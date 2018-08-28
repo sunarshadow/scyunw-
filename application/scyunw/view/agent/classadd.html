@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户类型</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入商户类型" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="status" value="1" lay-skin="switch" lay-text="开启|关闭" checked>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script type="text/javascript">
+        //Demo
+        layui.use('form', function () {
+            var form = layui.form, $ = layui.$
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                $.post("{:url('agent/crdclass')}",data.field, function(res){
+                    layer.msg("增加成功",function(){
+                        window.parent.location.reload();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+                    
+                })
+                return false;
+            })
+        });
+    </script>
+
+</body>
+
+</html>

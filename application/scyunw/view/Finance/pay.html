@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" placeholder="手机号/车牌号/姓名" id="keyword" autocomplete="off">
+        </div>    
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <!-- <button class="layui-btn" data-type="toexcel">导出数据</button> -->
+        <button class="layui-btn" data-type="addfinance">添加平台支出</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('finance/checklist',['type'=>5])}', limit:10 , limits: [1, 5, 10, 30,50,100,1000] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'addtime', width:160,  fixed: true}">时间</th>
+                <th lay-data="{field:'remark', width:120}">摘要</th>
+                <th lay-data="{field:'astypestr', width:120}">操作</th>
+                <th lay-data="{field:'money', width:120}">金额</th>
+                <th lay-data="{field:'statstr', width:80}">状态</th>
+                <th lay-data="{field:'checkadmin', width:180}">审核人</th>
+                <th lay-data="{field:'checktime', width:160}">审核时间</th>
+                <th lay-data="{fixed:'right', width:90, align:'center', toolbar: '#barDemo'}">凭证</th>
+                {if in_array("finance_1",$sary)}<th lay-data="{fixed:'right', width:90, align:'center', toolbar: '#setcheck'}">操作</th>{/if}  
+            </tr>
+        </thead>
+    </table>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs"  lay-event="edit">查看</a>
+    </script>
+    <script type="text/html" id="setcheck">
+{if in_array("finance_1",$sary)}<a class="layui-btn layui-btn-xs layui-btn-warm {{#  if(d.stat>0){ }}layui-btn-disabled {{#  } }}" lay-event="check">审核</a>{/if}  
+    </script>
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'laydate', 'jquery'], function () {
+            var form = layui.form, table = layui.table, laydate = layui.laydate, $ = layui.jquery;
+            //监听工具条
+            table.on('tool(demo)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'edit'){
+                    var id = data.orderid;
+                    var index = layui.layer.open({
+                        title : "凭证图片",
+                        type : 2,
+                        area: ['100%', '100%'],
+                        content : data.image,
+                        success : function(layero, index){
+                            setTimeout(function(){
+                                layui.layer.tips('点击此处返回保单列表', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            },500)
+                        }
+                    })
+                }else if(obj.event === 'check'){
+                    if(data.stat==0){
+                        layer.confirm("确定审核该资金流水，审核通过后会自动记入资金流水?", function(index){
+                            $.post("{:url('finance/getset')}", {id:data.id,stat:1},function(ret){
+                                layer.msg("状态修改成功");
+                                table.reload('idTest');
+                            });
+                        });
+                    }
+                }
+            });            
+            var $ = layui.$, active = {
+                reload: function(){
+                    table.reload('idTest', {
+                        where: {
+                            type : 5,
+                            keyword : $('#keyword').val()
+                        }
+                    });
+                },
+                //导出数据
+                toexcel: function(){ 
+                    var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+                    for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+                    var url = "{:url('finance/pay')}?toexcel=1";
+                    if(ids){ url += "&ids="+ids;}//获取选中数据
+                    window.location = url;	
+                },
+                //添加平台支出
+                addfinance: function(){
+                    dourl("{:url('money/add',['type'=>5])}" , '添加平台支出', '点此返回平台借入管理', ['100%', '100%']);
+                }
+            };              
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+            
+        });
+    </script>
+
+</body>
+
+</html>

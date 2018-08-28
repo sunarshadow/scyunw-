@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>保险询价</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <!-- time -->
+    <script src="__STATIC__/web/js/distpicker.data.js"></script>
+    <script src="__STATIC__/web/js/distpicker.js"></script>
+    <style>
+    .getsmscode{
+        width:90px!important;
+        height:32px!important;
+        margin-top:0px!important;
+        font-size:14px!important;
+        background-color: #2196f3;
+        box-shadow: 0px 5px 10px 0px rgba(4, 115, 203, 0.2);
+        border: solid 1px #ffffff;
+        padding: 0;
+        outline: none;
+        color: #fff!important;
+        margin: auto;        
+    }
+    </style>    
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="">
+        <div class="npagePage Pageyemian" id="page_none">
+            <div id="banner" class="">
+                <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124956492.jpg);"></div>
+            </div>
+            <div class="content">
+                <div id="progressBar">
+                    <button id="first" class="btn-active">1<a>身份认证</a></button>
+                    <div id="first_" class="div-active"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="second" class="btn-active">2<a>运营商认证</a></button>
+                    <div id="second_"  class="div-active"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="third">3<a>平台审核</a></button>
+                    <div id="third_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="fourth"><span><i class="fa fa-check"></i></span><a>申请成功</a></button>
+                </div>
+                <div class="fw bystages maintain">
+                    <form id="orderform"  method="post">
+                        <input type="hidden" id="orderid" value="{$id}">
+                        <input type="hidden" id="order_price" name="order_price" value="">
+                        <input type="hidden" id="carrier_value" value="{$config['carrier_value']}">
+                        <input id="file" type="file">
+                        <div id="no1" class="row">
+                            <div style="width:50%; margin:0px auto;">
+                                <div>
+                                    手机号码：&emsp;
+                                    <input type="text" id="apply_phone" name="apply_phone" placeholder="手机号码">
+                                </div>
+                                <div>
+                                    户主姓名：&emsp;
+                                    <input type="text" id="car_name" name="car_name" placeholder="户主姓名">
+                                    <input type="hidden" id="id_code" name="id_code">
+                                </div>
+                                <div>
+                                    手机运营商：
+                                    <input type="text" id="carrier" placeholder="手机运营商">
+                                </div>
+                                <div class="needcarr">
+                                    验证码：&emsp;&emsp;
+                                    <input name="smscode" type="text" placeholder="">
+                                    <button class="btn changebtn getsmscode" type="button" onclick="getsmscode()">获取验证码</button>
+                                </div>
+                            </div>
+                            <div class="apply" style="margin-top:0px;">
+                                <button id="subapply" type="button" class="btn">立即验证</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="__STATIC__/web/js/upload.js"></script>
+<script type="text/javascript">
+$(function(){      
+    getOrer();
+})
+var successurl = "/web/user/orderdetail";
+$("#subapply").click(function() {
+    var fromary = $("#orderform").serialize();
+    var id = $("#orderid").val();
+    var price = $("#order_price").val();
+    var carrier = $("#carrier_value").val();
+    fromary += "&id=" + id + "&fktype=0&w=2";
+    if(price>carrier){
+        $.post("/api/index/getphoneurl.do", fromary, function(ret) {
+            var json = eval("(" + ret + ")");
+            window.location = json.result.url;
+        }); 
+    }else{
+        $.post($api.getStorage('serviceAddr') + "/api/order/buy.do", fromary, function(ret) {
+            if (ret == 1) {
+                alert("运营商认证成功！");
+                window.location = successurl;
+            } else {
+                alert(ret);
+            }
+            return;
+        });
+    }
+    return false;
+});
+
+function getOrer(){
+    var data = {};
+    {if $id}
+    var id = {$id};
+    data["id"] = id;
+    {/if}
+    $.post("/api/order/getuserorder.do", data, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("#" + key).val(json[key]);
+        }        
+        if(ret == 'login'){
+            alert("购买车险请先登录！");
+            $("#login").show();
+        }else{
+            $("#orderid").val(json["orderid"]);
+            var price = $("#order_price").val();
+            var carrier = $("#carrier_value").val();
+            if(price>carrier){$(".needcarr").hide();}
+        }      
+
+        $.post("/api/index/getphonetoken.do", { id: json["orderid"] }, function(rett) {
+            if (rett) {
+                getphonedate(rett);
+            }
+        });          
+    });    
+}
+
+
+function getphonedate(token) {
+    var fromary = $("#orderform").serialize();
+    var id = $("#orderid").val();
+    var price = $("#order_price").val();
+    fromary += "&id=" + id + "&fktype=0";
+    $.post("/api/index/getphonedata?token=" + token, fromary, function(res) {
+        if (res == 1 || res == 0) {
+            alert("验证成功");
+            window.location = successurl;
+        } else {
+            alert("验证失败");
+        }
+    });
+}
+
+
+function getsmscode() {
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)",1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+</script>

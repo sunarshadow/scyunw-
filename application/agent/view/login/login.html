@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>匀享车险商户后台管理</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="__STATIC__/shopadmin/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="__STATIC__/shopadmin/css/login.css" media="all" />
+	<script>
+	if(window !=top){  
+			top.location.href=location.href;  
+	}  
+	</script>
+	 <style type="text/css" media="screen">
+    .login {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .login h1 {
+        position: relative;
+    }
+
+    .login h1 img {
+        position: absolute;
+        top: -200px;
+        left: 50%;
+        margin-left: -90px;
+        width: 180px;
+    }
+
+    .login button {
+        background: #15B8DB
+    }
+    </style>
+</head>
+<body>
+<!-- 	<video class="video-player" preload="auto" autoplay="autoplay" loop="loop" data-height="1080" data-width="1920" height="1080" width="1920">
+	    <source src="__STATIC__/shopadmin/pagejs/login/login.mp4" type="video/mp4">
+	</video> -->
+	<!-- <div class="video_mask"></div> -->
+	<img src="__STATIC__/shopadmin/images/bj.png" alt="" style="width: 100%;height: 100%;">
+	<div class="login">
+	    <h1>匀享车险商户后台登录
+	    <img src="__STATIC__/shopadmin/images/logo.png" alt="">
+	    </h1>
+	    <form class="layui-form">
+	    	<div class="layui-form-item">
+				<input class="layui-input" name="name" placeholder="用户名" lay-verify="required" type="text" autocomplete="off">
+		    </div>
+		    <div class="layui-form-item">
+				<input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">
+		    </div>
+		    <div class="layui-form-item form_code">
+				<input class="layui-input" name="captcha" placeholder="验证码" lay-verify="required" type="text" autocomplete="off">
+				<div class="code" id="captcha"><img src="{:captcha_src()}" id="verify_img" onclick="refreshVerify()" alt="captcha" width="116" height="36"></div>
+			</div>
+			<button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>
+		</form>
+		<div  style="color:#fff; margin-top: 5px;position:relative">
+			
+			<a style="color:#fff;position:absolute;right:5px;" href="{:url('login/Applyaccounts')}" >申请帐号</a>
+		</div>
+	</div>
+	<script type="text/javascript" src="__STATIC__/shopadmin/layui/layui.js"></script>
+	<script type="text/javascript" src="__STATIC__/shopadmin/pagejs/login/login.js"></script>
+	<script>
+			function refreshVerify() {
+					var ts = Date.parse(new Date())/1000;
+					var img = document.getElementById('verify_img');
+					img.src = "/captcha?id="+ts;
+			}
+			var URL = {
+				'tologin' : "{:url('login/tologin')}",
+			}
+	</script>
+</body>
+</html>

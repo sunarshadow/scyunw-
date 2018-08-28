@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>分期保单</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css" media="screen">
+    .aui-list .aui-list-item-title {
+        font-size: 13px;
+    }
+
+    li {
+        background: #fff !important;
+        padding: 10px 15px !important;
+    }
+
+    .checked-gray {
+        background-color: #bbbbbb !important;
+        border-color: #bbbbbb !important
+    }
+
+    li span {
+        color: #2196F3;
+        font-weight: bold;
+    }
+
+    li span.redyq {
+        color: red;
+    }
+
+    li span.grayhk {
+        color: #bbbbbb;
+    }
+    </style>
+</head>
+
+<body id="details">
+    <div class="out outshow">
+        <section class="aui-grid aui-grid-0">
+            <div class="aui-col-xs-6" style="width: 100%;">
+                <div class="aui-grid-label aui-text-left">保单金额：
+                    <span class="num aui-text-left"><span class="small">￥</span>
+                    <font class="order_price"></font>
+                    </span>
+                    <span class="openmsg" onclick="detail()">保单信息</span>
+                </div>
+                <div class="aui-grid-label order-num">订单编号:
+                    <font class="ordernum"></font>
+                    <font class="orderid" style="display:none;"></font>
+                </div>
+                <div class="aui-grid-label order-time">订单时间:
+                    <font class="ordertime"></font>
+                </div>
+                <div class="aui-grid-label order-time">支付方式:分期（
+                    <font class="install_count"></font>期）</div>
+                <div class="num name" style="padding-top: 20px;">
+                    <font class="companyname"></font>
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-1">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">被保车辆</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_license"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">车主信息</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_name"></font>
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-0 bgw">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">身份证</div>
+                <div class="aui-grid-label">
+                    <font class="id_code"></font>
+                </div>
+                <div class="aui-grid-label">行驶证</div>
+                <div class="aui-grid-label">
+                    <font class="car_code"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">
+                    <img src="../image/circle.png">
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-0 bgw nowpayinfo">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">本期还款时间</div>
+                <div class="aui-grid-label">
+                    <font class="paydate"></font>
+                </div>
+                <div class="aui-grid-label">本期还款金额</div>
+                <div class="aui-grid-label fw bennum">
+                    <font class="payfee"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">&emsp;</div>
+                <div class="aui-grid-label">&emsp;</div>
+                <div class="aui-grid-label fw jd">分期进度</div>
+                <div class="aui-grid-label fw jd"><span class="jd-num"><font class="nowqishu"></font>/</span>
+                    <font class="install_count"></font>
+                </div>
+            </div>
+        </section>
+        <br>
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-list-in">
+                <div id="mylist">
+                </div>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">
+                            <div>选择还款金额为：<span>¥&nbsp;</span><span id="selmoney">0</span></div>
+                            <div>剩余还款金额为：<span>¥&nbsp;</span><span id="leavemoney">0</span></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="bystagestype">
+            <button type="button" onclick="pay()">还款</button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript" src="../script/aui-actionsheet.js"></script>
+<script type="text/javascript" src="../script/pay.js"></script>
+<script type="text/javascript">
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+var leavemoney = 0;
+$(function() {
+    var id = GetQueryString("id");
+    $.post("/api/order/getuserorder.do", { id: id }, function(ret) {
+        // console.log(ret);
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+        if (json["isp"] == 1) {
+            $(".nowqishu").html(json["install_count"]);
+            $(".paydate").html("已完结");
+            $(".payfee").html("0.00");
+            $(".bystagestype").hide();
+        }
+    });
+    $.post("/api/order/getinstalldetail.do", { id: id }, function(ret) {
+        // console.log(ret);
+        var isPay, isPaystat, redyq,ttime;
+        var json = eval("(" + ret + ")");
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].paystat == 1) {
+                isPay = 'aui-checked checked-gray';
+                isPaystat = '已还款';
+                redyq = 'grayhk';
+                ttime =json[i].paytime;
+                if (json[i].yuqistat == 1) {
+                    isPaystat = '逾期 ' + json[i].yuqiday + ' 天后还款';
+                    //redyq = 'redyq'
+                }	
+				$("#mylist").append('<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-title"><div>第 <span>' + json[i].qishu + '</span> 期</div><div>还款金额：<span>¥&nbsp;' + json[i].money + '</span></div><div>实际还款时间：<span>' + ttime + '</span></div><div>约定还款时间：<span>' + json[i].yuqitime + '</span></div><div>状&emsp;&emsp;态：<span class="' + redyq + '">' + isPaystat + '<span></div></div><div class="aui-list-item-right"><input data-id="' + json[i].qishu + '" data-money="' + json[i].money + '"  type="checkbox" class="aui-checkbox ' + isPay + '"></div></div></li>');	
+            } else {
+                leavemoney += parseFloat(json[i].money);
+                isPay = '';
+                redyq = '';
+                ttime =json[i].yuqitime;
+                isPaystat = '未还款(剩余 ' + json[i].yuqiday + ' 天)';
+                if (json[i].yuqistat == 1) {
+                    isPaystat = '已逾期 ' + json[i].yuqiday + ' 天';
+                    redyq = 'redyq'
+                }
+				$("#mylist").append('<li class="aui-list-item"><div class="aui-list-item-inner"><div class="aui-list-item-title"><div>第 <span>' + json[i].qishu + '</span> 期</div><div>还款金额：<span>¥&nbsp;' + json[i].money + '</span></div><div>还款时间：<span>' + ttime + '</span></div><div>状&emsp;&emsp;态：<span class="' + redyq + '">' + isPaystat + '<span></div></div><div class="aui-list-item-right"><input data-id="' + json[i].qishu + '" data-money="' + json[i].money + '"  type="checkbox" class="aui-checkbox ' + isPay + '"></div></div></li>');
+            }
+            // <div>期初金额：' + json[i].beforemoney + '</div><div>期末金额：' + json[i].aftermoney + '</div>
+
+        }
+        $("#leavemoney").html(leavemoney);
+    });
+});
+
+function detail(id) {
+    var id = $(".orderid").html();
+    window.location = "mybystagesdetail_frm.html?id=" + id;
+    //openWin('mybystagesdetail')
+}
+
+function pay() {
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+        }
+    } else {
+        jsApiCall();
+    }
+}
+$(document).on('click', '.aui-checkbox ', function() {
+    if (!$(this).hasClass('checked-gray')) {
+        if (!$(this).hasClass('checked-on')) {
+            $(this).addClass('checked-on');
+            // console.log($('.checked-on').length);
+        } else {
+            $(this).removeClass('checked-on');
+        }
+    }
+    var money = 0;
+    $('.checked-on').each(function() {
+        console.log(($(this).data('money')));
+        money += parseFloat($(this).data('money'));
+    });
+    $("#selmoney").html(money);
+    // console.log($("#leavemoney").html()-money);
+    $("#leavemoney").html((leavemoney - money).toFixed(2));
+});
+</script>
+<script type="text/javascript">
+//调用微信JS api 支付
+function jsApiCall() {
+    var id = $(".orderid").html();
+    if ($('.checked-on').length == 0) {
+        alert('请先选择期数');
+        return;
+    }
+    var qishu = '';
+    $('.checked-on').each(function() {
+        qishu += qishu ? "," + $(this).data('id') : $(this).data('id');
+    });
+    console.log(qishu);
+    $.post("/api/webuser/payinstalljs.do", { id: id, qishu: qishu }, function(ret) {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            ret,
+            function(res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    WeixinJSBridge.log(res.err_msg);
+                    alert("支付成功");
+                    window.location.reload();
+                }
+            }
+        );
+    });
+}
+</script>
+
+</html>

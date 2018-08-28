@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>财务中心</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="__STATIC__/insureradmin/text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <div class="finance center">
+            <!-- 显示加show 隐藏加hide -->
+            <div class="password" style="display:none">
+                <div>请输入密码按回车确认</div>
+                <div>
+                    <input id="password" type="text" name="" value="">
+                </div>
+            </div>
+            <div class="outtotal outtotal-1" style="display:none">
+                <div class="total">
+                    <div class="title">财务中心</div>
+                    <div class="type">
+                        保&emsp;单：
+                        <input type="text" disabled name="" value="{$data.count}" class="bg1">
+                        <a href="{:url('policylist/index',['stat'=>'4'])}" class="detail">详情</a>
+                    </div>
+                    <div class="type">
+                        总金额：
+                        <input type="text" disabled name="" value="{$data.sum}" class="bg2">
+                        <a href="{:url('policylist/index',['stat'=>'4'])}" class="detail">详情</a>
+                    </div>
+                    <div class="type">
+                        未结款：
+                        <input id="weijiekuan" disabled type="text" disabled name="" value="{$data.sum-$data.moneyok}" class="bg2">
+                        <a style="background:#fff;color:#fff;    border: 2px solid #fff;" href="{:url('policylist/index',['stat'=>'4'])}" class="detail">详情</a>
+                    </div>
+                    <div class="type">
+                        已结款：
+                        <input type="text" name="" disabled value="{$data.moneyok}" class="bg2">
+                        <a href="financelist.html" class="detail">详情</a>
+                    </div>
+                </div>
+                <div class="botbtn">
+                    <a class="btn btn-default cancel finish" id="jiekuan">结款</a>
+                </div>
+            </div>
+            <div class="finance submit cwzx" >
+                <!-- 显示加show 隐藏加hide -->
+                <div class="menu"><a>财务中心</a><i class="fa fa-angle-right blue"></i><a class="blue">提交</a></div>
+                <div class="outtotal outtotal-2">
+                    <form id="insertform">
+                        
+                   
+                    <div class="total">
+                        <div class="title">&emsp;</div>
+                        <div class="type">
+                            结&ensp;款&ensp;人：
+                            <input type="text" name="knotman" value="" class="bg2">
+                        </div>
+                        <div class="type">
+                            银&emsp;&emsp;行：
+                            <input type="text" name="bank" value="" class="bg2">
+                        </div>
+                        <div class="type">
+                            卡&emsp;&emsp;号：
+                            <input type="text" name="bankcarnub" value="" class="bg2">
+                        </div>
+                        <div class="type">
+                            金&emsp;&emsp;额：
+                            <input type="text" name="amount" id="amount" value="" class="bg2">
+                        </div>
+                        <div class="type">
+                            打款时间：
+                            <input type="datetime-local" name="paytime" value="" class="bg2"> 
+                        </div>
+                        <div class="upload" id="uploadbg">
+                            <span id="uoloadbtn" onclick='document.getElementById("picFile").click(); '>上传附件</span>
+                            <input type="text" style="display:none" id="imgurl" name="imgurl" />   
+                            <input type="file" style="display:none" id="picFile" onchange="readFile(this)" />   
+                            <!-- <input type="file" name="img" id=""/> -->
+                        </div>
+                    </div>
+                </form>
+                    <div class="botbtn">
+                        <a id="finish" class="btn btn-default cancel finish addgo">提交</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="modal fade" id="msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="out-content">
+                <div class="modal-content">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">提示消息</h4>
+                            </div>
+                            <div class="modal-body" id="ajaxinfo"></div>
+                            <div class="modal-footer">
+                                <a href="{:url('index/index')}" type="button" class="btn cancel finish btn-return pull-left">返回首页</a>
+                                <a href="{:url('user/usercenter')}" type="button" class="btn cancel finish btn-return">返回个人中心</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+   
+    
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+    
+</script>
+    
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+{if condition = "session('insurer_financepwd')"}
+    $(".outtotal-1").show();
+    {else /}
+    $(".password").show();
+{/if}
+
+$("#password").keydown(function(event){
+    if(event.which == "13"){
+        var financepwd = $(this).val();
+        $.post('',{financepwd:financepwd},function(res){
+            location.reload();
+        })
+    }
+});
+$("#jiekuan").click(function() {
+    
+    // $("#finance").modal('show');
+    $(".cwzx").show();
+    $(".outtotal-1").hide();
+    
+    
+});
+function readFile(obj){   
+        document.getElementById('uoloadbtn').style.display='none';
+        var file = obj.files[0];      
+        //判断类型是不是图片  
+        if(!/image\/\w+/.test(file.type)){     
+                alert("请确保文件为图像类型");   
+                return false;   
+        }   
+        var reader = new FileReader();   
+        reader.readAsDataURL(file);   
+        reader.onload = function(e){   
+            $('#yulan').attr('src',this.result)
+            $('#imgurl').val(this.result)
+            var uploadbg = document.getElementById('uploadbg');
+            uploadbg.style.backgroundImage="url("+this.result+")";
+            uploadbg.style.backgroundRepeat="no-repeat";
+            uploadbg.style.backgroundSize="100% 100%";
+            var imgurl = document.getElementById('imgurl');
+            imgurl.nodeValue=this.result;
+        }   
+}   
+$('.addgo').click(function(){
+    var weijiekuan = $('#weijiekuan').val();
+    var amount = $('#amount').val();
+    
+    if(parseFloat(amount) > parseFloat(weijiekuan) ) {
+        alert('结款金额不超过'+weijiekuan);
+        return
+    }
+
+    var box = $('#insertform').serializeArray();
+    var postdata = {};
+    var off = true;
+    $.each(box,function(index,item){
+        if(item.value == ''){
+            alert('信息未完善');
+            off = false;
+            return false;
+        }
+        postdata[item.name] = item.value;
+    })
+    if(off == false) return false;
+    postdata['ordernumber']='{$data.count}';
+    console.log(postdata);
+    $.post('insertData',postdata,function(res){
+        console.log(res);
+        if(res.code==1){
+            var html = '<i class="fa fa-check-circle"></i>'+res.msg;
+        }
+        if(res.code==0){
+            var html = '<i class="fa fa-plus-circle"></i>'+res.msg;
+        }
+
+        $('#ajaxinfo').html(html);
+        $("#msg").modal('show');
+    })
+    return 
+})
+  
+
+
+</script>
+
+</html>

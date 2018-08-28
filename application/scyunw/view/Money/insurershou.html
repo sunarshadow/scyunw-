@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" placeholder="手机号/车牌号/姓名" id="keyword" autocomplete="off">
+        </div>    
+        <label style="padding-left: 10px;">时间范围：</label>
+        <div class="layui-inline">
+        <input class="layui-input" id="add" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>          
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('finance/getlist',['type'=>2])}', limit:10 , limits: [1, 5, 10, 30,50,100,1000] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'addtime', width:160,  fixed: true}">时间</th>
+                <th lay-data="{field:'name', width:160}">合作保险公司</th>
+                <th lay-data="{field:'remark', width:180}">摘要(保险单号)</th>
+                <th lay-data="{field:'add', width:120}">增加</th>
+                <th lay-data="{field:'sub', width:120}">减少</th>
+                <th lay-data="{field:'balance', width:120}">期末余额</th>
+                <th lay-data="{fixed:'right', width:90, align:'center', toolbar: '#barDemo'}">消费信息</th>
+            </tr>
+        </thead>
+    </table>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs"  lay-event="edit">查看</a>
+    </script>
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'laydate', 'jquery'], function () {
+            var form = layui.form, table = layui.table, laydate = layui.laydate, $ = layui.jquery;
+	        laydate.render({elem: '#add',range: true});	        
+            //监听工具条
+            table.on('tool(demo)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'edit'){
+                    var index = layui.layer.open({
+                        title : "应收保险公司佣金详情",
+                        type : 2,
+                        area: ['50%', '90%'],
+                        content : data.detailurl,
+                        success : function(layero, index){
+                            setTimeout(function(){
+                                layui.layer.tips('点击此处返回应收保险公司佣金列表', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            },500)
+                        }
+                    })
+                }
+            });            
+            var $ = layui.$, active = {
+                reload: function(){
+                    table.reload('idTest', {
+                        where: {
+                            type : 2,
+                            keyword : $('#keyword').val(),
+                            add : $('#add').val(),
+                        }
+                    });
+                },
+                toexcel: function(){ //导出数据
+                    var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+                    for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+                    var url = "{:url('finance/getlist',['type'=>2,'toexcel'=>1])}";
+                    if(ids){ url += "&ids="+ids;}//获取选中数据
+                    window.location = url;	
+                }
+            };              
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

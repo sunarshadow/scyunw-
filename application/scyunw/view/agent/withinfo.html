@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title switch-list">
+                <li layui-type="" class="layui-this">商户提现</li>
+                <li layui-data="0" ;>待初审</li>
+                <li layui-data="1" ;>待复审</li>
+                <li layui-data="2" ;>待打款</li>
+                <li layui-data="3" ;>已结款</li>
+                <li layui-data="4" ;>被驳回</li>
+            </ul>
+        </div>
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" placeholder="手机号/车牌号/姓名" id="keyword" autocomplete="off">
+        </div>
+        <label style="padding-left: 10px;">初审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="firsttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">复审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="secondtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">结款时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="paymenttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('agent/getwithdraw')}?userid={:$userid}',  limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'test', width:120}">地区</th>
+                <th lay-data="{field:'username', width:120}">商户名</th>
+                <th lay-data="{field:'name', width:200}">商户类型</th>
+                <!--消费外接id 跟商户id-->
+                <th lay-data="{field:'money', width:350}">提现金额</th>
+                <!--提现详情外接id 跟此次提现id-->
+                <th lay-data="{field:'allmoney', width:120}">可提现金额</th>
+                <th lay-data="{field:'historymoney', width:120}">历史提现总额</th>
+                <th lay-data="{field:'firstexamine', width:200, templet:'#firstexamineTpl'}">资金初审</th>
+                <th lay-data="{field:'firsttime', width:200, templet:'#ftimeTpl'}">初审时间</th>
+                <th lay-data="{field:'secondexamine', width:200, templet:'#secondexamineTpl'}">资金复审</th>
+                <th lay-data="{field:'bank_name', width:200, templet:'#stimeTpl'}">复审时间</th>
+                <th lay-data="{field:'collector', width:200,templet: '#collectorTpl'}">结款人</th>
+                <th lay-data="{field:'paymenttime', width:200,templet: '#paymenttimeTpl'}">结款时间</th>
+                <th lay-data="{field:'examinetype', width:200,templet: '#examinetypeTpl'}">审核状态</th>
+                <!-- <th lay-data="{fixed:'right', width:200, align:'center', toolbar: '#barDemo'}">操作</th> -->
+            </tr>
+        </thead>
+    </table>
+    <script type="text/html" id="examinetypeTpl">
+        {{#  if(d.examinetype==0){         }}
+                初审中
+        {{#  }else if(d.examinetype==1) {  }}
+                复审中
+        {{#  }else if(d.examinetype==2){    }}
+                待打款
+        {{#  }else if(d.examinetype==3) {  }}
+                已结款
+        {{#  }else if(d.examinetype==4) {  }}
+                驳回
+        {{#   }                            }}
+    </script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+            //三个时间
+            laydate.render({
+                elem: '#firsttime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#secondtime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#paymenttime'
+                , range: true
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //监听工具条
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'examine') {
+                    layer.confirm('您确定修改该商户吗', function (index) {
+                        var examinetype = '';
+                        switch (data.examinetype) {
+                            case 0:examinetype = 1;break;
+                            case 1:examinetype = 2;break;
+                            case 2:examinetype = 3;break;
+                            case 3:examinetype = 4;break;
+                            default:return false;
+                        }
+                        $.post("{:url('agent/updateExaminetype')}", { id: data.id, examinetype: examinetype }, function (ret) {
+                            if (ret.code) {
+                                layer.msg("审核成功");
+                                layer.close(index);
+                                table.reload('idTest')
+                            }
+                        });
+                    });
+                } else if (obj.event === 'payinfo') {
+                    dourl("{:url('agent/payinfo')}?userid=" + data.userid, '查看消费详情', '点此返回商户提现', ['100%', '100%']);
+                }
+            });
+            var active = {
+                reload: function () {
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            userid: {:$userid},
+                            type: type,
+                            keyword: $('#keyword').val(),
+                            firsttime: $('#firsttime').val(),
+                            secondtime: $('#secondtime').val(),
+                            paymenttime: $('#paymenttime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                        , page: { curr: 1 }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    var type = type ? type : '';
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type=' + type : '';
+                    get += '&userid=' +{:$userid} ;
+                    get += $('#keyword').val() ? '&keyword=' + $('#keyword').val() : '';
+                    get += $('#firsttime').val() ? '&firsttime=' + $('#firsttime').val() : '';
+                    get += $('#secondtime').val() ? '&secondtime=' + $('#secondtime').val() : '';
+                    get += $('#paymenttime').val() ? '&paymenttime=' + $('#paymenttime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('agent/getwithdraw')}" + "?toexcel=1" + get;
+                },
+
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    table.reload('idTest', {
+                        url: "{:url('agent/getwithdraw')}"
+                        , page: { curr: 1 }
+                        , where: {
+                            type: type,
+                            userid : {:$userid}
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

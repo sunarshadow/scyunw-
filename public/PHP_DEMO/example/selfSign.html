@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>web demo</title>
+</head>
+<body>
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">平台签署</div>
+        <div class="panel-body">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6 panel panel-default">
+                <div style="margin-top: 15px;">
+                    <form id="person" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="accountId" class="col-sm-3 control-label">账户标识</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="accountId" readonly >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="src-file" class="col-sm-3 control-label">待签署文档路径</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="src-file" value="E:/test-dst.pdf" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dst-file" class="col-sm-3 control-label">签署后文档保存路径</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="dst-file" value="E:/test-final.pdf" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">签章类型</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="signTypeRadios" id="signType1" value="Single" checked>单页
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="signTypeRadios" id="signType2" value="Multi" >多页
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="signTypeRadios" id="signType3" value="Edges" >骑缝
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="signTypeRadios" id="signType4" value="Key" >关键字
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">定位类型</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="posTypeRadios" id="posType1" value="0" checked>坐标定位
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="posTypeRadios" id="posType2" value="1" >关键字定位
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group page">
+                            <label for="pos-page" class="col-sm-3 control-label">签章页码</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="pos-page" value="1" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pos-x" class="col-sm-3 control-label">签署位置X坐标</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="pos-x" value="200" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pos-y" class="col-sm-3 control-label">签署位置Y坐标</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="pos-y" value="100" >
+                            </div>
+                        </div>
+                        <div class="form-group key" style="display: none;">
+                            <label for="pos-key" class="col-sm-3 control-label">签署位置关键字</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="pos-key" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="file-name" class="col-sm-3 control-label">文档显示名字</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="file-name" value="test" >
+                            </div>
+                        </div>
+						<div class="form-group">
+                            <label class="col-sm-3 control-label">二维码签署印章</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" name="qrcodeRadios" id="qrcodeType1" value="true" checked>是
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="qrcodeRadios" id="qrcodeType2" value="false" >否
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sealId" class="col-sm-3 control-label">印章标识</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="sealId" value="0" >
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-default" onclick="back()">上一步</button>
+                                <button type="button" class="btn btn-default" id="submit">下一步</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+
+    $(function() {
+        $('#accountId').val(window.accountId);
+        $('#src-file').val(window.dstFilePath);
+        $('#dst-file').val(window.finalFilePath);
+    });
+
+    $('input[name="posTypeRadios"]').change(function() {
+        if ($(this).val() == "1") {
+            $('.key').show();
+            $('.page').hide();
+            $('#pos-x').val(0);
+            $('#pos-y').val(0);
+        } else {
+            $('.key').hide();
+            $('.page').show();
+            $('#pos-x').val("200");
+            $('#pos-y').val("100");
+        }
+    });
+
+    $('#submit').click(function() {
+        window.selfSign = {
+                devId : window.devId,
+                accountId : window.accountId,
+                accountType : window.accountType,
+                srcFile : $('#src-file').val(),
+                dstFile : $('#dst-file').val(),
+                type : 'pdf',
+                signType : $('input[name="signTypeRadios"]:checked').val(),
+                posType : $('input[name="posTypeRadios"]:checked').val(),
+                posPage : $('#pos-page').val(),
+                posX : $('#pos-x').val(),
+                posY : $('#pos-y').val(),
+                key : $('#pos-key').val(),
+                fileName : $('#file-name').val(),
+				isQrcodeSign : $('input[name="qrcodeRadios"]:checked').val(),
+                sealId : $('#sealId').val()
+        };
+
+            callService("CommonHandle.php?action=selfSignPDF",$.extend(window.selfSign,window.project), (callback = function (data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                window.signServiceId = data.signServiceId;
+                window.dst_file = $('#dst-file').val();
+                $('#main').load("end.html");
+            } else {
+                alertError(data.msg);
+            }
+        }));
+    });
+
+    function back() {
+        $('#main').load("sign.html", function() {
+            if (window.sign != undefined) {
+                $('#accountId').val(window.accountId);
+                $('#src-file').val(window.sign.srcFile);
+                $('#dst-file').val(window.sign.dstFile);
+                $('input[name="signTypeRadios"][value=' + window.sign.signType + ']').attr("checked","checked");
+                $('input[name="posTypeRadios"][value=' + window.sign.posType + ']').attr("checked","checked");
+                $('#pos-page').val(window.sign.posPage);
+                $('#pos-x').val(window.sign.posX);
+                $('#pos-y').val(window.sign.posY);
+                $('#pos-key').val(window.sign.key);
+                $('#file-name').val(window.sign.fileName);
+                $('#seal').val(window.sealData);
+            }
+        });
+    }
+</script>
+</html>

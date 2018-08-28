@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>
+
+<form class="layui-form " action="">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>添加平台资金流水</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <label class="layui-form-label">摘要</label>
+        <div class="layui-input-inline">
+            <input type="text" name="remark" required lay-verify="required" placeholder="" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">操作</label>
+      <div class="layui-input-block">
+        <input type="radio" name="astype" value="0" title="增加" checked>
+        <input type="radio" name="astype" value="1" title="减少" >
+      </div>
+    </div>    
+    <div class="layui-form-item">
+        <label class="layui-form-label">金额</label>
+        <div class="layui-form-mid layui-word-aux">￥</div>
+        <div class="layui-input-inline">
+            <input type="text" name="money" required lay-verify="required" placeholder="" value="" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">元</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">凭证</label>
+        <div class="layui-input-inline" style="width:450px;">
+            <input type="text" name="image" id="image" required lay-verify="required" placeholder="" value="" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+          <button type="button" class="layui-btn" id="test1">
+              <i class="layui-icon">&#xe67c;</i>上传凭证
+          </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="type" value="{$type}" class="layui-input">
+            <button class="layui-btn" lay-submit="" lay-filter="set">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+ 
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form', 'layedit', 'laydate' , 'upload'], function(){
+    var $ = layui.$,form = layui.form,layer = layui.layer,layedit = layui.layedit,laydate = layui.laydate,upload = layui.upload;;
+	        laydate.render({elem: '#add',range: true});	        
+    //自定义验证规则
+    form.verify({
+    });
+    //监听提交
+    form.on('submit(set)', function(data){
+      $.post("{:url('finance/getset')}",data.field,function(res){
+      console.log(data.field);
+      console.log(res);
+        if(res.msg){
+          layer.msg(res.msg);
+        }else{
+            layer.msg("资金添加成功，请等待审核");
+            setTimeout(function(){
+              parent.location.reload();
+            },800);          
+        }
+      });
+      return false;
+    });
+    var uploadInst = upload.render({
+        elem: '#test1' //绑定元素
+        , url: "{:url('apiset/info')}" //上传接口
+        , done: function (res) {
+            $("#image").val(res.path);
+        }
+        , error: function () {
+            //请求异常回调
+        }
+    })
+});
+</script>
+
+
+</body>
+</html>

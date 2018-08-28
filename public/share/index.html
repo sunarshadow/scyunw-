@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link rel='stylesheet' type="text/css" href="css/swiper.min.css" />
+    <script type="text/javascript" charset="utf-8" src="js/jq.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/swiper.min.js"></script>
+    <title>二维码</title>
+    <link rel="stylesheet" href="">
+    <style type="text/css">
+	
+    body {
+        font-size: 0;
+        margin: 0;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .download {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .download img {
+        width: 50%;
+    }
+
+    .msg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.35);
+        margin: 0;
+        padding: 25px;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    .msgshow {
+        z-index: 1;
+        opacity: 1;
+    }
+
+    .msg .con {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 5px;
+        overflow: hidden;
+        padding: 0 15px;
+    }
+
+    .ios {
+        position: absolute;
+        bottom: 18px;
+        z-index: 9999;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    .iosshow {
+        opacity: 1;
+        z-index: 2;
+    }
+    </style>
+	
+<base target="_blank">
+</head>
+
+<body>
+   <img src="images/share.jpg" id="share" style="width: 100%; position: absolute; filter:alpha(Opacity=80);-moz-opacity:0.8;opacity: 0.8; z-index: 999999 ">
+    <img src="qrcode/caishen (1).jpg">
+    <img src="qrcode/caishen (2).jpg">
+    <img src="qrcode/caishen (3).jpg">
+    <img src="qrcode/caishen (4).jpg">
+    <a class="download">
+    <img src="qrcode/download.png">
+    </a>
+    <div class="msg" style="height:500px;">
+        <div class="con">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/1.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/2.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/3.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/4.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/5.png">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/6.png">
+                    </div>
+                </div>
+                <div class="swiper-pagination" style="right: -11px"></div>
+            </div>
+        </div>
+    </div>
+    <a href="https://fir.im/gdkr"  class="ios" style="width:100%">
+        <img src="qrcode/download.png" style="width: 50%;height: auto">
+    </a>
+    <script>
+    var mySwiper = new Swiper('.swiper-container', {
+        loop: true,
+        direction: 'vertical',
+        // autoplay: 3000, //可选选项，自动滑动
+        pagination: '.swiper-pagination',
+
+    });
+	var winRef = window.open("", "_blank");//打开一个新的页面
+		var ll = 'https://fir.im/gdkr';
+    function loc(){
+		var ll = 'https://fir.im/gdkr';
+		winRef.location = ll;//改变页面的 location
+    }
+	$('html').css("height",$(window).height());
+    var u = navigator.userAgent;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+    var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    $(".download").click(function() {
+        if (isiOS) {
+            $(".msg").addClass('msgshow');
+            $(".ios").addClass('iosshow');
+        } else {
+            window.location = ll;
+        }
+    });
+	$(".ios").click(function(){
+	//window.parent.location.href = "https://fir.im/gdkr";
+	//setTimeout(loc(),800);
+		$("#share").show();
+	});
+    </script>
+</body>
+
+</html>

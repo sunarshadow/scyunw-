@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title switch-list">
+                <li layui-type="" class="layui-this">全部</li>
+                <li layui-data="0" ;>初审中</li>
+                <li layui-data="1" ;>复审中</li>
+                <li layui-data="2" ;>拨款中</li>
+                <li layui-data="3" ;>出单中</li>
+                <li layui-data="4" ;>生效中</li>
+                <li layui-data="5" ;>过期</li>
+                <li layui-data="6" ;>违约</li>
+            </ul>
+        </div>
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="companyname" placeholder="保险公司名" id="companyname" autocomplete="off">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="inspectadminid" placeholder="资金初审人" id="inspectadminid" autocomplete="off">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="comfirmadminid" placeholder="资金复审人" id="comfirmadminid" autocomplete="off">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="approadminid" placeholder="资金结算人" id="approadminid" autocomplete="off">
+        </div>
+        <label style="padding-left: 10px;">初审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input"  id="inspecttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">复审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="comfirmtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">结款时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="approtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('insurer/getpremium')}',  limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'car_license', width:120 ,templet: '#car_licenseTpl'}">申请车辆</th>
+                <th lay-data="{field:'username', width:120}">车主姓名</th>
+                <th lay-data="{field:'companyname', width:200}">保险公司</th>
+                <th lay-data="{field:'jqprice', width:90}">交强险</th>
+                <th lay-data="{field:'csprice', width:350}">车船税</th>
+                <th lay-data="{field:'syprice', width:120}">商业险</th>
+                <th lay-data="{field:'order_price', width:120}">保单总额</th>
+                <th lay-data="{field:'inspectadminid', width:120 ,templet: '#inspectadminidTpl'}">资金初审</th>
+                <th lay-data="{field:'inspecttime', width:200 ,templet: '#inspecttimeTpl'}">初审时间</th>
+                <th lay-data="{field:'comfirmadminid', width:200 ,templet: '#comfirmadminidTpl'}">资金复审</th>
+                <th lay-data="{field:'comfirmtime', width:200 ,templet: '#comfirmtimeTpl'}">复审时间</th>
+                <th lay-data="{field:'approadminid', width:200,templet: '#approadminidTpl'}">结款人</th>
+                <th lay-data="{field:'approtime', width:200 ,templet: '#approtimeTpl'}">结款时间</th>
+                <th lay-data="{field:'stat', width:200, templet: '#statTpl'}">审核状态</th>
+                <th lay-data="{fixed:'right', width:200, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+        </thead>
+    </table>
+    <!-- 消费详情 -->
+    <script type="text/html" id="payinfoTpl">
+        <a style="color:#32CD32"   lay-event="payinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">查看</a>
+    </script>
+    <!-- 提现历史详情 -->
+    <script type="text/html" id="withinfoTpl">
+        <a style="color:#32CD32"   lay-event="withinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">提现详情</a>
+    </script>
+    <script type="text/html" id="car_licenseTpl">
+              <a lay-event="carlicense" color="#B3EE3A">{{ d.car_license}}</a>
+    </script>
+    <!-- 初审 -->
+    <script type="text/html" id="inspectadminidTpl">
+        {{#  if(d.csname !==0){ }}
+            {{ d.cstitle}}-{{ d.csname}}
+        {{#  }else{ }}
+            暂未初审
+        {{# } }}
+    </script>
+    <!-- 初审时间 -->
+    <script type="text/html" id="inspecttimeTpl">
+        {{#  if(d.inspecttime !=='0000-00-00 00:00:00' ){ }}
+            {{ d.inspecttime}}
+        {{#  }else{ }}
+            暂未初审
+        {{# } }}
+    </script>
+    <!-- 复审 -->
+    <script type="text/html" id="comfirmadminidTpl">
+        {{#  if(d.fsname !==0){ }}
+            {{ d.fstitle}}-{{ d.fsname}}
+        {{#  }else{ }}
+            暂未复审
+        {{# } }}
+    </script>
+    <!-- 复审时间 -->
+    <script type="text/html" id="comfirmtimeTpl">
+        {{#  if(d.comfirmtime !=='0000-00-00 00:00:00' ){ }}
+            {{ d.comfirmtime}}
+        {{#  }else{ }}
+            暂未复审
+        {{# } }}
+    </script>
+    <!-- 结款 -->
+    <script type="text/html" id="approadminidTpl">
+        {{#  if(d.jssname !==0){ }}
+            {{ d.jstitle}}-{{ d.jsname}}
+        {{#  }else{ }}
+            暂未结款
+        {{# } }}
+    </script>
+    <!-- 结款时间 -->
+    <script type="text/html" id="approtimeTpl">
+        {{#  if(d.approtime !=='0000-00-00 00:00:00' ){ }}
+            {{ d.approtime}}
+        {{#  }else{ }}
+            暂未结款
+        {{# } }}
+    </script>
+    <script type="text/html" id="statTpl">
+    {{#  if(d.stat==0){         }}
+            初审中
+    {{#  }else if(d.stat==1) {  }}
+            复审中
+    {{#  }else if(d.stat==2){    }}
+            拨款中
+    {{#  }else if(d.stat==3) {  }}
+            出单中
+    {{#  }else if(d.stat==4) {  }}
+            生效
+    {{#  }else if(d.stat==5) {  }}
+            过期
+    {{#  }else if(d.stat==6) {  }}
+            违约
+    {{#   }                            }}
+    </script>
+    <script type="text/html" id="barDemo">
+        {{#  if(d.stat==0){         }}
+                <a class="layui-btn layui-btn-xs"   lay-event="examine">初审</a>
+                <a class="layui-btn layui-btn-xs layui-btn-warm  layui-btn-disabled"  lay-event="examine">复审</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs  layui-btn-disabled" lay-event="examine">结算</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">回收</a>
+        {{#  }else if(d.stat==1) {  }}
+                <a class="layui-btn layui-btn-xs layui-btn-disabled"   lay-event="examine">初审</a>
+                <a class="layui-btn layui-btn-xs layui-btn-warm "  lay-event="examine">复审</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs  layui-btn-disabled" lay-event="examine">结算</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">回收</a>
+        {{#  }else if(d.stat==2){    }}
+                <a class="layui-btn layui-btn-xs layui-btn-disabled"   lay-event="examine">初审</a>
+                <a class="layui-btn layui-btn-xs layui-btn-warm layui-btn-disabled"  lay-event="examine">复审</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="examine">结算</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">回收</a>
+        {{#  }else if(d.stat==3) {  }}
+                <a class="layui-btn layui-btn-xs layui-btn-disabled"   lay-event="examine">初审</a>
+                <a class="layui-btn layui-btn-xs layui-btn-warm layui-btn-disabled"  lay-event="examine">复审</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="examine">结算</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">回收</a>
+        {{#  }else{       }}
+                <a class="layui-btn layui-btn-xs layui-btn-disabled"   lay-event="examine">初审</a>
+                <a class="layui-btn layui-btn-xs layui-btn-warm layui-btn-disabled"  lay-event="examine">复审</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled" lay-event="examine">结算</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">回收</a>
+        {{#  }      }}
+         
+        
+    </script>
+
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);
+                    form.render('select');
+                });
+            });
+            //三个时间
+            laydate.render({
+                elem: '#inspecttime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#comfirmtime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#approtime'
+                , range: true
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //监听工具条
+
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'examine') {
+                    if ($(this).hasClass('layui-btn-disabled')) {
+                        layer.msg("错误操作");
+                        return false;
+                    }
+                    layer.confirm('您确定修改该商户吗', function (index) {
+                        var stat = '';
+                        switch (data.stat) {
+                            case 0:stat = 1;break;
+                            case 1:stat = 2;break;
+                            case 2:stat = 3;break;
+                            case 3:stat = 4;break;
+                            default:return false;
+                        }
+                        $.post("{:url('insurer/savepremium')}", { id: data.id, stat: stat }, function (ret) {
+                            if (ret.code) {
+                                layer.msg("操作成功");
+                                layer.close(index);
+                                table.reload('idTest')
+                            }
+                        });
+                    });
+                } else if (obj.event === 'del') {
+                    layer.confirm('您确定回收该商户吗', function (index) {
+                        $.post("{:url('insurer/savepremium')}", { id: data.id, stat: '-1' }, function (ret) {
+                            if (ret.code) {
+                                layer.msg("操作成功");
+                                layer.close(index);
+                                table.reload('idTest')
+                            }
+                        });
+                    });
+                } else if (obj.event === 'payinfo') {
+                    dourl("{:url('agent/payinfo')}?$paystat=1&agentid=" + data.userid, '查看消费详情', '点此返回商户提现', ['100%', '100%']);
+                } else if (obj.event === 'withinfo') {
+                    dourl("{:url('agent/withinfo')}?agentid=" + data.userid, '查看提现历史详情', '点此返回商户提现', ['100%', '100%']);
+                } else if (obj.event === 'withinfo') {
+                    dourl("{:url('agent/withinfo')}?agentid=" + data.userid, '查看提现历史详情', '点此返回商户提现', ['100%', '100%']);
+                }
+            });
+            var active = {
+                reload: function () {
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            type: type,
+                            companyname: $('#companyname').val(),
+                            inspectadminid: $('#inspectadminid').val(),
+                            inspecttime: $('#inspecttime').val(),
+                            comfirmadminid: $('#comfirmadminid').val(),
+                            comfirmtime: $('#comfirmtime').val(),
+                            approadminid: $('#approadminid').val(),
+                            approtime: $('#approtime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                        , page: { curr: 1 }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = false;
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    for (var i = 0; i < data.length; i++) {
+                        ids += "," + data[i].id;
+                    }
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type=' + type : '';
+                    get += $('#keyword').val() ? '&keyword=' + $('#keyword').val() : '';
+                    get += $('#firsttime').val() ? '&firsttime=' + $('#firsttime').val() : '';
+                    get += $('#secondtime').val() ? '&secondtime=' + $('#secondtime').val() : '';
+                    get += $('#paymenttime').val() ? '&paymenttime=' + $('#paymenttime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('agent/getwithdraw')}" + "?toexcel=1" + get;
+                },
+
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    table.reload('idTest', {
+                        url: "{:url('insurer/getpremium')}"
+                        , page: { curr: 1 }
+                        , where: {
+                            type: type
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

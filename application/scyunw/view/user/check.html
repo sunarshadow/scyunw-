@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>
+
+              
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>认证情况</legend>
+</fieldset>
+ 
+
+  <div lay-filter="demo" >
+    <a class="layui-btn checkstat" data-id="{$info.id}"  data-type="{$type}" >认证通过</a>
+    <a class="layui-btn layui-btn-danger nopass" data-id="{$info.id}"  data-type="{$type}">驳回认证</a>
+  </div>
+
+  {if $type neq "phone_stat"}
+  <table class="layui-table info">
+    <tbody>
+    <tr style="display: none">
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+    <tr>
+      <td class="tips">用户名</td>
+      <td>{$info.username}</td>
+      <td class="tips">真实姓名</td>
+      <td>{$info.realname}</td>
+    </tr>
+    <tr>
+      <td class="tips">电话</td>
+      <td>{$info.phone}</td>
+      <td class="tips">身份证</td>
+      <td>{$info.id_license}</td>
+    </tr>
+    <tr>
+      <td class="tips">注册时间</td>
+      <td>{$info.addtime}</td>
+      <td class="tips">登录时间</td>
+      <td>{$info.last_logintime}</td>
+    </tr>
+    <tr>
+      <td class="tips">推荐人</td>
+      <td>{$info.reco_id}</td>
+      <td class="tips">登录次数</td>
+      <td>{$info.logincount}</td>
+    </tr>
+    <tr>
+      <td class="tips">车牌号</td>
+      <td>{$info.carlicense}</td>
+      <td class="tips">账户状态</td>
+      <td>{$info.is_inquiry}</td>
+    </tr>
+    <tr>
+		<td colspan="2"><img src="{$info['id_img']}" style="max-width:100%; "></td>
+		<td colspan="2"><img src="{$info['id_img_b']}" style="max-width:100%; "></td>
+    </tr> 
+    {if $type eq "face_stat"}
+    <tr>
+		<td colspan="4" align="center"><img src="{$info['id_img_r']}" style="max-width:100%; "></td>
+    </tr> 
+    {elseif $type eq "rnstat"}
+    {/if}
+  </table>
+{else}
+  <table class="layui-table phonedata">
+    <tr style="display: none">
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+    </tr>
+    
+    <!-- 报告基本信息 -->
+    <tr><td colspan="4" align="center">报告基本信息</td></tr>
+    <tr>
+      <td class="tips">报告编号</td>
+      <td>{$pdetail.basicInfo.reportID}</td>
+      <td class="tips">报告时间</td>
+      <td>{$pdetail.basicInfo.reportTime}</td>
+    </tr>
+    <tr>
+      <td class="tips">姓名</td>
+      <td>{$pdetail.basicInfo.name}</td>
+      <td class="tips">身份证号码</td>
+      <td>{$pdetail.basicInfo.certNo}</td>
+    </tr>
+    <tr>
+      <td class="tips">登记手机</td>
+      <td>{$pdetail.basicInfo.phoneNo}</td>
+      <td class="tips">年龄</td>
+      <td>{$pdetail.basicInfo.age}</td>
+    </tr>
+    <tr>
+      <td class="tips">性别</td>
+      <td>{$pdetail.basicInfo.sex}</td>
+      <td class="tips">出生日期</td>
+      <td>{$pdetail.basicInfo.birthday}</td>
+    </tr>
+    <tr>
+      <td class="tips">出生地</td>
+      <td>{$pdetail.basicInfo.birthArea}</td>
+      <td class="tips">手机归属地</td>
+      <td>{$pdetail.basicInfo.phoneBelongArea}</td>
+    </tr>
+    <!-- 运行商基本信息 -->
+    <tr><td colspan="4" align="center">运行商基本信息</td></tr>
+    <tr>
+      <td class="tips">运营商类型</td>
+      <td>{$pdetail.phoneInfo.operator}</td>
+      <td class="tips">入网时间</td>
+      <td>{$pdetail.phoneInfo.inNetDate}</td>
+    </tr>
+    <tr>
+      <td class="tips">认证实名</td>
+      <td>{$pdetail.phoneInfo.realName}</td>
+      <td class="tips">认证身份证号</td>
+      <td>{$pdetail.phoneInfo.certNo}</td>
+    </tr>
+    <tr>
+      <td class="tips">手机号</td>
+      <td>{$pdetail.phoneInfo.phoneNo}</td>
+      <td class="tips">登记邮箱</td>
+      <td>{$pdetail.phoneInfo.email}</td>
+    </tr>
+    <tr>
+      <td class="tips">当前余额</td>
+      <td>{$pdetail.phoneInfo.balance}</td>
+      <td class="tips">会员等级</td>
+      <td>{$pdetail.phoneInfo.vipLevel}</td>
+    </tr>
+    <tr>
+      <td class="tips">积分值</td>
+      <td>{$pdetail.phoneInfo.pointValue}</td>
+      <td class="tips">网龄</td>
+      <td>{$pdetail.phoneInfo.netAge}</td>
+    </tr>
+    <tr>
+      <td class="tips">最早通话时间</td>
+      <td>{$pdetail.phoneInfo.firstCallDate}</td>
+      <td class="tips">最近通话时间</td>
+      <td>{$pdetail.phoneInfo.lastCallDate}</td>
+    </tr>
+    <tr>
+      <td class="tips">登记地址</td>
+      <td  colspan="23">{$pdetail.phoneInfo.addr}</td>
+    </tr>
+    <!-- 欺诈风险 -->
+    <tr><td colspan="4" align="center">欺诈风险</td></tr>
+    <tr>
+      <td class="tips">身份证号码有效性</td>
+      <td>{if $pdetail.deceitRisk.certNoIsValid eq "True"}是{else}否{/if}</td>
+      <td class="tips">运营商是否实名</td>
+      <td>{if $pdetail.deceitRisk.phoneIsAuth eq "True"}是{else}否{/if}</td>
+    </tr>
+    <tr>
+      <td class="tips">运营商实名一致性</td>
+      <td>{if $pdetail.deceitRisk.samePeople eq "True"}是{else}否{/if}</td>
+      <td class="tips">是否长时间出现关机</td>
+      <td>{if $pdetail.deceitRisk.longTimePowerOff eq "True"}是{else}否{/if}</td>
+    </tr>
+    <tr>
+      <td class="tips">是否命中网贷黑名单</td>
+      <td>{if $pdetail.deceitRisk.inBlacklist eq "unKnow"}无{else}{$pdetail.deceitRisk.inBlacklist}{/if}</td>
+      <td class="tips">是否出现法院相关呼叫</td>
+      <td>{if $pdetail.deceitRisk.calledByCourtNo eq "unKnow"}无{else}{$pdetail.deceitRisk.calledByCourtNo}{/if}</td>
+    </tr>
+    <!-- 运营商消费分析 -->
+    <tr><td colspan="4" align="center">运营商消费分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">月份</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">主叫时间(分)</td>
+          <td class="tips">被叫时间(分)</td>
+          <td class="tips">短信数(条)</td>
+          <td class="tips">话费充值额(元)</td>
+        </tr>
+        {volist name="$pdetail.consumeInfo" id="vo"}
+        <tr>
+          <td >{$vo.month}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.callTime}</td>
+          <td >{$vo.calledTime}</td>
+          <td >{$vo.totalSmsNumber}</td>
+          <td >{$vo.payMoney}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 联系人区域分析 -->
+    <tr><td colspan="4" align="center">联系人区域分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">地区</td>
+          <td class="tips">号码数量</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">主叫时间</td>
+          <td class="tips">被叫次数</td>
+          <td class="tips">被叫时间</td>
+          <td class="tips">占比</td>
+        </tr>
+        {volist name="$pdetail.contactAreaInfo" id="vo"}
+        <tr>
+          <td >{$vo.area}</td>
+          <td >{$vo.totalNumber}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.callTime}</td>
+          <td >{$vo.calledTimes}</td>
+          <td >{$vo.calledTime}</td>
+          <td >{$vo.percent*100}%</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 联系人通话时间分析 -->
+    <tr><td colspan="4" align="center">联系人通话时间分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">时间</td>
+          <td class="tips">通话次数</td>
+          <!-- <td class="tips">通话时间</td> -->
+          <td class="tips">通话人数量</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">被叫次数</td>
+        </tr>
+        {volist name="$pdetail.connPeriodTimeAnalysis" id="vo" key="k"}
+        <tr>
+          <td >{$key}</td>
+          <td >{$vo.connTimes}</td>
+          <!-- <td >{$vo.connTime}</td> -->
+          <td >{$vo.connNumbers}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.calledTimes}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 通话记录分析 -->
+    <tr><td colspan="4" align="center">通话记录分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">号码</td>
+          <td class="tips">通话时间</td>
+          <td class="tips">通话次数</td>
+          <td class="tips">号码归属地</td>
+          <td class="tips">被叫次数</td>
+          <td class="tips">主叫次数</td>
+          <!-- <td class="tips">号码标识</td> -->
+        </tr>
+        {volist name="$pdetail.callRecordsInfo" id="vo"}
+        <tr>
+          <td >{$vo.phoneNo}</td>
+          <td >{$vo.connTime}</td>
+          <td >{$vo.connTimes}</td>
+          <td >{$vo.belongArea}</td>
+          <td >{$vo.calledTimes}</td>
+          <td >{$vo.callTimes}</td>
+          <!-- <td >{$vo.identifyInfo}</td> -->
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 短信记录分析 -->
+    <tr><td colspan="4" align="center">短信记录分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">号码</td>
+          <td class="tips">号码归属地</td>
+          <td class="tips">条数</td>
+          <td class="tips">号码标识</td>
+        </tr>
+        {volist name="$pdetail.messageRecordsInfo" id="vo"}
+        <tr>
+          <td >{$vo.phoneNo}</td>
+          <td >{$vo.belongArea}</td>
+          <td >{$vo.totalSmsNumber}</td>
+          <td >{$vo.identifyInfo}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+</table>
+ {/if}
+
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use('table',function(){
+    var table = layui.table, $ = layui.jquery;
+    //监听表格复选框选择
+    //审核通过
+    $("body").on("click",".checkstat",function(){
+        var id = $(this).data("id");
+        var type = $(this).data("type");
+        var stat = 1;
+        switch(type){
+          case "phone_stat":
+            var data = {id:id,phone_stat:stat};
+            break;
+          case "face_stat":
+            var data = {id:id,face_stat:stat};
+            break;
+          case "rnstat":
+            var data = {id:id,rnstat:stat};
+            break;
+        }
+        $.post("{:url('user/getset')}", data,function(ret){
+            layer.msg("认证状态修改成功");
+            parent.location.reload();
+        });
+    });
+
+    //驳回申请
+    $("body").on("click",".nopass",function(){
+        var id = $(this).data("id");
+        var type = $(this).data("type");
+        var stat = 0;
+        switch(type){
+          case "phone_stat":
+            var data = {id:id,phone_stat:stat};
+            break;
+          case "face_stat":
+            var data = {id:id,face_stat:stat};
+            break;
+          case "rnstat":
+            var data = {id:id,rnstat:stat};
+            break;
+        }
+        $.post("{:url('user/getset')}", data,function(ret){
+            layer.msg("认证状态修改成功");
+            parent.location.reload();
+        });
+    });
+
+
+
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+
+    
+});	
+</script>
+</body>
+</html>

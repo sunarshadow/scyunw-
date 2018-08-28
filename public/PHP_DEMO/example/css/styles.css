@@ -1,0 +1,23 @@
+.square {
+    width: 97px;
+    height: 97px;
+}
+
+.square-radio {
+    height: 97px;
+}
+
+.push-file {
+    height: 34px;
+    padding-top: 6px;
+}
+
+.sign-succeed {
+    font-size: 20px;
+    color: green;
+}
+
+.sign-failed {
+    font-size: 20px;
+    color: red;
+}

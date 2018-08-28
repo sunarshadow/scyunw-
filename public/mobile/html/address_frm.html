@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的地址</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body>
+    <input type="hidden" id="addid" value="" />
+    <div id="address"></div>
+    <div id="bankcard" style="display: none;">
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" id="addbankcard" onclick="addaddress()">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner">
+                            <img src="../image/addbankcard.png"><span > 添加地址</span>
+                        </div> 
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" /> -->
+    <!-- <div id="footer" class="border-t" style="position:fixed;width:100%;bottom:0;"> -->
+        <!-- <ul id="myTab" class="flex-wrap nav nav-tabs"> -->
+            <!-- <li tapmode="hover" class="flex-con0 flex-con active"><a href="index_frm.html" data-toggle="tab"><span>首页</span></a></li> -->
+            <!-- <li tapmode="hover" class="flex-con1 flex-con"><a href="index_frm.html?l=1" data-toggle="tab"><span>订单</span></a></li> -->
+            <!-- <li tapmode="hover" class="flex-con2 flex-con"><a href="index_frm.html?l=2" data-toggle="tab"><span>我的</span></a></li> -->
+        <!-- </ul> -->
+    <!-- </div> -->
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+$(function() {
+    getaddresslist();
+});
+$(document).on('click', '.setdefault', function() {
+    // alert(1);
+    var id = $(this).data("id");
+    $(".isdefault").removeClass("aui-selected");
+    $(this).addClass("aui-selected");
+    $.post("/api/user/setdefault.do", { id: id }, function(ret) {
+        $("#addid").val(id);
+        location.reload();
+    });
+});
+
+function setdefault(obj) {
+    console.log(obj)
+}
+
+function editaddress(id) {
+    $api.setStorage('addressid', id);
+    openWin('addaddress');
+}
+
+function deladdress(id) {
+	if(confirm("您确定删除该收货地址吗")){
+		$.post("/api/user/deladdress.do", { id: id }, function(ret) {
+			$("#addid").val(id);
+			location.reload();
+		});
+	}
+}
+
+function addaddress() {
+    $api.setStorage('addressid', 0);
+    openWin('addaddress');
+}
+
+function getaddresslist() {
+    $.post("/api/user/address.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += '<div class="list" data-id="' + json[i].id + '"><div><span class="name">' + json[i].name + '</span>';
+            html += '<span class="tel">' + json[i].apply_phone + '</span></div>';
+            html += '<div class="address">' + json[i].address + '</div>';
+            if (json[i].isdefault == "1") {
+                $("#addid").val(json[i].id);
+                html += '<div class="op"><span data-id="' + json[i].id + '"  class="setdefault aui-iconfont aui-icon-correct isdefault aui-selected"> 设为默认</span>';
+            } else {
+                html += '<div class="op"><span onclick="setdefault()" data-id="' + json[i].id + '"  class="setdefault aui-iconfont aui-icon-correct isdefault"> 设为默认</span>';
+            }
+            html += "<span onclick='deladdress(" + json[i].id + ")' class='aui-iconfont aui-icon-trash aui-pull-right'> 删除</span>";
+            html += "<span onclick='editaddress(" + json[i].id + ")' class='aui-iconfont aui-icon-edit aui-pull-right '> 编辑</span></div></div>";
+        }
+        $("#address").html(html);
+        $("#bankcard").show();
+    });
+}
+</script>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5">
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title switch-list">
+            <li layui-data="0" class="layui-this">红包统计</li>
+            <li layui-data="1" class="layui-btn"  style="background: none;color: #000;" onclick="window.location='{:url("user/paylist")}'">还款统计</li>
+        </ul>
+    </div> 
+</div>
+<div class="demoTable">
+    关键字搜索：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" placeholder="用户/手机/红包类型" autocomplete="off">
+    </div>
+	<label style="padding-left: 10px;">时间段：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="add" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+<table class="layui-table"   >
+    
+     <tbody>
+       <tr>
+           <th style="width: 11%;">推广购买红包</th>
+           <th style="width: 11%;"><label id="count[1]">红包个数</label>个</th>
+           <th style="width: 11%;">￥<label id="sum[1]"></label></th>
+           <th style="width: 11%;">消费奖励</th>
+           <th style="width: 11%;"><label id="count[2]">红包个数</label>个</th>
+           <th style="width: 11%;">￥<label id="sum[2]"></label></th>
+           <th style="width: 11%;">注册红包</th>
+           <th style="width: 11%;"><label id="count[0]">红包个数</label>个</th>
+           <th style="width: 11%;">￥<label id="sum[0]"></label></th>
+       </tr>
+       <tr>
+           <th>认证红包</th>
+           <th><label id="count[3]">红包个数</label>个</th>
+           <th>￥<label id="sum[3]"></label></th>
+           <th>生日红包</th>
+           <th><label id="count[4]">红包个数</label>个</th>
+           <th colspan="4">￥<label id="sum[4]"></label></th>
+       </tr>
+       <tr>
+           <th colspan="3">合计</th>
+           <th colspan="3"><label id="count[5]">红包个数</label>个</th>
+           <th colspan="3">￥<label id="sum[5]"></label></th>
+       </tr>
+     </tbody>
+<table class="layui-table" lay-data="{ width: 'full',cellMinWidth:120,url:'{:url('Capital/getlist',['rs'=>$rs])}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest' , 
+done:function(res){
+    for(var i=0;i<=5;i++){
+        document.getElementById('count['+i+']').innerHTML = res.totaldata[i].count;
+        document.getElementById('sum['+i+']').innerHTML = res.totaldata[i].sum;
+    }
+}
+}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+      <th lay-data="{field:'username'}">用户名</th>
+      <th lay-data="{field:'phone', width:200}">手机</th>
+      <th lay-data="{field:'comphone', width:200}">被推荐人手机</th>
+      <th lay-data="{field:'money', width:200}">金额</th>
+      <th lay-data="{field:'content', width:200}">红包类型</th>
+      <th lay-data="{field:'addtime', width:200}">红包发送时间</th>
+    </tr>
+  </thead>
+</table>
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['table',"laydate"],function(){
+    var table = layui.table,laydate = layui.laydate;;
+	laydate.render({
+		elem: '#add'
+		,range: true
+	});	
+    var $ = layui.$, active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+            table.reload('idTest', {
+                where: {
+                    keyword: demoReload.val(),
+                    add : $('#add').val(),
+                }
+            });
+        }
+    };    
+    
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+    
+});
+</script>
+
+</body>
+</html>

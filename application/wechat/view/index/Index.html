@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/app/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/app/css/aui.css" />
+</head>
+
+<body id="login">
+    <div>
+        <img src="__STATIC__/app/image/logo.png">
+    </div>
+    <div class="aui-content">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="text" id="phone" placeholder="手机号码" value="">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="password" id="password" placeholder="密码">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="forget" onclick="openWin('forgetpassword')">
+        忘记密码?
+    </div>
+    <div class="aui-text-center">
+        <button type="button" onclick="login()">登录</button>
+    </div>
+    <div class="wxlogin">
+        <img onclick="wxlogin()" src="__STATIC__/app/image/wxlogin.png">
+        <img onclick="qqlogin()" src="__STATIC__/app/image/qqlogin.png">
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="__STATIC__/app/script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="__STATIC__/app/script/api.js"></script>
+<script type="text/javascript" src="__STATIC__/app/script/aui-dialog.js"></script>
+<script type="text/javascript" src="__STATIC__/app/script/openWin.js"></script>
+<script type="text/javascript" src="__STATIC__/app/script/aui-toast.js"></script>
+<script type="text/javascript">
+$(function(){
+    $.post("http://chexian.302s.cn/api/Loginbywx/getdata.do", {},function(ret){
+        console.log(ret);
+    });
+})
+
+function login() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    showDefault('loading', 1, 0);
+}
+
+function wxlogin() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    var wx = api.require('wx');
+    wx.auth({
+        // apiKey: ''
+    }, function(ret, err) {
+        if (ret.status) {
+            wx.getToken({
+                code: ret.code
+            }, function(ret_, err_) {
+                if (ret_.status) {
+                    wx.getUserInfo({
+                        accessToken: ret_.accessToken,
+                        openId: ret_.openId
+                    }, function(retinfo, errinfo) {
+                        if (retinfo.status) {
+                            var openid = retinfo.openid;
+                            $api.setStorage('openid', retinfo.openid);
+                            $api.setStorage('unionid', retinfo.unionid);
+                            $api.setStorage('nickname', retinfo.nickname);
+                            $api.setStorage('headimgurl', retinfo.headimgurl);
+                            console.log(openid);
+                            $.post($api.getStorage('serviceAddr') + "/api/index/checkopenid.do", {
+                                openid: openid,
+                                type: 0
+                            }, function(status) {
+                                if (status && status != 0) {
+                                    // alert(1);
+                                    showDefault('loading', openid, status, 0);
+                                } else {
+                                    openWin('register');
+                                }
+                            });
+                        } else {
+                            alert(errinfo.code);
+                        }
+                    });
+                } else {
+                    alert(err_.code);
+                }
+            });
+        } else {
+            alert(err.code);
+        }
+    });
+}
+
+function qqlogin() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    var qq = api.require('qq');
+    qq.login(function(ret, err) {
+        var openid = ret.openId;
+        qq.getUserInfo(function(retinfo, errinfo) {
+            if (retinfo.status) {
+                $api.setStorage('openid', openid);
+                $api.setStorage('unionid', "qq" + openid);
+                $api.setStorage('nickname', retinfo.info.nickname);
+                $api.setStorage('headimgurl', retinfo.info.figureurl_qq_2);
+                $.post($api.getStorage('serviceAddr') + "/api/index/checkopenid.do", {
+                    openid: openid,
+                    type: 1
+                }, function(status) {
+                    if (status && status != 0) {
+                        // alert(1);
+                        showDefault('loading', openid, status, 1);
+                    } else {
+                        openWin('register');
+                    }
+                });
+            } else {
+                var dialog = new auiDialog();
+                dialog.alert({
+                    title: "请输入信息",
+                    msg: errinfo.msg,
+                    buttons: ['确定']
+                }, function(ret) {
+
+                });
+            }
+        });
+    });
+}
+
+var toast = new auiToast();
+
+function showDefault(type, openid, tel, logintype) {
+    switch (type) {
+        case "success":
+            toast.success({
+                title: "提交成功",
+                duration: 2000
+            });
+            break;
+        case "fail":
+            toast.fail({
+                title: "用户名或者密码错误，请重新输入！",
+                duration: 2000
+            });
+            break;
+        case "custom":
+            toast.custom({
+                title: "提交成功",
+                html: '<i class="aui-iconfont aui-icon-laud"></i>',
+                duration: 2000
+            });
+            break;
+        case "loading":
+            if (openid == 1) {
+                var phone = $("#phone").val();
+                var password = $("#password").val();
+                if (phone == '') {
+                    alert('请输入手机号?');
+                    return;
+                }
+                if (password == '') {
+                    alert('请输入密码?');
+                    return;
+                }
+                $.post($api.getStorage('serviceAddr') + "/api/index/login.do", {
+                    phone: phone,
+                    password: password
+                }, function(ret) {
+                    if (ret == 1) {
+                        toast.loading({
+                            title: "正在登录",
+                            duration: 2000
+                        }, function(ret) {
+                            $api.setStorage('loginstatus', 'success');
+                            $api.setStorage('loginsuccesstel', phone);
+                            setTimeout(function() {
+                                toast.hide();
+                                // closeWin('lgoin');
+                                // api.openWin({
+                                //     name: 'index',
+                                //     url: 'index.html',
+                                //     bounces: false,
+                                //     slidBackEnabled: false,
+                                // });
+                                window.location= 'http://chexian.302s.cn/A6065427632216/web_adapter/adapter.html?targetUrl=%2Fhtml%2FA6065427632216%2Fweb_adapter%2Fadapter.html';
+                            }, 1500)
+                        });
+                    } else {
+                        alert('用户名或密码输入错误，请重新输入！');
+                        $("#password").val('');
+                    }
+
+                });
+            } else {
+                $.post($api.getStorage('serviceAddr') + "/api/index/login.do", {
+                    openid: openid,
+                    type: logintype
+                }, function(ret) {
+                    if (ret == 1) {
+                        toast.loading({
+                            title: "正在登录",
+                            duration: 2000
+                        }, function(ret) {
+                            $api.setStorage('loginstatus', 'success');
+                            $api.setStorage('loginsuccesstel', tel);
+                            setTimeout(function() {
+                                toast.hide();
+                                // closeWin('lgoin');
+                                api.openWin({
+                                    name: 'index',
+                                    url: 'index.html',
+                                    bounces: false,
+                                    slidBackEnabled: false,
+                                });
+                            }, 1500)
+                        });
+                    } else {
+                        alert('用户名或密码输入错误，请重新输入！');
+                        $("#password").val('');
+                    }
+                });
+            }
+
+            break;
+        default:
+            break;
+    }
+}
+</script>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>财务中心</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="__STATIC__/insureradmin/text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <div class="finance" >
+            <!-- 显示加show 隐藏加hide -->
+            <div class="menu"><a>财务中心</a><i class="fa fa-angle-right blue"></i><a class="blue">提交</a></div>
+            <div class="outtotal outtotal-2">
+                <div class="total">
+                    <div class="title">&emsp;</div>
+                    <div class="type">
+                        结&ensp;款&ensp;人：
+                        <input id="password" type="text" name="" value="" class="bg2">
+                    </div>
+                    <div class="type">
+                        银&emsp;&emsp;行：
+                        <input id="password" type="text" name="" value="" class="bg2">
+                    </div>
+                    <div class="type">
+                        卡&emsp;&emsp;号：
+                        <input id="password" type="text" name="" value="" class="bg2">
+                    </div>
+                    <div class="type">
+                        金&emsp;&emsp;额：
+                        <input id="password" type="text" name="" value="" class="bg2">
+                    </div>
+                    <div class="type">
+                        打款时间：
+                        <input id="password" type="text" name="" value="" class="bg2">
+                    </div>
+                    <div class="upload">
+                        <span>上传附件</span>
+                        <input type="file" name="img" id=""/>
+                    </div>
+                </div>
+                <div class="botbtn">
+                    <a id="finish" class="btn btn-default cancel finish">提交</a>
+                </div>
+            </div>
+    </div>
+     <div class="modal fade" id="msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="out-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">提示消息</h4>
+                    </div>
+                    <div class="modal-body"><i class="fa fa-check-circle"></i>提交完成</div>
+                    <div class="modal-footer">
+                        <a href="index.html" type="button" class="btn cancel finish btn-return pull-left">返回首页</a>
+                        <a href="financenter.html" type="button" class="btn cancel finish btn-return">返回财务中心</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+    
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+
+</script>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>
+	body{margin: 10px;}
+	.layui-table a{ cursor: pointer;}
+</style>
+</head>
+<body>  
+
+
+<table class="layui-table" lay-data="{ width: 'full',url:'{$url}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{field:'id', width:70, sort: true, fixed: true}">ID</th>
+      <th lay-data="{field:'username', width:120}">用户名</th>
+      <th lay-data="{field:'phone', width:149}">绑定手机</th>
+      <th lay-data="{field:'car_license', width:100}">车牌号</th>
+      <th lay-data="{field:'company', width:120}">投保公司</th>
+      <th lay-data="{field:'statstr', width:90}">审核状态</th>
+      <th lay-data="{field:'client', width:150, align:'center', toolbar: '#showxz'}">投保险种/证件/详情</th>
+      <th lay-data="{field:'addtime', width:145}">提交时间</th>
+      {if $user}
+      <th lay-data="{field:'checkadmin', width:180}">最后审核</th>
+      {else}
+      <th lay-data="{field:'checkadmin', width:180}">初审人</th>
+      <th lay-data="{field:'checktime', width:145}">初审时间</th>
+      <th lay-data="{field:'offerinsurer', width:170}">报价保险公司</th>
+      <th lay-data="{field:'offertime', width:145}">最后报价时间</th>
+      <th lay-data="{field:'rejecttime', width:145}">驳回时间</th>
+      <th lay-data="{field:'admin_note', width:145}">驳回理由</th>
+      {/if}
+      <th lay-data="{fixed:'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+    </tr>
+  </thead>
+</table> 
+<script type="text/html" id="showxz">
+  <a class="layui-btn layui-btn-xs"  lay-event="showxz">查看</a>
+</script>
+<script type="text/html" id="barDemo">
+  {if in_array("inquiry_1",$sary)}<a class="layui-btn layui-btn-xs {{#  if(d.stat>0){ }}layui-btn-disabled {{#  } }}" lay-event="check">审核</a>{/if}
+  {if in_array("inquiry_2",$sary)}<a class="layui-btn layui-btn-warm layui-btn-xs {{#  if(d.stat>1){ }}layui-btn-disabled {{#  } }}" lay-event="setprice">报价</a>{/if}
+  {if in_array("inquiry_-1",$sary)}<a class="layui-btn layui-btn-danger layui-btn-xs" lay-stat="-1"  lay-event="chgstatus">回收</a>{/if}
+</script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use('table',function(){
+    var table = layui.table;
+    //监听表格复选框选择
+    table.on('checkbox(demo)', function(obj){
+        console.log(obj)
+    });
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'chgstatus'){
+            if(hasClass(this, 'layui-btn-disabled')){ return false;}
+			var stat = $(this).attr("lay-stat");
+            layer.confirm("是否更改用户状态?", function(index){
+                $.post("{:url('userorder/getset')}", {id:data.id,stat:stat},function(ret){
+                    layer.msg("状态修改成功");
+                    table.reload('idTest');
+                });
+            });
+        }else if(obj.event === 'check'){
+            if(hasClass(this, 'layui-btn-disabled')){ return false;}
+			var id = data.id;
+            var index = dourl("{:url('userorder/check')}"+'?id='+id,"投保险种/证件/详情","点击此处返回分期订单列表",['50%', '90%']);
+        }else if(obj.event === 'showxz'){
+			var id = data.id;
+            var index = dourl("{:url('userorder/info')}"+'?id='+id,"投保险种/证件/详情","点击此处返回分期订单列表",['50%', '90%']);
+        }else if(obj.event === 'setprice'){
+            if(hasClass(this, 'layui-btn-disabled')){ return false;}
+			var id = data.id;
+            var index = dourl("{:url('userorder/setprice')}"+'?id='+id,"报价","点击此处返回分期订单列表",['50%', '90%']);
+        }
+    });
+    var $ = layui.$, active = {
+        reload: function(){
+        var demoReload = $('#demoReload');
+        table.reload('idTest', {
+            page: {
+                    curr: 1 //重新从第 1 页开始
+            },            
+            where: {
+                keyword: demoReload.val()
+            }
+        });
+        }
+    };    
+    
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+	
+    function dourl(url,title,tips,area){
+        layui.layer.open({
+            title : title,
+            type : 2,
+            content : url,
+            area: area,
+            success : function(layero, index){
+                setTimeout(function(){
+                    layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            }
+        })
+    }
+ 
+    function hasClass(element, cls) {
+        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    } 
+});	
+</script>
+
+</body>
+</html>

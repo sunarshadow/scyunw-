@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title switch-list">
+                <li layui-type="" class=" {if $type===NULL}layui-this{/if}">商户管理</li>
+                <li layui-data="0" class="{if $type==='0'}layui-this{/if}" ;>待审核商户</li>
+                <li layui-data="1" class="{if $type==='1'}layui-this{/if}" ;>已审核商户</li>
+                <li layui-data="2" class="{if $type==='2'}layui-this{/if}" ;>黑名单商户</li>
+                <li layui-data="3" class="{if $type==='3'}layui-this{/if}" ;>被驳回商户</li>
+            </ul>
+        </div>
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" placeholder="商户名称" id="keyword" autocomplete="off">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="rebate" placeholder="消费返点比例" id="rebate" autocomplete="off">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="logincount" placeholder="登录情况" id="logincount" autocomplete="off">
+        </div>
+        <label style="padding-left: 10px;">注册时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="addtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <br>
+        <label style="padding-left: 10px;">地区搜索：</label>
+        <div class="layui-inline">
+            <select name="modules" id="province" lay-filter="province">
+                <option value="">选择省份</option>
+                {volist name="province" id="vo"}
+                <option value="{$vo.province_id}">{$vo.province_name}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select name="modules" id="city" lay-filter="city">
+                <option value="">选择城市</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select name="modules" id="area" lay-filter="area">
+                <option value="">选择地区</option>
+            </select>
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+        <button class="layui-btn" data-type="updatebl">批量修改比例</button>
+        <button class="layui-btn" data-type="addagent">添加商户</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('agent/getlist')}',where:{{if $type!==false}type:{$type}{/if}}, limit:10 , limits: [1, 5, 10, 30,50,100,1000] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'test', width:120}">地区</th>
+                <th lay-data="{field:'username', width:120}">用户名</th>
+                <th lay-data="{field:'company', width:200}">公司名称</th>
+                <th lay-data="{field:'servicetype', width:120}">商户类型</th>
+                <th lay-data="{field:'address', width:350 ,templet: '#addressTpl'}">地址</th>
+                <th lay-data="{field:'nickname', width:120}">负责人</th>
+                <th lay-data="{field:'phone', width:120}">绑定手机</th>
+                <th lay-data="{field:'acholder', width:120}">结算帐户名</th>
+                <th lay-data="{field:'bank_account', width:200}">结算卡号</th>
+                <th lay-data="{field:'bank_name', width:200}">开户行</th>
+                <th lay-data="{field:'rebate', width:120, templet: '#rebateTpl'}">消费返点</th>
+                <th lay-data="{field:'allow_login', width:150,templet: '#statusTpl'}">审核状态</th>
+                <th lay-data="{field:'logincount', width:120,templet: '#logincountTpl'}">登录情况</th>
+                <th lay-data="{field:'addtime', width:120}">注册时间</th>
+                <th lay-data="{fixed:'right', width:200, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+        </thead>
+    </table>
+    <script type="text/html" id="statusTpl">
+{{#  if(d.allow_login==0){         }}
+未审核【<a style="color: #F581B1;" lay-event="chgstatus">审核</a>】
+{{#  }else if(d.allow_login==1) {  }}
+已审核【<a style="color: #5FB878;" lay-event="chgstatus">停用</a>】
+{{#  }else if(d.allow_login==2){    }}
+停用【<a style="color: #5FB878;" lay-event="chgstatus">启用</a>】
+{{#  }else{                      }}
+<span style="color: #5FB878;" lay-event="chgstatus">驳回</span>
+{{#   }                            }}
+</script>
+    <script type="text/html" id="rebateTpl">
+{{#  if(d.rebate !==false){ }}
+   {{ d.rebate}}%
+{{#  } }}
+</script>
+    <script type="text/html" id="logincountTpl">
+    <a style="color: #CD00CD;" lay-event="getlogininfo">{{ d.logincount}}</a>
+</script>
+
+    <script type="text/html" id="addressTpl">
+    <a style="color: #32CD32;" lay-event="getaddress">{{ d.address}}</a>
+</script>
+
+    <script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs"  lay-event="edit">查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm "  lay-event="toexcel">导出</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="updateinfo">修改信息</a>
+</script>
+
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'laydate', 'jquery'], function () {
+            var form = layui.form, table = layui.table, laydate = layui.laydate, $ = layui.jquery;
+
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);
+                    form.render('select');
+                });
+            });
+            //三个时间
+            laydate.render({
+                elem: '#addtime'
+                , range: true
+            });
+            //监听工具条
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'updateinfo') {
+                    var id = data.id;
+                    var index = layui.layer.open({
+                        title: '修改商户',
+                        type: 2,
+                        content: "{:url('agent/updateinfo')}" + '?id=' + id,
+                        area: ['50%', '60%'],
+                        shadeClose: true, //开启遮罩关闭
+                        success: function (layero, index) {
+                            setTimeout(function () {
+                                layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            }, 500)
+                        }
+                    })
+                } else if (obj.event === 'edit') {
+                    var id = data.id;
+                    if (data.allow_login === 0) {
+                        var index = layui.layer.open({
+                            title: '查看商户',
+                            type: 2,
+                            content: "{:url('agent/info')}" + '?id=' + id,
+                            area: ['50%', '60%'],
+                            shadeClose: true, //开启遮罩关闭
+                            success: function (layero, index) {
+                                setTimeout(function () {
+                                    layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                                        tips: 3
+                                    });
+                                }, 500)
+                            }
+                            , btn: ['驳回']
+                            , yes: function (index, layero) {
+                                allow_login = 3;
+                                layer.prompt({
+                                    formType: 2,
+                                    value: '驳回理由',
+                                    title: '请输入理由',
+                                    area: ['800px', '350px'] //自定义文本域宽高
+                                    }, function(value, index, elem){
+                                        $.post("{:url('agent/getset')}", { id: data.id, allow_login: allow_login ,msg:value}, function (ret) {
+                                            layer.msg("驳回成功");
+                                            layer.close(index);
+                                            table.reload('idTest');
+                                        });
+                                    });
+                               
+                            }
+                        })
+
+                    } else {
+                        var index = layui.layer.open({
+                            title: '查看商户',
+                            type: 2,
+                            content: "{:url('agent/info')}" + '?id=' + id,
+                            area: ['50%', '60%'],
+                            shadeClose: true, //开启遮罩关闭
+                            success: function (layero, index) {
+                                setTimeout(function () {
+                                    layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                                        tips: 3
+                                    });
+                                }, 500)
+                            }
+                        })
+                    }
+
+                } else if (obj.event === 'chgstatus') {
+                    var allow_login = '';
+                    switch (data.allow_login) {
+                        case 0:
+                            allow_login = 1;
+                            break;
+                        case 1:
+                            allow_login = 2;
+                            break;
+                        case 2:
+                            allow_login = 1;
+                            break;
+                        default:
+                            return false;
+                    }
+                    layer.confirm("是否更改商户状态?", function (index) {
+                        $.post("{:url('agent/getset')}", { id: data.id, allow_login: allow_login }, function (ret) {
+                            layer.msg("状态修改成功");
+                            table.reload('idTest');
+                        });
+                    });
+                } else if (obj.event === 'toexcel') {
+                    var id = data.id;
+                    window.location = "{:url('agent/toexcel')}" + '?id=' + id;
+                } else if (obj.event === 'getaddress') {
+                    var index = layui.layer.open({
+                        title: '查看商户',
+                        type: 2,
+                        content: "{:url('agent/getmap')}" + '?location=' + data.location,
+                        area: ['50%', '80%'],
+                        shadeClose: true, //开启遮罩关闭
+                        success: function (layero, index) {
+                            setTimeout(function () {
+                                layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            }, 500)
+                        }
+                    })
+
+                } else if (obj.event === 'getlogininfo') {
+                    var index = layui.layer.open({
+                        title: '查看商户',
+                        type: 2,
+                        content: "{:url('agent/getloginlog')}" + '?userid=' + data.id,
+                        area: ['50%', '80%'],
+                        shadeClose: true, //开启遮罩关闭
+                        success: function (layero, index) {
+                            setTimeout(function () {
+                                layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            }, 500)
+                        }
+                    })
+
+                }
+
+                
+
+            });
+
+            var active = {
+                reload: function () {
+                    var demoReload = $('#demoReload');
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            keyword: demoReload.val(),
+                            rebate: $('#rebate').val(),
+                            type: type,
+                            logincount: $('#logincount').val(),
+                            keyword: $('#keyword').val(),
+                            addtime: $('#addtime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+
+                    for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    var type = type ? type : '';
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type=' + type : '';
+                    get += $('#keyword').val() ? '&keyword=' + $('#keyword').val() : '';
+                    get += $('#rebate').val() ? '&rebate=' + $('#rebate').val() : '';
+                    get += $('#logincount').val() ? '&logincount=' + $('#logincount').val() : '';
+                    get += $('#addtime').val() ? '&addtime=' + $('#addtime').val() : '';
+                    get += $('#firsttime').val() ? '&firsttime=' + $('#firsttime').val() : '';
+                    get += $('#secondtime').val() ? '&secondtime=' + $('#secondtime').val() : '';
+                    get += $('#paymenttime').val() ? '&paymenttime=' + $('#paymenttime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('agent/getlist')}" + "?toexcel=1" + get;
+                },
+                updatebl: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    if(data.length == 0) {
+                        layer.msg('未勾选');
+                        return false;
+                    }
+                    for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    layer.prompt({title: '请输入比例(数字)', formType: 0},function(val, index){
+                        
+                        layer.confirm('是否修改ID为'+ids+'的比例', {
+                            btn: ['是','否'] //按钮
+                            }, function(){
+                            //do Thing
+                            $.post("{:url('agent/updaterebate')}", { ids: ids, val: val }, function (ret) {
+                            layer.msg(ret.msg);
+                            table.reload('idTest');
+                            });
+
+                        });
+                        layer.close(index);
+                    });
+                },
+                addagent:function(){ //添加商户
+                    dourl("{:url('agent/addagent')}", '添加商户', '点此返回商户提现', ['100%', '100%']);
+                }
+                
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    var type = type ? type : '';
+                    table.reload('idTest', {
+                        url: "{:url('agent/getlist')}"
+                        , page: { curr: 1 }
+                        , where: {
+                            type
+                        } //设定异步数据接口的额外参数
+                    });
+
+                }
+
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+
+
+    </script>
+
+</body>
+
+</html>

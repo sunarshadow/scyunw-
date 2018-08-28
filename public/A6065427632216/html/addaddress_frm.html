@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>添加地址</title>
+    <!-- 城市选择 -->
+    <link rel="stylesheet" href="../script/picker/css/mui.min.css">
+    <link href="../script/picker/css/mui.picker.css" rel="stylesheet" />
+    <link href="../script/picker/css/mui.poppicker.css" rel="stylesheet" />
+    <script src="../script/picker/js/mui.min.js"></script>
+    <script src="../script/picker/js/mui.picker.js"></script>
+    <script src="../script/picker/js/mui.poppicker.js"></script>
+    <script src="../script/picker/js/city.data.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../script/picker/js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 城市选择 -->
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+    #addbankcardpage .aui-list-item-label {
+        width: 30%;
+    }
+
+    .aui-list .aui-list-item {
+        border-bottom: none !important
+    }
+    </style>
+</head>
+
+<body id="addbankcardpage">
+    <form id="bankform">
+        <div id="inputmsg" class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item" style="margin-bottom: 0">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            收货人
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="name" name="name" placeholder="请输入真实姓名">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            联系电话
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="apply_phone" name="apply_phone" placeholder="请输入联系电话">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            选择地区
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="hidden" id="area" name="area" placeholder="请选择地区">
+                            <input id="province_" type="hidden" value="福建">
+                            <input id="city_" type="hidden" value="泉州">
+                            <input type="hidden" id="cityval"  value="泉州">
+                            <span style="font-size: 13px;" type="text" id="position">请选择地区</span>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            详细地址
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="address" name="address" placeholder="请输入详细地址">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            设为默认地址
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input id="isdefault" class="aui-checkbox aui-pull-right" type="checkbox" name="isdefault" value="0">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="aui-text-center fixbottom">
+            <input type="hidden" id="id" name="id">
+            <button type="button" id="next">确认</button>
+        </div>
+    </form>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/city.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var id = $api.getStorage('addressid');
+    if (id > 0) {
+        $.post($api.getStorage('serviceAddr') + "/api/user/getaddress.do", { id: id }, function(ret) {
+            var json = eval("(" + ret + ")");
+            for (key in json) {
+                $("#" + key).val(json[key]);
+            }
+            // alert(JSON.stringify(json));
+            $("#areasel").text($("#area").val());
+            if ($("#isdefault").val() == 1) {
+                $("#isdefault").addClass('aui-checked');
+            }
+            if (json["isdefault"] == 1) { $("#isdefault").attr("checked", "checked") }
+        });
+    }
+};
+$(".aui-checkbox").click(function() {
+    // alert($(this).val());
+    if ($(this).val() == 1) {
+        $(this).val(0);
+        $("#isdefault").removeClass('aui-checked');
+    } else {
+        $(this).val(1).addClass('aui-checked');
+    }
+});
+$("#next").click(function() {
+    var msgarray = new Array();
+    $("input").each(function(index, element) {
+        var vl = $(this).val();
+        var msg = $(this).attr('placeholder');
+        if (vl == "") {
+            msgarray[index] = $(this).attr('placeholder');
+        } else {
+            msgarray[index] = 0;
+        }
+    });
+    for (var i = 0; i < msgarray.length; i++) {
+        if (msgarray[i] != 0 && i != 5 && i != 6) {
+            var dialog = new auiDialog();
+            dialog.alert({
+                title: "请输入信息",
+                msg: msgarray[i],
+                buttons: ['确定']
+            }, function(ret) {
+
+            });
+            return;
+        }
+    }
+    addbank();
+});
+
+
+function addbank() {
+    var fromary = $("#bankform").serialize();
+    // alert(fromary);
+    $.post($api.getStorage('serviceAddr') + "/api/user/addaddress.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("地址编辑成功！");
+            var jsfun = 'getaddresslist();';
+            api.execScript({
+                name: 'address',
+                frameName: 'address',
+                script: jsfun
+            });
+            closeWin('addaddress');
+        } else {
+            alert(ret);
+        }
+    });
+}
+
+
+
+
+// $("#areasel").click(function() {
+//     var citySelector = api.require('citySelector');
+//     citySelector.open({
+//         y: api.frameHeight / 1.6,
+//         fixedOn: api.frameName,
+//         anim: true
+//     }, function(ret, err) {
+//         if (ret) {
+//             // alert(JSON.stringify(ret));
+//             $("#areasel").text(ret.province + '' + ret.city + '' + ret.county);
+//             $("#area").val(ret.province + '-' + ret.city + '-' + ret.county);
+//             // alert(json);
+
+//         } else {
+//             // alert(JSON.stringify(err));
+//         }
+//     });
+// });
+$("#province_").change(function(){
+    $("#area").val($("#province_").val()+$("#city_").val());
+    $("#position").val($("#province_").val()+$("#city_").val());
+})
+</script>

@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>账户安全</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <style>
+    .getsmscode{
+        width:auto!important;
+        height:18px!important;
+        margin-top:0px!important;
+        font-size:14px!important;
+    }
+    </style>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="newsPage" class="npagePage Pagenews">
+        <div id="banner">
+            <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124501768.jpg);"></div>
+        </div>
+        <div class="content">
+            <div class="header">
+                <a href="usercenter.html">
+                    <p class="title">我的账户</p>
+                    <p class="subtitle">My account</p>
+                </a>
+            </div>
+            <div id="category">
+                <a href="/web/user/capital" {if $action eq "capital"}class="active"{/if}>资金管理</a>
+                <a href="/web/user/agentorder" {if $action eq "agentorder"}class="active"{/if}>商户预约</a>
+                <a href="/web/user/order" {if $action eq "order"}class="active"{/if}>我的保单</a>
+                <!-- <a href="/web/user/bill" {if $action eq "bill"}class="active"{/if}>我的账单</a> -->
+                <a href="/web/user/info" {if $action eq "info"}class="active"{/if}>个人资料</a>
+                <a href="/web/user/security" {if $action eq "security"}class="active"{/if}>账户安全</a>
+                <!-- <a href="/web/user/award" {if $action eq "award"}class="active"{/if}>推广奖励</a> -->
+            </div>
+            <div id="newslist" class="rightcon">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#tab_0" data-toggle="tab">登录密码</a></li>
+                    <li><a href="#tab_1" data-toggle="tab">支付密码</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">绑定手机</a></li>
+                    <!-- <li><a href="#tab_3" data-toggle="tab">绑定邮箱</a></li> -->
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="tab_0">
+                    <form id="orderform">
+                        <div class="wrapper usermsg">
+                            <div class="change">
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;请输入手机号：</span>&emsp;&emsp;
+                                        <input  name="apply_phone" type="text" placeholder="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;请输入验证码：</span>&emsp;&emsp;
+                                        <input name="smscode" type="text" placeholder="">
+                                        <span class="btn changebtn getsmscode" onclick="getsmscode()">获取验证码</span>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;请输入新密码：</span>&emsp;&emsp;
+                                        <input  name="password" type="password" placeholder="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;请确认新密码：</span>&emsp;&emsp;
+                                        <input type="password" name="repassword" placeholder="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                        <button class="btn changebtn" type="button" onclick="setpwd()">提交</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                    <div class="tab-pane fade" id="tab_1">
+                    <form id="paypwdform">
+                        <div class="wrapper usermsg">
+                            <div class="change">
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;输入密码：</span>&emsp;&emsp;
+                                    <input name="paypassword" type="paypassword" placeholder="">
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;确认密码：</span>&emsp;&emsp;
+                                        <input type="password" name="repaypassword" placeholder="">
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;验证码：</span>&emsp;&emsp;
+                                    <input name="smscode" type="text" placeholder="">
+                                    <span class="btn changebtn getsmscode" onclick="getsmscode()">获取验证码</span>
+                                    <br>
+                                    <span class="ts">
+                                        验证码将发送到您绑定的手机: {$user["showphone"]}
+                                    </span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                    <button class="btn changebtn"  type="button" onclick="setpaypwd()">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                    <div class="tab-pane fade" id="tab_2">
+                        <form id="changetelform">
+                        <div class="wrapper usermsg">
+                            <div class="change">
+                                <div class="leftmsg">
+                                    <span class="red">&emsp;&emsp;&emsp;&emsp;当您的手机号码弃用或遗失时，可使用此功能绑定新号码。</span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;新手机号：</span>&emsp;&emsp;
+                                    <input type="hidden" name="phone" value="{$user['phone']}" placeholder="">
+                                    <input type="text" id="apply_phone" name="new_phone"  placeholder="">
+                                </div>
+                                <div class="leftmsg">
+                                    <span>输入登录密码：</span>&emsp;&emsp;
+                                    <input type="password" name="password" placeholder="">
+                                    <br>
+                                    <span class="ts">
+                                       更改绑定手机需要验证您的登录密码
+                                    </span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;验证码：</span>&emsp;&emsp;
+                                    <input name="smscode" type="text" placeholder="">
+                                    <span class="btn changebtn getsmscode" onclick="getnewsmscode()">获取验证码</span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                    <button class="btn changebtn"  type="button" onclick="changetel()">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="tab_3">
+                        <div class="wrapper usermsg">
+                            <div class="change">
+                                <div class="leftmsg">
+                                    <span class="red">&emsp;&emsp;&emsp;&emsp;绑定电子邮箱可提升帐户的安全性。</span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>电子邮箱地址：</span>&emsp;&emsp;
+                                    <input type="text" name="">
+                                </div>
+                                <div class="leftmsg">
+                                    <span>输入登录密码：</span>&emsp;&emsp;
+                                    <input type="text" name="">
+                                    <br>
+                                    <span class="ts">
+                                       绑定邮箱需要验证您的登录密码
+                                    </span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;邮件验证码：</span>&emsp;&emsp;
+                                    <input type="text" name="">
+                                    <button class="btn getcode">发送邮件</button>
+                                    <br>
+                                    <span class="ts">
+                                       请输入您收到的邮件里的验证码
+                                    </span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                    <button class="btn changebtn">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+
+<script src="__STATIC__/web/js/upload.js"></script>
+<script>
+function getsmscode() {
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)",1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+function getnewsmscode() {
+    var fromary = $("#changetelform").serialize();
+    fromary += "&apply_phone=" + $("#apply_phone").val();
+    console.log(fromary);
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)",1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+function setpwd(){
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/resetpwd.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert('密码重置成功,请重新登录!');
+            $.post("/api/index/loginout.do", {}, function(ret) {
+                window.location = "/";
+            });
+        } else {
+            alert(ret);
+        }
+    });    
+}
+function setpaypwd(){
+    var fromary = $("#paypwdform").serialize();
+    $.post("/api/user/setpaypwd.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert('支付密码设置成功!');
+        } else {
+            alert(ret);
+        }
+    });    
+}
+function changetel(){
+    var fromary = $("#changetelform").serialize();
+    $.post("/api/user/changetel.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert('手机更换成功，请重新登录!');
+            $.post("/api/index/loginout.do", {}, function(ret) {
+                window.location = "/";
+            });
+        } else {
+            alert(ret);
+        }
+    });
+}
+function clock(r){
+    if(r>0){
+        $("#getsmscode").html(r+"s").css("background-color","#929292");  
+        setTimeout("clock("+(r-1)+")",1000);
+    }else{
+        $("#getsmscode").html("获取验证码").css("background-color","#2196f3");  
+    }
+}
+</script>
+</html>

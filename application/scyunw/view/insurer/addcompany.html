@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属保险</label>
+            <div class="layui-input-block">
+                <select name="insuranceid" id="province" lay-filter="province">
+                    <option value="">选择所属保险公司</option>
+                    {volist name="insuranceid" id="vo"}
+                    <option {if isset($company.insuranceid)&&$vo.id==$company.insuranceid}selected{/if} value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="companyname" disabled value="{php}echo isset($company)? $company['companyname'] : ''; {/php}" required
+                    lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input {php}echo isset($company)? 'layui-disabled' : ''; {/php}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">登录帐号</label>
+            <div class="layui-input-block">
+                <input type="text" name="loginname" disabled value="{php}echo isset($company)? $company['loginname'] : ''; {/php}" required
+                    lay-verify="required" placeholder="请输入登录帐号" autocomplete="off" class="layui-input  {php}echo isset($company)? 'layui-disabled' : ''; {/php}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">登录密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required lay-verify="required" value="{php}echo isset($company)? $company['truepassword'] : ''; {/php}"
+                    placeholder="请输入登录密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-block">
+                <input type="text" name="corporation" value="{php}echo isset($company)? $company['corporation'] : ''; {/php}" placeholder="请输入公司负责人"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人电话</label>
+            <div class="layui-input-block">
+                <input type="number" name="cptphone" value="{php}echo isset($company)? $company['cptphone'] : ''; {/php}" placeholder="请输入公司负责人"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结算账户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="cardname" value="{php}echo isset($company)? $company['cardname'] : ''; {/php}" placeholder="请输入公司结算账户名"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">结算卡号</label>
+            <div class="layui-input-block">
+                <input type="number" name="carnumber" value="{php}echo isset($company)? $company['carnumber'] : ''; {/php}" placeholder="请输入结算卡号"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户银行</label>
+            <div class="layui-input-block">
+                <input type="carbank" name="carbank" value="{php}echo isset($company)? $company['carbank'] : ''; {/php}" placeholder="请输入开户银行"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">交强险比例</label>
+            <div class="layui-input-block">
+                <input type="number" name="jqxrate" value="{php}echo isset($company)? $company['jqxrate'] : ''; {/php}" placeholder="请输入交强险比例"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商业险比例</label>
+            <div class="layui-input-block">
+                <input type="number" name="xyxrate" value="{php}echo isset($company)? $company['xyxrate'] : ''; {/php}" placeholder="请输入商业险比例"
+                    autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地区选择</label>
+            <div class="layui-input-inline">
+                <select name="province" id="province" lay-filter="province">
+                    <option value="">选择省份</option>
+                    {volist name="province" id="vo"}
+                    <option {if isset($company.province)&&$vo.province_id==$company.province}selected{/if} value="{$vo.province_id}">{$vo.province_name}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="city" id="city" lay-filter="city">
+                    <option value="">选择城市</option>
+                    {if isset($company)} {volist name="city" id="vo"}
+                    <option {if isset($company.city)&&$vo.city_id==$company.city}selected{/if} value="{$vo.city_id}">{$vo.city_name}</option>
+                    {/volist} {/if}
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="area" id="area" lay-filter="area">
+                    <option value="">选择地区</option>
+                    {if isset($company)} {volist name="area" id="vo"}
+                    <option {if isset($company.area)&&$vo.area_id==$company.area}selected{/if} value="{$vo.area_id}">{$vo.area_name}</option>
+                    {/volist} {/if}
+                </select>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="{php}echo isset($company)? $company['id'] : ''; {/php}" autocomplete="off" class="layui-input">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery'], function () {
+            var form = layui.form, table = layui.table, $ = layui.jquery;
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                console.log(data.field)
+                $.post('', data.field, function () {
+
+                })
+                return false;
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+                return false;
+            });
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    $("#area").html('<option  value="">选择地区</option>');
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);
+                    form.render('select');
+                });
+            });
+
+        });
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>
+	body{margin: 10px;}
+	.layui-table a{ cursor: pointer;}
+	.layui-table b{ color:red; padding-right:15px;}
+</style>
+</head>
+<body>  
+
+<table class="layui-table">  
+            <thead>
+            <tr>
+                <th>还款逻辑是用户在申请分期后的次月今天支付分期第一月款项</th>
+            </tr>
+            <tr>
+                <th>期初余额为未还款事总额，期末余额=期初-单月还款额</th>
+            </tr>
+            <tr>
+                <th>车牌：<b>{$offer["car_license"]}</b>  车主：<b>{$info["realname"]}</b>  身份证号：<b>{$info["id_license"]}</b></th>
+            </tr>
+            <tr>
+                <th>保单总额：<b>￥{$offer["order_price"]}</b> 分期：<b>{$info["install_count"]}</b> 已还：<b>￥{$info["wxmoney"]}</b>  累积违约金：<b>￥{$info["wxmoney"]}</b></th>
+            </tr>
+            </thead>
+</table> 
+<table class="layui-table" lay-data="{ url:'{$url}', cellMinWidth:70 , limit:12 , page:false,  id:'idTest'}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{field:'qishu', sort: true}">期数</th>
+      <th lay-data="{field:'money', sort: true}">还款额</th>
+      <th lay-data="{field:'beforemoney', sort: true}">期初余额</th>
+      <th lay-data="{field:'aftermoney', sort: true}">期末余额</th>
+      <th lay-data="{field:'yuqistat'}">逾期状态</th>
+      <th lay-data="{field:'wymoney', sort: true}">违约金</th>
+      <th lay-data="{field:'paystat'}">还款状态</th>
+      <th lay-data="{field:'paytime'}">还款时间</th>
+    </tr>
+  </thead>
+</table>         
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use('table',function(){
+    var table = layui.table;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商家详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body id="details">
+    <div class="out">
+        <section class="aui-grid aui-grid-0" style="background: #CFEAF9">
+            <div class="aui-col-xs-6 store-padt-25">
+                <div class="aui-grid-label storename">
+                    <font class="company"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6 store-padb-0">
+                <div class="aui-grid-label">电话：
+                    <font class="phone"></font>
+                </div>
+                <div class="aui-grid-label">
+                    <font class="servertype"></font>
+                </div>
+                <div class="aui-grid-label">营业时间：
+                    <font class="server_time"></font>
+                </div>
+            </div>
+        </section>
+        <div class="storeimg">
+            <div class="con">
+                <div class="swiper-container swiper-1">
+                    <div class="swiper-wrapper banner"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+        <div id="details-list">
+            <div class="top">&nbsp;评价记录</div>
+            <!-- <div class="toptitle">保养<span class="aui-pull-right">$670.00</span></div> -->
+            <div class="midlist">
+                <div class="aui-content backg-none">
+                    <ul class="aui-list aui-media-list backg-none" id="bydetail"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="aui-text-center fixbottom">
+        <button type="button" id="next" onclick="closeWin()">确认</button>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/swiper.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+$(function() {
+    getinfo();
+    getorder();
+});
+
+//获取该商户订单
+function getorder() {
+    var html = "";
+    var id = $api.getStorage('agentid');
+    $.post("/api/agent/getorder.do", { id: id }, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (var i = 0; i < json.length; i++) {
+            // //详细
+            // html += '<li class="aui-list-item aui-list-item-middle"><div class="aui-media-list-item-inner">';
+            // html += '<div class="aui-list-item-inner">共计<span class="aui-pull-right">$1000</span></div>';
+            // html += '</div></li>';
+            // html += '<li class="aui-list-item aui-list-item-middle">';
+            // //资费列表
+            // html += '<div class="aui-media-list-item-inner">';
+            // html += '<div class="aui-list-item-inner">';
+            // html += '工时<span class="aui-pull-right">$1000</span>';
+            // html += '</div>';
+            // html += '</div>';
+
+            // html += '</li>';
+            //简要
+            html += '<li class="aui-list-item aui-list-item-middle bgblue"><div class="aui-media-list-item-inner">';
+            html += '<div class="aui-list-item-inner">' + json[i].evaluate + '<span class="aui-pull-right">$' + json[i].order_fee + '</span></div>';
+            html += '</div></li>';
+        }
+        $("#bydetail").html(html);
+
+    });
+}
+//获取商户信息
+function getinfo() {
+    var id = $api.getStorage('agentid');
+    $.post("/api/agent/getinfo.do", { id: id }, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+        var html = '';
+        var banner = eval("(" + json["com_other_img"] + ")");
+        for (var i = 0; i < banner.length; i++) {
+            html += '<div class="swiper-slide"><img src="' + banner[i] + '"></div>';
+        }
+        $(".banner").html(html);
+
+        var mySwiper = new Swiper('.swiper-1', {
+            loop: true,
+            autoplay: 3000, //可选选项，自动滑动
+            pagination: '.swiper-pagination'
+        });
+    });
+}
+
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+
+</script>
+
+</html>

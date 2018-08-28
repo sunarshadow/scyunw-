@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>保险询价</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <!-- time -->
+    <script src="__STATIC__/web/js/distpicker.data.js"></script>
+    <script src="__STATIC__/web/js/distpicker.js"></script>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="">
+        <div class="npagePage Pageyemian" id="page_none">
+            <div id="banner" class="">
+                <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124956492.jpg);"></div>
+            </div>
+            <div class="content">
+                <div id="progressBar">
+                    <button id="first" class="btn-active">1<a>填写投保信息</a></button>
+                    <div id="first_" class="div-active"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="second">2<a>提交保单</a></button>
+                    <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="third">3<a>平台审核</a></button>
+                    <div id="third_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="fourth"><span><i class="fa fa-check"></i></span><a>申请成功</a></button>
+                </div>
+                <div class="fw bystages maintain">
+                    <form id="orderform"  method="post">
+                    
+                        <input id="file" type="file">
+                        <div id="no1" class="row" style="display:none">
+                            <div class="col-lg-6">
+                                <div>
+                                    填写信息
+                                </div>
+                                <div>
+                                    投保地区：
+                                    <span data-toggle="distpicker">
+                                    <select name="province" style="width:140px;"></select>&emsp;
+                                    <select name="city" style="width:140px;"></select>&emsp;
+                                    <!-- <select></select> -->
+                                </span>
+                                </div>
+                                <div>
+                                    投保公司：
+                                    <select name="company"  id="insurerid">
+                                    </select>
+                                </div>
+                                <!-- <div>
+                                    投保险种：<span class="blue">选择险种</span>
+                                </div> -->
+                                <div>
+                                    车主姓名：
+                                    <input type="text" name="car_name" value="{$post['car_name']}">
+                                </div>
+                                <div>
+                                    车&ensp;牌&ensp;号：
+                                    <input type="text" name="car_license" value="{$post['car_license']}">
+                                    <input type="hidden" id="isNewcar" name="isNewcar" value="0"><span id="nonepai">未上牌</span>
+                                </div>
+                                <div>
+                                    购车日期：
+                                    <select name="buy_year" id="buy_year">
+                                    </select>
+                                    &emsp;
+                                    <select name="buy_month" id="buy_month">
+                                    </select>
+                                </div>
+                                <div>
+                                    手机号码：
+                                    <input type="text" name="apply_phone" value="{$post['apply_phone']}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    上传证件
+                                </div>
+                                
+                                <input class="checkcode" id="IDPicZ_" type="hidden" name="id_img">
+                                <input id="IDPicF_" type="hidden" name="id_img_b">
+                                <input  class="checkcode" id="drivinglicensePicZ_" type="hidden" name="car_img">
+                                <input id="drivinglicensePicF_" type="hidden" name="car_img_b">
+                                <input id="drivinglicensePicZ_text" type="hidden" name="car_img_text" value="0">
+                                <input id="drivinglicensePicF_text" type="hidden" name="car_img_b_text" value="0">
+                                <input id="IDPicZ_text" type="hidden" name="id_img_text" value="0">
+                                <input id="IDPicF_text" type="hidden" name="id_img_b_text" value="0">
+                                <div class="row">
+                                    <div class="col-lg-6 text-center" onclick="getPicture('IDPicZ','camera','身份证正面');">
+                                        <div id="IDPicZ" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            身份证正面照
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center" onclick="getPicture('IDPicF','camera','身份证反面')">
+                                        <div id="IDPicF" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            身份证反面照
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center" onclick="getPicture('drivinglicensePicZ','camera','行驶证正面')">
+                                        <div id="drivinglicensePicZ" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            行驶证正副页
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center" onclick="getPicture('drivinglicensePicF','camera','行驶证反面')">
+                                        <div id="drivinglicensePicF" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            行驶证副页背面
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div id="xian" style="clear:both;">
+                            <div class="name">险种选择</div>
+                            <div class="underline">强制险</div>
+                            <div>
+                                <input type="checkbox" name="insurer[jqxian]" checked value="1" readonly onclick="return false;"> 交强险
+                                <input type="checkbox" name="insurer[ccxian]" checked value="1" readonly onclick="return false;"> 车船税
+                            </div>
+                            <div class="underline">商业险</div>
+                            <input type="checkbox" name="insurer[syxian]" checked value="1" style="display:none">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input class="leftbox" type="checkbox" name="insurer[csxian]" id="csxian" value="1"> 车损险&emsp;&emsp;
+                                    <input type="checkbox" name="insurer[bj_cs]" value="1" class="bjmpx"> 不计免赔险
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="leftbox" type="checkbox" name="insurer[dqxian]" value="1"> 盗抢险&emsp;&emsp;
+                                    <input type="checkbox" name="insurer[bj_dq]" value="1" class="bjmpx"> 不计免赔险
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input id="dszxian" class="leftbox" type="checkbox" name="insurer[dszxian]" value="1"> 第三者险
+                                    <input id="dszxian_opt" type="hidden" name="">
+                                    <select class="issel_write" name="insurer[dszxian_opt]">
+                                        <option value="-1">下拉选择</option>
+                                        {volist name="oredrset['dszxian']" id="vo"}
+                                        <option value="{$vo}">{$vo}</option>
+                                        {/volist}
+                                    </select>
+                                    &emsp;&emsp;
+                                    <input name="insurer[bj_dsz]" type="checkbox" value="1" class="bjmpx"> 不计免赔险
+                                </div>
+                                <div class="col-lg-6">
+                                    <input id="driver" class="leftbox" type="checkbox" name="insurer[zwxian]" value="1"> 司机座位险
+                                    <select class="issel_write" name="insurer[zwxian_cn]">
+                                        <option value="-1">下拉选择</option>
+                                        {volist name="oredrset['zwxian']" id="vo"}
+                                        <option value="{$vo}">{$vo}</option>
+                                        {/volist}
+                                    </select>
+                                    <input type="checkbox" name="insurer[bj_zw]" value="1" class="bjmpx"> 不计免赔险
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input id="passenger" class="leftbox" type="checkbox" name="insurer[ckxian]" value="1"> 乘客座位险
+                                    <select class="issel_write" name="insurer[ckxian_cn]">
+                                        <option value="-1">下拉选择</option>
+                                        {volist name="oredrset['ckxian']" id="vo"}
+                                        <option value="{$vo}">{$vo}</option>
+                                        {/volist}
+                                    </select>
+                                    <input type="checkbox" name="insurer[bj_ck]" value="1" class="bjmpx"> 不计免赔险
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="checkbox" class="leftbox bxcs" name="insurer[zrxian]" value="1"> 自燃险 &emsp;&emsp;
+                                    <input type="checkbox" name="insurer[bj_zr]" value="1" class="bjmpx bxcs"> 不计免赔险
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input id="blxian" class="leftbox bxcs" type="checkbox" name="insurer[blxian]" value="1"> 玻璃险
+                                    <input id="blxian_opt" type="hidden" name="">
+                                    <select class="issel_write bxcs" name="insurer[blxian_opt]">
+                                        <option value="-1">下拉选择</option>
+                                        {volist name="oredrset['blxian']" id="vo"}
+                                        <option value="{$key}">{$vo}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="bxcs" type="checkbox" name="insurer[ssxian]" value="1"> 涉水险
+                                </div>
+                            </div>
+                            <div>
+                                <input id="hhxian" class="leftbox bxcs" type="checkbox" name="insurer[hhxian]" value="1"> 车身划痕险
+                                <input id="hhxian_opt" type="hidden" name="">
+                                <select name="insurer[hhxian_opt]" class="issel_write bxcs">
+                                    <option value="-1">下拉选择</option>
+                                        {volist name="oredrset['hhxian']" id="vo"}
+                                        <option value="{$vo}">{$vo}</option>
+                                        {/volist}
+                                </select>
+                                &emsp;&emsp;
+                                <input type="checkbox" name="insurer[bj_zr]" value="1" class="bjmpx bxcs"> 不计免赔险
+                            </div>
+                            <!-- <div class="name">保险公司选择</div>
+                            <div class="bximg">
+                                <img src="__STATIC__/web/images/bx1.png" alt="">
+                                <img src="__STATIC__/web/images/bx2.png" alt="">
+                                <img src="__STATIC__/web/images/bx3.png" alt="">
+                                <img src="__STATIC__/web/images/bx4.png" alt="">
+                                <img src="__STATIC__/web/images/bx5.png" alt="">
+                            </div> -->
+                        </div>
+                            <div class="apply">
+                                <button id="subapply" class="btn">提交申请</button>
+                            </div>
+                        </div>
+                        <div id="no2" class="row">
+                            <div class="tsmsg">
+                                <i class="fa fa-check"></i>
+                                <!-- <i class="fa fa-close"></i> -->
+                            </div>
+                            <div class="tsmsg">
+                                车险信息已提交等待平台审核请保存电话畅通以便客服与您取得联系
+                            </div>
+                            <div class="apply" style="margin-left: -100px;">
+                                <a href="index.html" class="btn returnindex">返回首页</a>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="__STATIC__/web/js/upload.js"></script>
+<script type="text/javascript">
+$(function(){
+    
+    $.post("/api/index/getlist.do", { t: 1 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        var insurerid = '{$post["insurerid"]}';
+        for (var i = 0; i < json.length; i++) {
+            if(insurerid == json[i].id){
+                html += '<option value="' + json[i].id + '" selected>' + json[i].name + '</option>';
+            }else{
+                html += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+            }
+        }
+        $("#insurerid").html(html);
+        html = "";
+        for (var i = 2010; i < 2028; i++) {
+            html += '<option value="' + i + '">' + i + '</option>';
+        }
+        $("#buy_year").html(html);
+        html = "";
+        for (var i = 1; i < 13; i++) {
+            html += '<option value="' + i + '">' + i + '</option>';
+        }
+        $("#buy_month").html(html);
+    });      
+    $.post("/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            $("#no1").show();
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                $("#no1").show();
+            } else {
+                if (json["stat"] == 0) {
+                    $("#no1").hide();
+                    $("#no2").show();
+                    $("#second").addClass("btn-active");
+                    $("#second_").addClass("div-active");
+                } else if (json["stat"] == 1) {
+                    $("#no1").hide();
+                    $("#no2").show();
+                    $("#second").addClass("btn-active");
+                    $("#second_").addClass("div-active");
+                    $("#third").addClass("btn-active");
+                } else if (json["stat"] == 2) {
+                    $("#no1").show();
+                }
+            }
+        }        
+    });    
+})
+$("#subapply").click(function() {
+    $.post("/api/order/create.do", $("#orderform").serialize(), function(ret) {
+        if (ret == 1) {
+            $("#no1").hide();
+            $("#no2").show();
+            $("#second").addClass("btn-active");
+            $("#second_").addClass("div-active");
+        } else {
+            if(ret == 'login'){
+                $("#login").show();
+            }else{
+                alert(ret);
+            }
+        }
+    });       
+    return false;
+});
+
+$("body").on("click",".bjmpx",function(){
+    if ($(this).is(':checked')) {
+        $(this).parent().find(".leftbox").attr('checked', true).prop('checked', true);
+    }
+});
+
+$("body").on("change",".issel_write",function(){
+    if($(this).val()!='-1'){
+        $(this).parent().find(".leftbox").attr('checked', true).prop('checked', true);
+    }else{
+		if(!$(this).parent().find(".bjmpx").is(':checked')){
+			$(this).parent().find(".leftbox").removeAttr('checked');
+		}
+	}
+})
+
+$("body").on("click",".leftbox",function(){
+    if ($(this).is(':checked')) {
+    } else {
+        $(this).parent().find(".bjmpx").removeAttr('checked');
+    }
+});
+
+$(".bxcs").click(function() {
+    if (!$('#csxian').is(':checked')) {
+        $('.bxcs').each(function() {
+            $(this).removeAttr('checked');
+        })
+        alert('只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险');
+    } 
+});
+
+$("#csxian").click(function() {
+    var a = 0;
+    $('.bxcs').each(function() {
+        if ($(this).is(':checked')) {
+            a++;
+        }
+    });
+    if (a > 0) {
+        $(this).attr('checked', true).prop('checked', true);;
+        alert('只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险');
+    }
+    // if ($('#csxian').is(':checked')) {
+    //     $(".cs-checkbox").removeAttr("disabled");
+    // } else {
+    //     $(".cs-checkbox").attr("disabled", "disabled");
+    // }
+});
+</script>

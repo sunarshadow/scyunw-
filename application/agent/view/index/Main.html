@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>匀享车险商户后台管理</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="__STATIC__/shopadmin/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="http://at.alicdn.com/t/font_tnyc012u2rlwstt9.css" media="all" />
+	<link rel="stylesheet" href="__STATIC__/shopadmin/css/main.css" media="all" />
+	<style type="text/css" media="screen">
+		#ordersum{
+			position: absolute;right: -5px;top: -8px;
+			color: #fff;background: red;width: 25px;border-radius: 50%;
+			padding: 3.5px 0;
+		}
+		.panel_word cite {
+			font-size: 25px!important;
+			display: block!important;
+			height: 30px!important;
+			line-height: 30px!important;
+		}		
+	</style>
+</head>
+<body class="childrenBody">
+	<div class="panel_box row" style="overflow: visible;">
+		<div class="panel col">
+			<a href="javascript:;" data-url="/agent/home.html">
+				<div class="panel_icon" style="background-color:#FF5722;">
+					<i class="layui-icon" data-icon="&#xe613;">&#xe613;</i>
+				</div>
+				<div class="panel_word userAll">
+					<cite>前台营销</cite>
+					<span></span>
+				</div>
+			</a>
+		</div>
+		<div class="panel col" style="position: relative;">
+			<a href="javascript:;" data-url="/agent/Business/index?istoday=histry">
+				<div class="panel_icon" style="background-color:#009688;">
+					<i class="layui-icon" data-icon="&#xe649;">&#xe649;</i>
+				</div>
+				<div class="panel_word userAll" >
+					<cite>预约订单</cite>
+					<span></span>
+				</div>
+			</a>
+			<cite id="ordersum"></cite>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="/agent/Finance/Settlement">
+				<div class="panel_icon" style="background-color:#5FB878;">
+					<i class="layui-icon" data-icon="&#xe629;">&#xe629;</i>
+				</div>
+				<div class="panel_word userAll">
+					<cite>财务管理</cite>
+					<span></span>
+				</div>
+			</a>
+		</div>
+		<div class="panel col">
+			<a href="javascript:;" data-url="/agent/infosys/mechanism">
+				<div class="panel_icon" style="background-color:#F7B824;">
+					<i class="layui-icon" data-icon="&#xe614;">&#xe614;</i>
+				</div>
+				<div class="panel_word userAll">
+					<cite>信息维护</cite>
+					<span></span>
+				</div>
+			</a>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="__STATIC__/shopadmin/layui/layui.js"></script>
+	<script type="text/javascript" src="__STATIC__/shopadmin/js/main.js"></script>
+	<script>
+	layui.config({
+		base : "js/"
+	}).use(['form','element','layer','jquery'],function(){
+		var form = layui.form(),
+			layer = parent.layer === undefined ? layui.layer : parent.layer,
+			element = layui.element(),
+			$ = layui.jquery;
+			$(function(){
+				updatetotal();
+			});
+			function updatetotal(){
+				$.post("/agent/index/gettotal.do", {}, function(ret) {
+					var json = eval("(" + ret + ")");
+					for (key in json) {
+						$("#" + key).html(json[key]);
+						console.log(json[key]);
+					}					
+				});
+				setTimeout(updatetotal,15000);
+			}
+	})
+	</script>	
+</body>
+</html>

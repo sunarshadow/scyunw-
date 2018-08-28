@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>个人资料</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <!-- time -->
+    <script src="__STATIC__/web/js/distpicker.data.js"></script>
+    <script src="__STATIC__/web/js/distpicker.js"></script>
+    <style>
+    #getsmscode{
+        width:auto!important;
+        height:18px!important;
+        margin-top:0px!important;
+        font-size:14px!important;
+    }
+    </style>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="newsPage" class="npagePage Pagenews">
+        <div id="banner">
+            <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124501768.jpg);"></div>
+        </div>
+        <div class="content">
+            <div class="header">
+                <a href="usercenter.html">
+                    <p class="title">我的账户</p>
+                    <p class="subtitle">My account</p>
+                </a>
+            </div>
+            <div id="category">
+                <a href="/web/user/capital" {if $action eq "capital"}class="active"{/if}>资金管理</a>
+                <a href="/web/user/agentorder" {if $action eq "agentorder"}class="active"{/if}>商户预约</a>
+                <a href="/web/user/order" {if $action eq "order"}class="active"{/if}>我的保单</a>
+                <!-- <a href="/web/user/bill" {if $action eq "bill"}class="active"{/if}>我的账单</a> -->
+                <a href="/web/user/info" {if $action eq "info"}class="active"{/if}>个人资料</a>
+                <a href="/web/user/security" {if $action eq "security"}class="active"{/if}>账户安全</a>
+                <!-- <a href="/web/user/award" {if $action eq "award"}class="active"{/if}>推广奖励</a> -->
+            </div>
+            <div id="newslist" class="rightcon">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#tab_0" data-toggle="tab">我的信息</a></li>
+                    <li><a href="#tab_1" data-toggle="tab">收货地址</a></li>
+                    <!-- <li><a href="#tab_2" data-toggle="tab">实名认证</a></li>
+                    <li><a href="#tab_3" data-toggle="tab">车辆认证</a></li>
+                    <li><a href="#tab_4" data-toggle="tab">验车认证</a></li> -->
+                </ul>
+                    <input id="file" type="file">
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="tab_0">
+                            <div class="wrapper usermsg" style="padding: 30px 65px;">
+                                <div class="leftmsg">
+                                    <span class="name">注册时间：</span>&emsp;&emsp;<span>{$user["addtime"]}</span>
+                                    {if $user["bdwx"]}
+                                    <div class="right_con">微信昵称：{$user["wxnickname"]}</div>
+                                    {/if}
+                                </div>
+                                <div class="leftmsg">
+                                    <span>真实姓名：</span>&emsp;&emsp;<span>{$user["realname"]}</span>
+                                    {if $user["bdwx"]}
+                                    <div class="right_con">是否绑定微信：{$user["bdwx"]}</div>
+                                    {/if}
+                                </div>
+                                <div class="leftmsg">
+                                    <span>车牌号：</span>&emsp;&emsp;<span>{$user["carlicense"]}</span>
+                                    {if $user["bdwx"]}
+                                    <div class="right_con">
+                                        绑定微信时间：{$user["bdwxtime"]}
+                                        <div class="headimg">
+                                            <div>
+                                                <img src="{$user["wxavatar"]}" alt="">
+                                            </div>
+                                            <div>
+                                                微信头像
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                                <div class="leftmsg">
+                                    <span>身份证号码：</span>&emsp;&emsp;<span>{$user["id_license"]}</span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>绑定手机号：</span>&emsp;&emsp;<span>{$user["phone"]}</span>
+                                    {if $user["bdqq"]}
+                                    <div class="right_con">
+                                        QQ昵称：{$user["qqnickname"]}
+                                    </div>
+                                    {/if}
+                                </div>
+                                <div class="leftmsg">
+                                    <span>手机归属地：</span>&emsp;&emsp;<span>{$user["phone_core"]}</span>
+                                    {if $user["bdqq"]}
+                                    <div class="right_con">
+                                        是否绑定QQ：{$user["bdqq"]}
+                                    </div>
+                                    {/if}
+                                </div>
+                                <div class="leftmsg">
+                                    <span>我的推荐人：</span>&emsp;&emsp;<span>{$user["reco_phone"]}</span>
+                                    {if $user["bdqq"]}
+                                    <div class="right_con">
+                                        绑定微信时间：{$user["bdqqtime"]}
+                                        <div class="headimg">
+                                            <div>
+                                                <img src="{$user["qqavatar"]}" alt="">
+                                            </div>
+                                            <div>
+                                                QQ头像
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                                <!-- <div class="leftmsg">
+                                    <span>已绑定邮箱：</span>&emsp;&emsp;
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_1">
+                        <style>
+                            .selyuyue span{ width:100px!important;}
+                            .selyuyue input{ width:337px!important; height:33px!important;}
+                        </style>
+                        <div class="wrapper usermsg">
+                            <div class="leftmsg selyuyue">
+                                <form id="addressform">
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;收货人：</span>&emsp;&emsp;&emsp;
+                                        <input type="text" name="name" placeholder="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;联系电话：</span>&emsp;&emsp;
+                                        <input type="text" name="apply_phone" placeholder="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;选择地区：</span>&emsp;&emsp;
+                                        <span data-toggle="distpicker">
+                                            <select id="province" style="width:110px;"></select>
+                                            <select id="city" style="width:110px;"></select>
+                                            <select id="area" style="width:110px;"></select>
+                                        </span>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;详细地址：</span>&emsp;&emsp;
+                                        <input type="text" name="address" placeholder="">
+                                    </div>
+                                    <button class="btn addressform" type="button" style="margin-top:10px;">添加收货地址</button>
+                                </form>
+                            </div>
+                            <div>
+                                收货地址列表
+                            </div>
+                            <div id="address"></div>
+                        </div>
+                        </div>
+                        <!-- <div class="tab-pane fade" id="tab_2">
+                            <input id="IDPicZ_" type="hidden" name="id_img">
+                            <input id="IDPicF_" type="hidden" name="id_img_b">
+                            <div class="wrapper usermsg">
+                                <div class="change">
+                                    <div class="leftmsg">
+                                        <span class="red">&emsp;&emsp;&emsp;&emsp;您还未进行实名资料提交，建议立即完成资料上传。</span>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;真实姓名：</span>&emsp;&emsp;
+                                        <input type="text" name="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>身份证号码：</span>&emsp;&emsp;
+                                        <input type="text" name="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span class="pull-left">上传证件照：</span>&emsp;&emsp;
+                                        <div class="up" onclick="getPicture('IDPicZ','camera','身份证正面')">
+                                            <div id="IDPicZ" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                身份证正面照
+                                            </div>
+                                        </div>
+                                        <div class="up2" onclick="getPicture('IDPicF','camera','身份证反面')">
+                                            <div id="IDPicF" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                身份证反面照
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                        <button class="btn changebtn2">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_3">
+                            <div class="wrapper usermsg">
+                                <div class="red">您还未提交实名认证，请先提交实名认证再进行车辆认证。（注：新车无需申请车辆认证）</div>
+                                <div class="change">
+                                    <div class="leftmsg">
+                                        <span>&emsp;真实姓名：</span>&emsp;&emsp;
+                                        <input type="text" name="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>身份证号码：</span>&emsp;&emsp;
+                                        <input type="text" name="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span class="pull-left">上传证件照：</span>&emsp;&emsp;
+                                        <div class="up">
+                                            <div class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                身份证正面照
+                                            </div>
+                                        </div>
+                                        <div class="up2">
+                                            <div class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                身份证反面照
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                        <button class="btn changebtn2">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_4">
+                            <input id="car1_" type="hidden" name="car1">
+                            <input id="car2_" type="hidden" name="car2">
+                            <input id="car3_" type="hidden" name="car3">
+                            <input id="car4_" type="hidden" name="car4">
+                            <input id="car5_" type="hidden" name="car5">
+                            <input id="car6_" type="hidden" name="car6">
+                            <div class="wrapper usermsg">
+                                <div class="change">
+                                    <div class="leftmsg">
+                                        <span class="red">四个45度角（报纸可见版面）+VIN码合照（报纸可见版面）+人车合照</span>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;车牌号码：</span>&emsp;&emsp;
+                                        <input type="text" name="">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span class="pull-left">上传验车照：</span>&emsp;&emsp;
+                                        <div class="up3" onclick="getPicture('car1')">
+                                            <div id="car1" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                左前角
+                                            </div>
+                                        </div>
+                                        <div class="up4" onclick="getPicture('car2')">
+                                            <div id="car2" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                左后角
+                                            </div>
+                                        </div>
+                                        <div class="up5" onclick="getPicture('car3')">
+                                            <div id="car3" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                右前角
+                                            </div>
+                                        </div>
+                                        <div class="up6" onclick="getPicture('car4')">
+                                            <div id="car4" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                右后脚
+                                            </div>
+                                        </div>
+                                        <div class="up7" onclick="getPicture('car5')">
+                                            <div id="car5" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                右后脚
+                                            </div>
+                                        </div>
+                                        <div class="up8" onclick="getPicture('car6')">
+                                            <div id="car6" class="uploadimg"></div>
+                                            <div class="red">
+                                                上传照片
+                                            </div>
+                                            <div class="gray">
+                                                人车合照
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                        <button class="btn changebtn3">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+<script src="__STATIC__/web/js/upload.js"></script>
+<script>
+$(function(){
+    getaddresslist();
+})
+function getsmscode() {
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)",1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+function setpwd(){
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/resetpwd.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert('密码重置成功!');
+            $.post("/api/index/loginout.do", {}, function(ret) {
+                window.location.reload();
+            });
+        } else {
+            alert(ret);
+        }
+    });    
+}
+function clock(r){
+    if(r>0){
+        $("#getsmscode").html(r+"s").css("background-color","#929292");  
+        setTimeout("clock("+(r-1)+")",1000);
+    }else{
+        $("#getsmscode").html("获取验证码").css("background-color","#2196f3");  
+    }
+}
+
+function getaddresslist() {
+    $.post("/api/user/address.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += '<div class="addresslist btnone" style="margin-top:15px;">';
+            html += '' + json[i].name + ' ';
+            html += '' + json[i].apply_phone + ' ';
+            html += '' + json[i].address + ' ';
+            if (json[i].isdefault != "1") {
+                html += '<button type="button" data-id="' + json[i].id + '" class="btn setdefault">设为默认</button>';
+            }
+            html += "</div>";
+        }
+        $("#address").html(html);
+    });
+}
+
+$(document).on('click', '.setdefault', function() {
+    var id = $(this).data("id");
+    $.post("/api/user/setdefault.do", { id: id }, function(ret) {
+        alert("默认地址设置成功");
+        location.reload();
+    });
+});
+
+$(document).on('click', '.addressform', function() {
+    var fromary = $("#addressform").serialize();
+    fromary += "&province=" + $("#province option:selected").data("code");
+    fromary += "&city=" + $("#city option:selected").data("code");
+    fromary += "&area=" + $("#area option:selected").data("code");
+    console.log(fromary);
+    $.post("/api/user/addwaddress.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("地址编辑成功！");
+            // location.reload();
+        } else {
+            alert(ret);
+        }
+    });
+});
+</script>
+</html>

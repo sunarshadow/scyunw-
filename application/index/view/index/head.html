@@ -1,0 +1,197 @@
+<div id="login">
+    <div class="frame">
+        <img class="closeframe" src="__STATIC__/web/images/X.png" alt="">
+        <div class="title">
+            登录
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/user.png" alt="">
+            <input type="text" name="" id="phone" placeholder="手机号">
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/password.png" alt="">
+            <input type="password" name="" id="password" placeholder="密码">
+        </div>
+        <!-- <div class="forminput code">
+            <img src="__STATIC__/web/images/code.png" alt="">
+            <input type="text" name="" placeholder="请输入验证码">
+            <div class="getcode">
+                1111
+            </div>
+        </div> -->
+        <div class="forminput formsearch">
+            <button type="button" onclick="login()">登 录</button>
+        </div>
+        <div class="forminput forgetreg">
+            <a class="forget">忘记密码</a>
+            <a class="reg">注册账号</a>
+        </div>
+    </div>
+</div>
+<div id="forget">
+    <div class="frame">
+        <img class="closeframe" src="__STATIC__/web/images/X.png" alt="">
+        <div class="title">
+            找回密码
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/intel.png" alt="">
+            <input type="text" name="" placeholder="请输入手机号">
+        </div>
+        <div class="forminput code">
+            <img src="__STATIC__/web/images/code.png" alt="">
+            <input type="text" name="" placeholder="请输入短信验证码">
+            <div class="getcode">
+                发送验证码
+            </div>
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/password.png" alt="">
+            <input type="password" name="" placeholder="请设置新的登录密码">
+        </div>
+        <div class="forminput formsearch">
+            <button type="button">登 录</button>
+        </div>
+        <div class="forminput forgetreg">
+            <a class="logina">登录</a>
+        </div>
+    </div>
+</div>
+<div id="reg">
+    <div class="frame">
+        <img class="closeframe" src="__STATIC__/web/images/X.png" alt="">
+        <div class="title">
+            注册
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/user.png" alt="">
+            <input type="text" name="" placeholder="用户名">
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/intel.png" alt="">
+            <input type="text" name="" placeholder="请输入手机号">
+        </div>
+        <!-- <div class="forminput code">
+            <img src="__STATIC__/web/images/code.png" alt="">
+            <input type="text" name="" placeholder="请输入验证码">
+            <div class="getyzm">
+                1111
+            </div>
+        </div> -->
+        <div class="forminput code">
+            <img src="__STATIC__/web/images/code.png" alt="">
+            <input type="text" name="" placeholder="请输入短信验证码">
+            <div class="getcode">
+                发送验证码
+            </div>
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/password.png" alt="">
+            <input type="password" name="" placeholder="请输入密码">
+        </div>
+        <div class="forminput">
+            <img src="__STATIC__/web/images/password.png" alt="">
+            <input type="password" name="" placeholder="请输确认密码">
+        </div>
+        <div class="forminput formsearch">
+            <button type="button">注 册</button>
+        </div>
+        <div class="forminput forgetreg">
+            <a class="logina">登录</a>
+        </div>
+    </div>
+</div>
+<div id="topmsg">
+    <div class="desc">
+        客服热线： 400-188-0817 （工作日 8:30-17:30）
+        <span class="pull-right">
+        {if $user}
+        <a class="loginnow">{$user["username"]}</a>&emsp;<a class="regnow">注销登录 </a>&emsp;|&emsp;
+        {else}
+        <a class="loginnow">立即登录</a>&emsp;<a class="regnow">免费注册 </a>&emsp;|&emsp;
+        {/if}
+        <a href="noviceguide.html">新手指南</a></span>
+    </div>
+</div>
+<div id="header" class="index_nav">
+    <div class="content">
+        <a href="#/" id="logo"><img src="__STATIC__/web/images/logo.png" height="40" /></a>
+        <ul id="nav">
+            <li class="navitem"><a class="nav-a  active" href="/"><span>首页</span></a></li>
+            <li class="navitem"><a class="nav-a" href="javascript:;" target=""><span>汽车服务</span><i class="fa fa-angle-down"></i></a>
+                <ul class="subnav" style="left: -32px; top: 48px;">
+                    <li><a href="/web/user/agentorder"><span>预约审车</span><i class="fa fa-angle-right"></i></a></li>
+                    <li><a href="/web/user/agentorder"><span>爱车维护</span><i class="fa fa-angle-right"></i></a></li>
+                </ul>
+            </li>
+            <li class="navitem"><a class="nav-a" href="/web/index/inquiry" target=""><span>车险服务</span><i class="fa fa-angle-down"></i></a>
+                <ul class="subnav" style="left: -32px; top: 48px;">
+                    <li><a href="/web/index/inquiry"><span>保险询价</span><i class="fa fa-angle-right"></i></a></li>
+                    <li><a href="/web/index/buy"><span>车险购买</span><i class="fa fa-angle-right"></i></a></li>
+                </ul>
+            </li>
+            <li class="navitem"><a class="nav-a" href="/web/info/join"><span>合作加盟</span></a></li>
+            <li class="navitem"><a class="nav-a" href="javascript:;" target=""><span>关于我们</span><i class="fa fa-angle-down"></i></a>
+                <ul class="subnav" style="left: -32px; top: 48px;">
+                    <li><a href="/web/info/aboutus"><span>公司简介</span><i class="fa fa-angle-right"></i></a></li>
+                    <li><a href="/web/info/joinus"><span>加入我们</span><i class="fa fa-angle-right"></i></a></li>
+                </ul>
+            </li>
+            <li class="navitem"><a class="nav-a" href="/web/user"><span>我的账户</span></a></li>
+            <li class="navitem"><a class="nav-a" href="/web/info/news"><span>咨询中心</span></a></li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+    <a id="headSHBtn" href="javascript:;"><i class="fa fa-bars"></i></a>
+</div>
+<script>
+var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    paginationClickable: true,
+    autoplay: 3000,
+    loop: true
+});
+$(".closeframe").click(function() {
+    $(this).parent().parent().hide();
+});
+{if !$user}
+    $(".loginnow").click(function() {
+        $("#login").show();
+    });
+    $(".regnow").click(function() {
+        $("#reg").show();
+    });
+{else}
+    $(".loginnow").click(function() {
+        $("#login").show();
+    });
+    $(".regnow").click(function() {
+        $.post("/api/index/loginout.do", {} , function(ret){alert("已注销登录");window.location.reload();});   
+    });
+{/if}
+$("#login .forget").click(function() {
+    $("#login").hide();
+    $("#forget").show();
+});
+$(".logina").click(function() {
+    $("#forget,#reg").hide();
+    $("#login").show();
+});
+$(".reg").click(function() {
+    $("#forget,#login").hide();
+    $("#reg").show();
+});
+function login(){
+    $.post("/api/index/login.do", {
+        phone: $("#phone").val(),
+        password: $("#password").val()
+    }, function(ret) {
+        if (ret == 1) {
+            window.location.reload();
+        } else {
+            alert('用户名或密码输入错误，请重新输入！');
+            $("#password").val('');
+        }
+    });
+}
+</script>

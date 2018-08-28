@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .container-fluid {
+            padding: 0 !important;
+        }
+
+        #container {
+            width: 100%;
+            height: 75%;
+        }
+
+        .shanghu-map {
+            height: 500px;
+            position: relative;
+            ;
+        }
+
+        #myPageTop {
+            position: absolute;
+            top: 0;
+            right: 0
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form layui-form-pane" lay-filter="search">
+        <blockquote class="layui-elem-quote layui-quote-nm">银行卡信息</blockquote>
+        <table class="layui-table layui-text">
+            <colgroup>
+                <col width="300">
+                <col width="250">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>银行卡</th>
+                    <th>卡号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="bankcard" id="vo"}
+                <tr>
+                    <td>{$vo.bank_name}</td>
+                    <td>{$vo.bank_account}{if $vo.ismain==1}
+                        <em>(默认)</em>{/if}</td>
+                    <td>
+                        <div class="layui-btn-group">
+                            <button class="layui-btn  layui-btn-xs layui-btn-danger delete" bid="{$vo.id}">删除</button>
+                            {if $vo.ismain!=1}
+                            <button class="layui-btn  layui-btn-xs layui-btn-warm ismain" bid="{$vo.id}">设为默认</button>
+                            {/if}
+                        </div>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        <blockquote class="layui-elem-quote layui-quote-nm">添加银行卡</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开卡所用名</label>
+            <div class="layui-input-block">
+                <input type="text" name="acholder" lay-verify="required" autocomplete="off" placeholder="开卡所用名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开卡证件号</label>
+            <div class="layui-input-block">
+                <input type="text" name="acmenid" lay-verify="required|identity"  autocomplete="off" placeholder="开卡证件号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">银行卡账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="bank_account" lay-verify="required"  autocomplete="off" placeholder="银行卡账号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">绑定手机</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone"  lay-verify="required|phone" autocomplete="off" placeholder="绑定手机" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" lay-verify="required"  autocomplete="off" placeholder="首尾不能为空格" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户验证码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="smscode"  placeholder="商户验证码" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn " lay-submit=""  lay-filter="demo3" >获取验证码</button>
+            </div>
+            
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" id="xiugai" lay-filter="demo1">添加</button>
+        </div>
+    </form>
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'table', "element", "laydate", "jquery"], function () {
+            var table = layui.table, form = layui.form, element = layui.element, laydate = layui.laydate, $ = layui.jquery;
+
+            //自定义验证规则
+            form.verify({
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                
+                data.field.code = 'addbank';
+                $.post('', data.field, function (res) {
+                    layer.msg(res.msg,function(){
+                        location.reload();
+                    })
+                });
+                return false;
+            });
+            form.on('submit(demo3)', function (data) {
+                console.log(data);
+                var fromary = {
+                    apply_phone: data.field.phone
+                }
+                $.post("/api/index/sms_sendcode.do", fromary, function(ret) {     
+                    if(ret==1){            
+                        layer.msg("短信已成功发送！");
+                    }else{
+                        layer.msg(ret.msg);
+                    }
+                    return false;
+                }); 
+                return false;
+            });
+
+            $(document).on('click','.delete',function(){
+                var postdata = {
+                    id:$(this).attr('bid'),
+                    code:'delete'
+                };
+                $.post('',postdata,function(res){
+                    layer.msg(res.msg,function(){
+                        location.reload();
+                    })
+                })
+                return false;
+            })
+            $(document).on('click','.ismain',function(){
+                var postdata = {
+                    id:$(this).attr('bid'),
+                    code:'ismain'
+                };
+                $.post('',postdata,function(res){
+                    layer.msg(res.msg,function(){
+                        location.reload();
+                    })
+                })
+                return false;
+            })
+            
+        });
+    </script>
+</body>
+
+</html>

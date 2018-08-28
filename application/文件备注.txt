@@ -1,0 +1,10 @@
+后台:admin
+admingroup -> 管理员权限
+admininspect  -> 审核组权限
+adminlist -> 管理员管理
+agent -> 商户管理
+bill -> 账单管理
+order -> 保单管理
+userorder -> 询价订单管理
+orderfq -> 分期订单管理
+user -> 用户管理

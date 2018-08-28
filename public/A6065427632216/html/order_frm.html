@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>生成订单</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+
+<body id="details">
+    <div class="out outshow">
+        <section class="aui-grid aui-grid-0">
+            <div class="aui-col-xs-6" style="width: 100%;">
+                <div class="aui-grid-label aui-text-left">保单金额：
+                    <span class="num aui-text-left"><span class="small">￥</span>
+                    <font class="order_price"></font>
+                    </span>
+                </div>
+                <div class="aui-grid-label order-num">订单编号:
+                    <font class="ordernum"></font>
+                </div>
+                <div class="aui-grid-label order-time">订单时间:
+                    <font class="ordertime"></font>
+                </div>
+                <div class="num name" style="padding-top: 20px;">
+                    <font class="companyname"></font>
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-1">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">被保车辆</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_license"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">车主信息</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_name"></font>
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-0 bgw">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">身份证</div>
+                <div class="aui-grid-label">
+                    <font class="id_code"></font>
+                </div>
+                <div class="aui-grid-label">行驶证</div>
+                <div class="aui-grid-label">
+                    <font class="car_code"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">
+                    <img src="../image/circle.png">
+                </div>
+            </div>
+        </section>
+        <div id="details-list">
+            <div class="top">&nbsp;保单信息</div>
+            <div class="toptitle">详情<span class="aui-pull-right">￥<font class="order_price"></font></span></div>
+            <div class="midlist">
+                <div class="aui-content">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    交强险<span class="aui-pull-right">￥<font class="jqprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    车船税<span class="aui-pull-right">￥<font class="csprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    商业险<span class="aui-pull-right">￥<font class="syprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <input id="test" type="text" name="">
+        <div class="bystagestype">
+            <font class="orderid" style="display:none;"></font>
+            <button type="button" onclick="createorder(0);">分期付款</button>
+            <button type="button" onclick="createorder(1);">全额付款</button>
+            <!--  <div class="label">
+                <input class="aui-checkbox" type="checkbox" name="demo1"> 已阅读付款协议
+            </div> -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript" src="../script/aui-actionsheet.js" ></script>
+<script type="text/javascript" src="../script/pay.js"></script>
+<script type="text/javascript">
+$(function() {
+    //获取已报价未确认订单
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+    });
+});
+//创建保单
+function createorder(fktype) {
+    var id = $(".orderid").html();
+    if (fktype == 0) {
+        openWin('identification');
+        //openWin('billbystages');确认分期
+    } else {
+        getPay(id,1,0);
+        return;
+    }
+}
+</script>
+
+</html>

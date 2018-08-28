@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>匀享车险后台管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="__STATIC__/shopadmin/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__STATIC__/shopadmin/css/login.css" media="all" />
+    <script>
+    if (window != top) {
+        top.location.href = location.href;
+    }
+    </script>
+    <style type="text/css" media="screen">
+    .login {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .login h1 {
+        position: relative;
+    }
+
+    .login h1 img {
+        position: absolute;
+        top: -200px;
+        left: 50%;
+        margin-left: -90px;
+        width: 180px;
+    }
+
+    .login button {
+        background: #15B8DB
+    }
+    </style>
+</head>
+
+<body>
+    <!-- <video class="video-player" preload="auto" autoplay="autoplay" loop="loop" data-height="1080" data-width="1920" height="1080" width="1920">
+	    <source src="__STATIC__/shopadmin/pagejs/login/login.mp4" type="video/mp4">
+	</video> -->
+    <img src="__STATIC__/shopadmin/images/bj.png" alt="" style="width: 100%;height: 100%;">
+    <!-- <div class="video_mask"></div> -->
+    <div class="login">
+        <h1>匀享车险后台管理系统
+			<img src="__STATIC__/shopadmin/images/logo.png" alt="">
+	    </h1>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <!-- <input class="layui-input" name="name" placeholder="用户名" lay-verify="required" type="text" autocomplete="off"> -->
+				<select name="name" class="layui-input" lay-filter="chgtel" >
+					<option value="0">请选择管理员</option>
+					{volist name="user" id="vo"}
+					<option value="{$vo.name}" data-phone="{$vo.phone}">{$vo.showname}</option>
+					{/volist}
+				</select>
+            </div>
+            <div class="layui-form-item">
+                <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">
+            </div>
+            <div class="layui-form-item">
+                <input class="layui-input" name="apply_phone" id="apply_phone" placeholder="手机号码" lay-verify="required" type="text" autocomplete="off">
+            </div>
+            <div class="layui-form-item">
+                <input  style="width:60%;float:left;" class="layui-input" name="smscode" placeholder="手机验证码" lay-verify="required" type="text" autocomplete="off">
+				<button  style="width:40%;float:left;" class="layui-btn login_btn" id="sendsms" type="button"  lay-filter="sendsms">获取</button>
+            </div>
+            <!-- <div class="layui-form-item form_code"> -->
+                <!-- <input class="layui-input" name="captcha" placeholder="验证码" lay-verify="required" type="text" autocomplete="off"> -->
+                <!-- <div class="code" id="captcha"><img src="{:captcha_src()}" id="verify_img" onclick="refreshVerify()" alt="captcha" width="116" height="36"></div> -->
+            <!-- </div> -->
+            <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>
+        </form>
+    </div>
+    <script type="text/javascript" src="__STATIC__/shopadmin/layui/layui.js"></script>
+    <script type="text/javascript" src="__STATIC__/shopadmin/pagejs/login/login.js"></script>
+    <script>
+    function refreshVerify() {
+        var ts = Date.parse(new Date()) / 1000;
+        var img = document.getElementById('verify_img');
+        img.src = "/captcha?id=" + ts;
+    }
+    var URL = {
+        'tologin': "{:url('login/tologin')}",
+        'getphone': "{:url('login/getphone')}",
+    }
+	
+		$('#sendsms').click(function () {
+			var data = $('#formdata').serializeArray();
+			var postdata = {};
+			$.each(data, function (index, item) {
+				postdata[item.name] = item.value;
+			})
+			console.log(postdata);
+			$.post("getphonetosms", postdata, function (res) {
+				if (res.code == 1) {
+					$.post("/api/index/sms_sendcode.do", { apply_phone: res.msg }, function (ret) {
+						if (res.code == 1) {
+							if (ret == 1) {
+								layer.msg("短信已成功发送！");
+								setTimeout(function () {
+									clock(60)
+								}, 1000);
+								clock(60);
+							} else {
+								layer.msg(res.msg);
+							}
+
+						}
+					})
+				} else {
+					layer.msg(res.msg)
+				}
+			})
+			return false;
+		})
+	
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+</body>
+
+</html>

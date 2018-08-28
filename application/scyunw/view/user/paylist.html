@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5">
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title switch-list">
+            <li layui-data="1" class="layui-btn"  style="background: none;color: #000;" onclick="window.location='{:url("user/redlist")}'">红包统计</li>
+            <li layui-data="0" class="layui-this">还款统计</li>
+        </ul>
+    </div> 
+</div>
+<div class="demoTable">
+    关键字搜索：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" placeholder="车辆/还款人" autocomplete="off">
+    </div>
+	<label style="padding-left: 10px;">时间段：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="paytime" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+<table class="layui-table"   >
+    
+     <tbody>
+       <tr>
+           <th style="width: 16%;">今日还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[0]"></label></th>
+           <th style="width: 16%;">今日应还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[1]"></label></th>
+           <th style="width: 16%;">今日未还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[2]"></label></th>
+       </tr>
+       <tr>
+           <th style="width: 16%;">历史还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[3]"></label></th>
+           <th style="width: 16%;">历史应还总额</th>
+           <th style="width: 16%;">￥<label id="sum[4]"></label></th>
+           <th style="width: 16%;">历史未还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[5]"></label></th>
+       </tr>
+       <tr>
+           <th style="width: 16%;">本期还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[6]"></label></th>
+           <th style="width: 16%;">本期应还总额</th>
+           <th style="width: 16%;">￥<label id="sum[7]"></label></th>
+           <th style="width: 16%;">本期未还款总额</th>
+           <th style="width: 16%;">￥<label id="sum[8]"></label></th>
+       </tr>
+     </tbody>
+<table class="layui-table" lay-data="{ width: 'full',cellMinWidth:120,url:'{:url('Capital/getpaylist')}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest' , 
+done:function(res){
+    for(var i=0;i<=8;i++){
+        document.getElementById('sum['+i+']').innerHTML = res.totaldata[i].sum;
+    }
+}
+}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'car_license', width:120, fixed: true}">还款车辆</th>
+      <th lay-data="{field:'realname'}">还款人</th>
+      <th lay-data="{field:'money', width:200}">本次还款金额</th>
+      <th lay-data="{field:'paytime', width:200}">还款时间</th>
+      <th lay-data="{field:'payclient', width:200}">还款端口</th>
+      <th lay-data="{field:'payip', width:200}">IP</th>
+    </tr>
+  </thead>
+</table>
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['table',"laydate"],function(){
+    var table = layui.table,laydate = layui.laydate;;
+	laydate.render({
+		elem: '#paytime'
+		,range: true
+	});	
+    var $ = layui.$, active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+            table.reload('idTest', {
+                where: {
+                    keyword: demoReload.val(),
+                    paytime : $('#paytime').val(),
+                }
+            });
+        },
+        Tourl: function(){
+            window.location = "{:url('user/redlist')}";
+        }
+    };    
+    
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+    
+});
+</script>
+
+</body>
+</html>

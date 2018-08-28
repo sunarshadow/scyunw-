@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我要推广</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+    body {
+        margin: 0;padding: 0
+    }
+    #img{width: 120px; top:0px;left:0px;position:absolute;}
+    #qrcodebg{ width:100%; height:100%;}
+    </style>
+</head>
+
+<body>
+    <div id="qrcodebg">
+        <img id="img" src="#">\
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script>
+    $.post("/api/index/getconfig.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var json_ = eval("(" + json.share_value + ")");
+        $("#qrcodebg").css("background","url('"+json_.qrcodebg+"') center center");
+        $("#img").css("top",json_.qrcode.top+"px").css("left",json_.qrcode.left+"px");
+        // $("#qrcodetext").html(json_.qrcodetext);
+        // $("#qrcodetext").css("top",json_.qrcodetxt.top+"px").css("left",json_.qrcodetxt.left+"px");
+    });
+    $(function(){
+        var phone = $api.getStorage('loginsuccesstel');
+        $("#img").attr("src","/api/index/qrcode/?phone=" + phone);
+    })
+</script>

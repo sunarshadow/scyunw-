@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>爱车维护</title>
+    <!-- 地图 -->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=c8c0c12de000163656a1f1afa6063133"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <!-- city -->
+    <script src="__STATIC__/web/js/distpicker.data.js"></script>
+    <script src="__STATIC__/web/js/distpicker.js"></script>
+    <!-- time -->
+    <script src="__STATIC__/web/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="__STATIC__/web/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <style type="text/css" media="screen">
+    .uploadimg {
+        width: 100%;
+        height: 120px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        background-image: url('http://chexian.302s.cn/static/web/images/upload.png');
+        background-size: 53px 53px;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: auto;
+        padding: 0;
+    }
+
+    .red {
+        font-size: 14px !important;
+        color: #666666 !important;
+        padding: 0 !important;
+    }
+
+    .gray {
+        font-size: 14px !important;
+        color: #ff0000 !important;
+        padding: 0 !important;
+    }
+
+    .changebtn {
+        width: 200px;
+        height: 50px;
+        background-color: #2196f3;
+        box-shadow: 0px 5px 10px 0px rgba(4, 115, 203, 0.2);
+        border: solid 1px #ffffff;
+        font-size: 24px;
+        font-weight: normal;
+        color: #ffffff !important;
+        margin-top: 30px;
+    }
+
+    .getsmscode {
+        width: auto!important;
+        height: 18px!important;
+        margin-top: 0px!important;
+        font-size: 14px!important;
+        padding-left: 2px;padding-right: 2px;
+    }
+    </style>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="">
+        <div class="npagePage Pageyemian" id="page_none">
+            <div id="banner" class="">
+                <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124956492.jpg);"></div>
+            </div>
+            <div class="content">
+                <div class="header fw">
+                    <p class="title">爱车维护</p>
+                    <p class="subtitle">Maintain</p>
+                </div>
+                <div class="fw maintain">
+                    <form id="orderform">
+                        <input id="file" type="file" name="" value="">
+                        <div>
+                            信息填写
+                        </div>
+                        <div>
+                            车主姓名：
+                            <input type="text" name="realname" placeholder="请填写真实姓名"> &emsp;&emsp;&emsp;&emsp;&emsp;车牌号码：
+                            <input type="text" name="car_license" placeholder="请输入正确的车牌号码">
+                        </div>
+                        <div>
+                            手机号码：
+                            <input type="text" id="apply_phone" name="apply_phone" placeholder="请输入手机号"> &emsp;&emsp;&emsp;&emsp;&emsp;预约时间：
+                            <input id="datetimepicker" type="text" name="bespeaktime" value="">
+                        </div>
+                        <div>
+                            验证码&emsp;：
+                            <input name="smscode" type="text" placeholder="">
+                            <span class="btn changebtn getsmscode" onclick="getsmscode()">获取验证码</span>
+                        </div>
+                        <div>
+                            上传证件
+                            <div id='container'></div>
+                        </div>
+                        <div class="mt0" style="display: inline-block;height: 340px;width: 470px;padding: 0;">
+                            <div class="col-lg-12 text-center" onclick="getPicture('certificate','camera','预约审车证件')" style="display: inline-block;height: 100%;width: 470px;padding: 0">
+                                <div id="certificate" class="uploadimg" style="height: 280px;">
+                                </div>
+                                <div class="red">
+                                    上传图片
+                                </div>
+                                <div class="gray">
+                                    预约审车证件
+                                </div>
+                            </div>
+                        </div>
+                        <div class="apply">
+                            <button class="btn" type="button" id="next">预约申请</button>
+                            <input type="hidden" name="agentid" value="{$agent['id']}">
+                            <input type="hidden" name="city" value="{$agent['city']}">
+                            <input type="hidden" name="order_type" value="{$agent['servicetype']}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="__STATIC__/web/js/upload.js"></script>
+<script type="text/javascript">
+$("body").on("click", "#next", function() {
+    $.post("/api/agent/create.do", $("#orderform").serialize(), function(ret) {
+        if (ret == 1) {
+            alert("预约成功");
+            window.location = "/web/user/agentorder";
+        } else {
+            alert("预约失败");
+        }
+        return false;
+    });
+})
+var locat = "{$agent['location']}";
+var lng = locat.split(',')[0];
+var lat = locat.split(',')[1];
+
+function getsmscode() {
+    var fromary = $("#orderform").serialize();
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)", 1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+var map = new AMap.Map('container', {
+    resizeEnable: true,
+    zoom: 11,
+    center: [lng, lat]
+});
+var marker = new AMap.Marker({
+    icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+    position: [lng, lat]
+});
+marker.setMap(map);
+</script>

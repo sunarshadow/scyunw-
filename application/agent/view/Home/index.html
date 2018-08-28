@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>业务受理流程</title>
+	<link rel="stylesheet" type="text/css" href="__STATIC__/agent/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="__STATIC__/agent/css/css.css" />
+</head>
+<style>
+	.zfb-payment {
+		float: left;
+		display: block;
+		width: 70px;
+		height: 51px;
+		margin-left: 10px;
+		background: url('__STATIC__/agent/alipay/img/alipay_logo.png') 0 0 no-repeat;
+		background-size: 100%;
+	}
+
+	.wx-payment {
+		float: left;
+		margin-left: 0px;
+		display: block;
+		width: 140px;
+		height: 51px;
+		background: url('__STATIC__/agent/wxpay/image/wx.jpg') 5px -15px no-repeat;
+		background-size: 100%;
+	}
+</style>
+
+<body>
+	<div id="topbar">
+		<div class="container" id="topbar_inner">
+			<div class="f_l">客服热线： 400-188-0817 （工作日 8:30-17:30）</div>
+			<!-- <div class="f_r">
+				欢迎您，
+
+				<a class="uname" href="index.php"></a> &nbsp;
+				<a href="javascript:if(confirm('确定要注销账户吗？'))location='login.php'">[注销]</a>
+				<span>&nbsp; | &nbsp;</span>
+				<a href="reset.php">[修改密码]</a>
+
+				游客
+
+			</div> -->
+		</div>
+	</div>
+	<div class="container">
+		<div class="investment_f clearfix">
+			<form id="quote_fast" method="post" target="_blank">
+				<input type="hidden" name="r" value="">
+				<input type="hidden" name="pay" id="pay" value="0">
+				<input type="hidden" name="checkaccess" value="p6NznYqAKaXv">
+			</form>
+			<form id="reg-from">
+				<div class="investment_title clearfix">
+
+					<div class="on1">
+						<span class="span-cicle{$step >= 1 ? '2' : ''}">
+							{$step >= 1 ? '<img src="__STATIC__/agent/images/icon-affirm.png" />' : 1}
+						</span>输入订单号</div>
+					<div class="on1">
+						<span class="span-cicle{$step >= 2 ? '2' : ''}">
+								{$step >= 2 ? '<img src="__STATIC__/agent/images/icon-affirm.png" />' : 2}
+						</span>车辆选择</div>
+					<div class="on1">
+						<span class="span-cicle{$step >= 3 ? '2' : ''}">
+								{$step >= 3 ? '<img src="__STATIC__/agent/images/icon-affirm.png" />' : 3}
+						</span>业务</div>
+					<div class="on1">
+						<span class="span-cicle{$step >= 4 ? '2' : ''}">
+								{$step >= 4 ? '<img src="__STATIC__/agent/images/icon-affirm.png" />' : 4}
+						</span>支付</div>
+					<div class="on1">
+						<span class="span-cicle{$step > 5 ? '2' : ''}">
+								{$step > 5 ? '<img src="__STATIC__/agent/images/icon-affirm.png" />' : 5}
+						</span>完成</div>
+				</div>
+				{if $step==1}
+					<input type="hidden" name="jx" value="create">
+					<input type="hidden" name="userphone" value="">
+					<input type="hidden" name="r" value="">
+					<div class="investment_con clearfix">
+						<div class="investment_con_list clearfix">
+							<div class="res-list">
+								<span class="re-tip">输入订单号</span>
+								<input type="text" name="ordercode" id="" value="{$agentorder['order_id']}" />
+							</div>
+
+							<div class="btn-next" id="doitnow">
+								<a>
+									<img src="__STATIC__/agent/images/btn-next.png" />
+								</a>
+							</div>
+						</div>
+					</div>
+					{if !$agentorder['order_id']}
+					<div id="wxlogin" style="text-align:center"></div>
+					<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+					<script>
+					var obj = new WxLogin({
+						id:"wxlogin",
+						appid: "wxa4ebbfc54497ce25",
+						scope: "snsapi_login",  
+						redirect_uri: "http://chexian.302s.cn/agent/home/",
+						state: "1",
+						style: "",
+						href: ""            
+					});
+					</script>  
+					{/if}				
+				{/if}
+				{if $step==2}
+				<input type="hidden" name="jx" value="getcarinfo">
+				<input type="hidden" name="userphone" value=" ">
+				<input type="hidden" name="r" value="">
+				<div class="investment_con">
+					<div class="investment_con_list clearfix">
+						<div class="zhizhao-img clearfix">
+							<div class="zhizhao-tip" style="width:auto;">订单号：{$agentorder['order_id']}</div>
+							<div class="zhizhao-tip" style="width:auto;">车主信息：{$agentorder['realname']}</div>
+							<div class="zhizhao-tip" style="width:auto;">车牌号：{$agentorder['car_license']}</div>
+							<div class="zhizhao-tip" style="width:auto;">预约提交时间：{$agentorder['addtime']}</div>
+							<div class="zhizhao-tip" style="width:auto;">预约服务时间：{$agentorder['bespeaktime']}</div>
+						</div>
+						<div class="card-lis clearfix">
+							<div class="card-slt" style="margin-top: 9px;">
+								<label>
+									<i class="input_style radio_bg radio_bg_check">
+										<input name="card" type="radio" value="1"  checked/>
+									</i>本人车辆 </label>
+							</div>
+							<div class="card-slt">
+								<label>
+									<i class="input_style radio_bg">
+										<input name="card" type="radio" value="3" />
+									</i>他人车辆 </label>
+								<input class="card-id" type="text" name="cardid" id="" value="" placeholder="请输入车牌号" />
+							</div>
+						</div>
+
+						<div class="btn-next clearfix" id="doitnow">
+							<a>
+								<img src="__STATIC__/agent/images/btn-next.png" />
+							</a>
+						</div>
+					</div>
+				</div>
+				{/if}
+
+
+
+				{php} if(!isset($carby))
+						{
+							$carby = '';
+						}
+				{/php}
+
+
+
+				{if $step==3 && $carby == 'self' }
+				<input type="hidden" name="jx" value="dobusiness">
+				<input type="hidden" name="r" value="">
+				<div class="investment_con clearfix">
+					<div class="investment_con_list clearfix">
+						<div class="res-list">
+							<span class="re-tip">业务信息</span>
+							<input  class="re-tip" style="padding-left:20px;" type="text" disable="disable"  value="{$agentclass['name']}" />
+						</div>
+						<div class="res-list">
+							<span class="re-tip">手机号码</span>
+							<input type="text" name="phone" id="selfphone" value="" />
+						</div>
+						<div class="res-list">
+							<span class="re-tip">验 证</span>
+							<input type="text" name="smscode" id="" value="" />
+							<div class="btn-getCode" id="smssend">
+								<img src="__STATIC__/agent/images/btn-getyzm.png" />
+							</div>
+						</div>
+						<div class="btn-next" id="doitnow">
+							<a>
+								<img src="__STATIC__/agent/images/btn-banliwc.png" />
+							</a>
+						</div>
+					</div>
+				</div>
+				{/if}
+
+				{if $step==4 && $carby == 'pay' }
+				<input type="hidden" name="jx" value="payresult">
+					<input type="hidden" name="userphone" value="">	
+					<input type="hidden" name="r" value="">
+					<div class="investment_con">
+						<div class="investment_con_list clearfix">
+							<div class="card-lis clearfix">
+								{if $isselfcar}
+								<div class="card-slt1">
+									<span class="clr2">他人车辆</span> 
+									<input class="cole" type="text" name="cardid" id="" value="{$agentorder['car_license']}" placeholder="请输入车牌号"/>
+								</div>
+								{/if}
+								<div class="card-slt1">
+									<span class="clr2">输入金额</span> 
+									<input class="cole" type="text" name="order_fee" id="" value="" placeholder="请输入金额" style="padding: 10px;"/>
+								</div>
+							</div>
+							<!-- <div class="btn-saoma" id="payorder"><img src="__STATIC__/agent/images/btn-saoma.png"/></div> -->
+							<div class="btn-next clearfix"  id="doitnow"><a><img src="__STATIC__/agent/images/btn-next.png"/></a></div>
+						</div>
+					</div>
+				{/if}
+				{if $step>=5}
+				<input type="hidden" name="jx" value="payconfirm">
+				 <div class="investment_con clearfix">
+					<div class="investment_con_list">
+						<div class="tip"></div>
+						<div class="scimg">
+							<img src="__STATIC__/agent/images/icon-big-secess.png" />
+						</div>
+						<div class="tip2">{$str}</div>
+						<div class="btn-next" id="doitnow">
+						{if $step==6}
+							<img src="__STATIC__/agent/images/btn-wancheng.png" />
+						{else}
+							<img src="__STATIC__/agent/images/btn-next.png" />
+						{/if}
+						</div>
+					</div>
+				</div> 
+				{/if}
+
+		</div>
+	</div>
+</body>
+<!-- mobile form logic & layer.mobile.js -->
+<script type="text/javascript" src="__STATIC__/agent/static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="__STATIC__/agent/static/js/common.mo.js"></script>
+<script type="text/javascript" src="__STATIC__/agent/static/js/layer.mo.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript">
+layui.use(["layer","jquery"], function () {
+	var  layer = layui.layer,$ = layui.jquery;
+	$(function () {
+		/*支付流程*/
+		$(".card-slt").on('click', function () {
+			var cardtype = $(this).find("input[name='card']").val();
+			if (cardtype == 1) {
+				$(".card-id").val('');
+			} else {
+				$(".card-id").val('');
+			}
+			$(".radio_bg_check").removeClass("radio_bg_check");
+			$(this).find(".input_style").addClass("radio_bg_check");
+            $(this).find(".input_style").find("input").attr("checked",true);
+		});
+
+		$("input[name='order_fee']").on("change", function () {
+			var fee = $(this).val();
+			$("#pay").val(fee);
+		})
+
+		$('#smssend').on('click', function () {
+			var fromary = {
+				apply_phone:$('#selfphone').val(),
+			}
+			$.post("/api/index/sms_sendcode.do", fromary, function(ret) {     
+				if(ret==1){            
+					layer.msg("短信已成功发送！");
+				}else{
+					layer.msg(ret.msg);
+				}
+				return false;
+			}); 
+		});
+
+		$('#doitnow').on('click', function () {
+			var urlstrings = $("#reg-from").serializeArray();
+			var postdata = {};
+			$.each(urlstrings,function(index,item){
+				postdata[this.name] = this.value
+			})
+			postdata.ordertype = $('#order_type').val();
+			$.post("{:url('Home/ajax_business',['step'=>$step])}", postdata, function (res) {
+				if(res.code == 1){
+					layer.open({
+						content: res.msg,
+						skin: 'msg',
+						time: 2, //2秒后自动关闭
+						success: function () {
+							if (res.code == 1) {
+								location.href = res.url;
+							}
+						}
+					});
+				}else{
+					layer.msg(res.msg);
+				}
+			})
+		});
+	})
+
+})
+
+
+
+</script>
+
+</html>

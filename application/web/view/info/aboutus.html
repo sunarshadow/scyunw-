@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>关于我们</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="">
+        <div class="npagePage Pageyemian" id="page_none">
+            <div id="banner" class="">
+                <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124956492.jpg);"></div>
+            </div>
+            <div class="content ">
+                <div class="header">
+                    <p class="title">公司简介</p>
+                    <p class="subtitle">COMPANY</p>
+                </div>
+                <div class="fw">
+                    {$list.main}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $('.navitem .nav-a').removeClass('active');
+    $('.navitem .nav-a').eq(4).addClass('active');
+</script>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的保单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body id="mypolicy">
+    <section class="aui-grid">
+        <div class="aui-col-xs-6">
+            <div class="aui-grid-label">待付款</div>
+            <div class="num" id="nopaycont">0</div>
+        </div>
+        <div class="aui-col-xs-6">
+            <div class="aui-grid-label">已报价</div>
+            <div class="num" id="approcount">0</div>
+        </div>
+        </div>
+    </section>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">
+            <div>全部</div>
+        </div>
+        <div class="aui-tab-item">
+            <div>未完成</div>
+        </div>
+        <div class="aui-tab-item">
+            <div>已完成</div>
+        </div>
+    </div>
+    <div class="list">
+        <div class="midlist">
+            <div class="aui-content">
+                <ul id="status1" class="aui-list aui-media-list"></ul>
+                <ul id="status2" class="aui-list aui-media-list"></ul>
+                <ul id="status3" class="aui-list aui-media-list"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+$(function() {
+    //获取明细
+    $.post($api.getStorage('serviceAddr') + "/api/order", { t: 0 }, function(ret) {
+        // alert(JSON.stringify(ret));
+        var json = eval("(" + ret + ")");
+        var nopaycont = approcount = 0;
+        var html = carlicense = addtime = temphtml = yeshtml = nothtml = "";
+        for (var i = 0; i < json.length; i++) {
+            carlicense = json[i].car_license.substring(0, 2) + "**" + json[i].car_license.substring(4, 7);
+            addtime = json[i].addtime.substring(0, 10);
+            temphtml = "";
+            temphtml += '<li onclick="test()" data-id="' + json[i].id + '" data-fqstat="' + json[i].zt + '" data-fktype="' + json[i].fktype + '" class="aui-list-item aui-list-item-middle"><div class="aui-media-list-item-inner"><div class="aui-list-item-inner">';
+            temphtml += '<span class="aui-pull-left">' + carlicense + '</span>￥' + json[i].order_price + '</div></div>';
+            temphtml += '<div class="aui-media-list-item-inner aui-media-list-item-inner-2"><div class="aui-list-item-inner">';
+            temphtml += '<span class="aui-pull-left">' + addtime + '</span>';
+            if (json[i].bstat < 2) {
+                temphtml += '<span class="statu s2">未报价</span></div></div></li>';
+                nothtml += temphtml;
+            } else if (json[i].stat < 4) {
+                temphtml += '<span class="statu s3">未生效</span></div></div></li>';
+                nothtml += temphtml;
+            } else if (json[i].stat == 4) {
+                temphtml += '<span class="statu s1">生效中</span></div></div></li>';
+                yeshtml += temphtml;
+            } else if (json[i].stat == 5) {
+                temphtml += '<span class="statu s2">已过期</span></div></div></li>';
+                yeshtml += temphtml;
+            } else if (json[i].stat == 6) {
+                temphtml += '<span class="statu s2">已违约</span></div></div></li>';
+                yeshtml += temphtml;
+            }
+            html += temphtml;
+            if (json[i].paystat == 0) {
+                nopaycont++;
+            }
+            if (json[i].bstat == 2) {
+                approcount++;
+            }
+        }
+        $("#nopaycont").html(nopaycont);
+        $("#approcount").html(approcount);
+        $("#status1").html(html);
+        $("#status2").html(nothtml);
+        $("#status3").html(yeshtml);
+    });
+});
+apiready = function() {
+    api.parseTapmode();
+}
+var tab = new auiTab({
+    element: document.getElementById("tab"),
+}, function(ret) {
+    console.log(ret);
+    $("#status" + ret.index).css({
+        "display": "block"
+    });
+    $("#status" + ret.index).nextAll().css({
+        "display": "none"
+    });
+    $("#status" + ret.index).prevAll().css({
+        "display": "none"
+    });
+});
+$(document).on("click", "li", function() {
+    var fqstat = $(this).data("fqstat");
+    var fktype = $(this).data("fktype");
+    if (fqstat < 4 && fktype!=1) {
+        openWin('auditbystages');
+    } else {
+        var id = $(this).data('id');
+        window.location = "mybystagesdetail_frm.html?id=" + id;
+    }
+});
+
+function test(obj) {
+    console.log(obj);
+}
+</script>
+
+</html>

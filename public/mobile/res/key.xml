@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+    <item name="aliPay_partner" value="2088921286184801" />
+    <item name="aliPay_seller" value="2649619989@qq.com" />
+    <item name="aliPay_rsaPriKey" value="MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKCBkH+cv1Kex9F86CAIg24He3UyuiUcD2M2EAeBUyWkVBR4sFTWZwpaa1MQmmNrELu/6bLtzhS+1EZCYZXyTZI7WZrwlsUic4E/+qQpcAKO6ouftsaBuG97k/tSYYoiy10fAnG9TdVE7d9AJnmJUmAfWDU/uxZLz9nV67zDJNBHAgMBAAECgYEAlm95cLIIfDaH0CgDJGr2TH1E0F7gKwH2xiUYtwAWX1R63ckUdB+T6hc/OlZ4bbAeueow7tyGZ9lH+iYjcrfszSNJU92qcCn+VqfgKW/G6qcuwLOrIuftalbcCJhISPKJmeGCJoQjMibW0cZ2SiL9tU7qDPqwjgmD0MfPP4D+bBECQQDLrqXB6Dm67D5yrvuC5tQkwk/IGu/r/K1ZWV8g4ScI9iEDTDbzqmFHV+jVmqnglTugndEYM7WMJ0cUeS4gfJS/AkEAybvS376euVeSVCu/7FJ/3yRyIPPLeCuzgye8qZgFZkyg/aIu14SgsFeQy1x1qTbwDfyP3s3/Db6tbAwfXZP+eQJAQ7I6WWZruZrHbqqF4Y4CuGz0w1dgopiKrQWtPmpW5P2ZH1V3dikMx/+J3WTYTVKMTOfnFRoqnvh3AXD9ScLeVQJBAIs4H/NhbdCi6s1D1BOXa7/nOwwas5SfNCeTSNQRochTodboEkORuAN6quZtTJYW39wHLJKqvxYRPUWPqCXAeKECQQC99Wc4hC4NEf3NqriddM1kUBCQg+N1gn3+pMQz9pFoVLIQiuv+x5RozqAQhFJxjgLTup5mKnHL1RWzAUwa8sxF" />
+    <item name="aliPay_rsaPubKey" value="BVq/rs/r5GNsNO4yScKmQC/OI905Idfv3hQHhSDPnLaaCrcRVia162QX8L06OL9PbrC5oIigfT6LrvxOnMIQk4amj33ozk2wTrJorRqLIX0rRIg4aiCu5qdXFtAwZSa+R/DOvQXLVsRYHDULNwXl5/5ZAKYRmYb6W/zdj0MCupc=" />
+    <item name="aliPay_notifyURL" value="http://chexian.302s.cn/api/index/alipayresult" />
+</security>

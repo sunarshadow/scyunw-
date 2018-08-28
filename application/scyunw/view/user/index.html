@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>
+	body{margin: 10px;}
+	.layui-table a{ cursor: pointer;}
+</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5">
+    关键字搜索：
+    <div class="layui-inline">
+        <input class="layui-input" name="keyword" id="demoReload" autocomplete="off">
+    </div>
+    <div class="layui-inline">
+        <select name="modules" lay-search="">
+            <option value="">账户状态</option>
+            <option value="0">封禁</option>
+            <option value="1">正常</option>
+        </select>
+    </div>
+    <div class="layui-inline">
+        <select name="modules" lay-search="">
+            <option value="">询价状态</option>
+            <option value="0">未询价</option>
+            <option value="1">已询价</option>
+        </select>
+    </div>
+    <div class="layui-inline">
+        <select name="modules" lay-search="">
+            <option value="">分期认证</option>
+            <option value="1">认证中</option>
+            <option value="2">已认证</option>
+            <option value="0">无分期</option>
+        </select>
+    </div>
+    <div class="layui-inline">
+        <select name="modules" lay-search="">
+            <option value="">账单状态</option>
+            <option value="0">无账单</option>
+            <option value="1">还款中</option>
+            <option value="2">已完结</option>
+            <option value="3">全款账单</option>
+            <option value="4">异常账单</option>
+        </select>
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+<div class="layui-btn-group demoTable">
+  <button class="layui-btn" data-type="toexcel">导出数据</button>
+</div>
+<table class="layui-table" lay-data="{ width: 'full-335',url:'{:url('user/getlist')}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'id', width:70, sort: true, fixed: true}">ID</th>
+      <th lay-data="{field:'username', minwidth:120 , width:120}">用户名</th>
+      <th lay-data="{field:'realname', width:90}">真实姓名</th>
+      <th lay-data="{field:'reputation', width:90}">信用评级</th>
+      <th lay-data="{field:'phone', width:120}">绑定手机</th>
+      <th lay-data="{field:'phonestat', width:120, toolbar: '#phonedata'}">运营商认证</th>
+      <th lay-data="{field:'phone_core', width:80}">归属地</th>
+      <th lay-data="{field:'is_inquiry', width:90, toolbar: '#is_inquiry'}">询价状态</th>
+      <th lay-data="{field:'rnstat', width:90, toolbar: '#rnstat'}">实名认证</th>
+      <th lay-data="{field:'fqstat', width:90, toolbar: '#fqstat'}">分期认证</th>
+      <th lay-data="{field:'billstat', width:90}">账单状态</th>
+      <th lay-data="{field:'userinfo', width:90, toolbar: '#userinfo'}">用户情况</th>
+      <th lay-data="{field:'logincount', width:90,  templet: '#logincount'}">登陆次数</th>
+      <th lay-data="{field:'last_logintime', width:170}">登陆时间</th>
+      <th lay-data="{field:'allow_login', width:70,  templet: '#statusTpl'}" >状态</th>
+      <th lay-data="{field:'reg_type', width:90}">注册方式</th>
+      <th lay-data="{field:'addtime', width:170}">注册时间</th>
+      <th lay-data="{fixed:'right', width:180, align:'center', toolbar: '#barDemo'}">个人资料操作</th>
+    </tr>
+  </thead>
+</table>
+<script type="text/html" id="logincount">
+	<a style="color: #5FB878;"  lay-event="logincount">{{d.logincount}}</a>
+</script>
+<script type="text/html" id="rnstat">
+    {{#  if(d.phone_stat==1){ }}
+	<a style="color: #5FB878;" >已认证</a>
+    {{# } else{ }}
+	<a style="color: #F581B1;" >未认证</a>
+    {{# } }}
+</script>
+<script type="text/html" id="fqstat">
+    {{#  if(d.fqstat == 4){ }}
+	<a style="color: #5FB878;" >完成认证</a>
+    {{# } else if(d.fqstat >0){ }}
+	<a style="color: #FFB800;" >认证中</a>
+    {{# } else{ }}
+	<a style="color: #F581B1;" >未认证</a>
+    {{# } }}
+</script>
+<script type="text/html" id="phonedata">
+    {{#  if(d.phone_stat==1){ }}
+	<a style="color: #5FB878;"  lay-event="phonedata">数据分析</a>
+    {{# } else{ }}
+	<a style="color: #F581B1;" >未认证</a>
+    {{# } }}
+</script>
+<script type="text/html" id="userinfo">
+	<a style="color: #5FB878;"  lay-event="info">用户情况</a>
+</script>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs"  lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="toexcel">导出</a>
+	{{#  if(d.allow_login==1){ }}
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="chgstatus">封号</a>
+	{{#  } else { }}
+		<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="chgstatus">解封</a>
+	{{#  } }}  
+</script>
+<script type="text/html" id="is_inquiry">
+{{#  if(d.is_inquiry){ }}
+    <a style="color: #5FB878;" lay-event="order">已询价</a>
+{{#  } else { }}
+    <a style="color: #F581B1;" lay-event="order">未询价</a>
+{{#  } }}
+</script>   
+<script type="text/html" id="statusTpl">
+{{#  if(d.allow_login==1){ }}正常
+{{#  } else { }}封禁
+{{#  } }}
+</script>   
+     
+
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use('table',function(){
+    var table = layui.table;
+    //监听表格复选框选择
+    table.on('checkbox(demo)', function(obj){
+        console.log(obj)
+    });
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'logincount'){
+			var id = data.id;
+			var index = dourl("{:url('user/logincount')}"+'?id='+id,"登陆次数","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'order'){
+			var id = data.id;
+			var index = dourl("{:url('userorder/index')}"+'?id='+id,"询价次数","点击此处返回用户列表",['80%', '80%']);
+        }else if(obj.event === 'info'){
+			var id = data.id;
+			var index = dourl("{:url('user/info')}"+'?id='+id,"用户情况","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'edit'){
+			var id = data.id;
+			var index = dourl("{:url('user/edit')}"+'?id='+id,"编辑用户信息","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'phonedata'){
+			var phone = data.phone;
+			var index = dourl("{:url('user/phonedata')}"+'?phone='+phone,"数据分析","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'toexcel'){
+			var id = data.id;
+			window.location = "{:url('user/toexcel')}"+'?id='+id;
+            layer.msg('正在导出单个用户信息', {
+                time: 1000
+            });         
+        }else if(obj.event === 'chgstatus'){
+			var allow_login = data.allow_login?0:1;
+            layer.confirm("是否更改用户状态?", function(index){
+                $.post("{:url('user/getset')}", {id:data.id,allow_login:allow_login},function(ret){
+                    layer.msg("状态修改成功");
+                    table.reload('idTest');
+                });
+            });
+        }
+    });
+
+    var $ = layui.$, active = {
+        reload: function(){
+			var demoReload = $('#demoReload');
+			table.reload('idTest', {
+				where: {
+					keyword: demoReload.val()
+				}
+			});
+        },
+		toexcel: function(){ //导出数据
+			  var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+			  for(var i=0;i<data.length;i++){
+				  ids += ","+data[i].id;
+			  }
+			window.location = "{:url('user/getlist')}"+"?toexcel=1&ids="+ids;		
+			console.log(ids);
+		}		
+    };    
+    
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+    function dourl(url, title, tips, area) {
+        layui.layer.open({
+            title: title,
+            type: 2,
+            content: url,
+            area: area,
+            shadeClose: true, //开启遮罩关闭
+            success: function (layero, index) {
+                setTimeout(function () {
+                    layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                }, 500)
+            }
+        })
+    }	
+
+    
+});
+	
+
+</script>
+
+</body>
+</html>

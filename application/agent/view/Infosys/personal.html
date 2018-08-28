@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form layui-form-pane" lay-filter="search">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户ID</label>
+            <div class="layui-input-block">
+                <input type="text" disabled autocomplete="off" value="{$agent.id}" placeholder="商业险会员免手续费" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" autocomplete="off" value="{$agent.nickname}" placeholder="商业险会员免手续费" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人手机</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickphone" lay-verify="required|phone" autocomplete="off" value="{$agent.nickphone}" placeholder="商业险会员免手续费"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" lay-verify="required|email" autocomplete="off" value="{$agent.email}" placeholder="商业险会员免手续费"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">上午时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="morning" class="layui-input" id="test9" placeholder=" - ">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">下午时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="night" class="layui-input" id="test10" placeholder=" - ">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">服务时间</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="week[1]" title="周一" {if strstr($agent.weekday,'1') }checked{/if}>
+                <input type="checkbox" name="week[2]" title="周二" {if strstr($agent.weekday,'2') }checked{/if}>
+                <input type="checkbox" name="week[3]" title="周三" {if strstr($agent.weekday,'3') }checked{/if}>
+                <input type="checkbox" name="week[4]" title="周四" {if strstr($agent.weekday,'4') }checked{/if}>
+                <input type="checkbox" name="week[5]" title="周五" {if strstr($agent.weekday,'5') }checked{/if}>
+                <input type="checkbox" name="week[6]" title="周六" {if strstr($agent.weekday,'6') }checked{/if}>
+                <input type="checkbox" name="week[7]" title="周日" {if strstr($agent.weekday,'7') }checked{/if}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">原密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="tpassword" autocomplete="off" value="" placeholder="无修改请勿输入" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" autocomplete="off" value="" placeholder="无修改请勿输入" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="truepassword" autocomplete="off" value="" placeholder="无修改请勿输入" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" id="xiugai" lay-filter="demo1">确认修改</button>
+        </div>
+    </form>
+
+    <script src="__STATIC__/shopadmin/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'table', "element", "laydate", "jquery"], function () {
+            var table = layui.table, form = layui.form, element = layui.element, laydate = layui.laydate, $ = layui.jquery;
+
+            //日期时间范围
+            laydate.render({
+                elem: '#test9'
+                , type: 'time'
+                , range: true
+                , format: 'HH:mm'
+                , max: '12:00:00'
+                {if $agent.server_zao}, value: '{$agent.server_zao}'{/if}
+            });
+            laydate.render({
+                elem: '#test10'
+                , type: 'time'
+                , range: true
+                , format: 'HH:mm'
+                , min: '12:00:00'
+                {if $agent.server_wan}, value: '{$agent.server_wan}'{/if}
+            });
+            //自定义验证规则
+            form.verify({
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                layer.confirm('确定修改', function (index) {
+                    console.log(data.field);
+                    $.post('', data.field, function (res) {
+                        layer.msg(res.msg,function(){
+                            location.reload();
+                        })
+                    });
+                    layer.close(index);
+                });
+                return false;
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>分期审核</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+    #login {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 47px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #login #discount .midlist .aui-list {
+        padding: 0;
+    }
+
+    #login #discount .midlist .aui-list img {
+        margin-top: 0;
+    }
+	.look-pdf {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding-bottom: 50px;
+		overflow:scroll;
+		display:none;
+    }
+	.pdfshow{
+		display:block;
+	}
+    </style>
+</head>
+
+<body>
+    <div id="login">
+        <div id="progressBar" class="audit">
+            <div id="toptitle" class="toptitle">审核中</div>
+            <button id="first" class="btn-active">1<a>审核中</a></button>
+            <div id="first_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="second">2<a>审核通过</a></button>
+            <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="third"><span>完成</span><a>提交合同</a></button>
+        </div>
+		 <div class="look-pdf">
+                <img src="http://chexian.302s.cn/uploads/contract/20180303172012513504946.pdf" style="width: 100%;margin-top:0" />
+        </div>
+        <div class="write" style="max-width:300px">
+            <canvas id="canvas" width="100" height="100">Your browser doesn't support signing</canvas>
+            <button type="button" id="sign" style="bottom:5px;">签约合同</button>
+        </div>
+        <ul id="queren" class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <img src="../image/finish.png">
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner blue">
+                    <a class="blue">分期成功！</a>
+                    <div class="chakan">
+                        点击查看<span onclick="openWin('mybystages')">分期账单</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="aui-text-center fixbottom" style="z-index: 100">
+        <input type="hidden" value="" id="orderid">
+        <button type="button" id="next">下一步</button>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-toast.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../js/bootstrap.js"></script>
+<script type="text/javascript" src="../js/signature_pad.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="../js/service.js"></script>
+<script type="text/javascript" src="../js/jquery.json.js"></script>
+<script type="text/javascript">
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+function changeSize() {
+    if (window.innerHeight > window.innerWidth) {
+        $('#sig').css("min-height", ((window.innerHeight / 2) - 100));
+        $("#canvas").attr({ "height": ((window.innerHeight / 2) - 100), "width": "250px" });
+    } else {
+        $('#sig').css("min-height", (window.innerHeight - 350));
+        $("#canvas").attr({ "height": (window.innerHeight - 350), "width": "250px" });
+    }
+    var canvasX = $("#canvas")[0];
+    signaturePad = new SignaturePad(canvasX, {
+        dotSize: 0,
+        velocityFilterWeight: 1,
+        minWidth: 2.0,
+        maxWidth: 5.2,
+        penColor: "rgb(255,0,0)",
+        backgroundColor: "rgb(255,255,255)"
+    });
+}
+var toast = new auiToast();
+var click_status = 0; 
+//获取已报价未确认订单
+changeSize();
+var id = GetQueryString("id");
+//获取已报价未确认订单
+var data = {};
+if(id>0){
+    data = {id:id};
+}
+$.post("/api/order/getuserorder.do", data, function(ret) {
+    var json = eval("(" + ret + ")");
+    $("#orderid").val(json["orderid"]);
+    console.log(json["fqstat"]);
+    if (json["fqstat"] == 3) {
+        checkstat();
+    } else {
+        $("#next").html("返回首页");
+        <!-- $("#next").css("background", "#CCCCCC"); -->
+        <!-- $("#next").css("box-shadow", "0 0 10px #CCCCCC"); -->
+        $("#next").attr("id", "re");
+    }
+});
+
+$("body").on("click","#re",function(){
+	window.location = "index_frm.html";
+})
+
+function checkstat() {
+    $("#first_input").hide();
+    $("#second_input").show();
+    $("#first_").addClass('div-active');
+    $("#second").addClass('btn-active');
+    $("#toptitle").text('审核通过');
+    click_status++;
+    return;
+}
+$("body").on("click", "#sign", function() {
+    if (signaturePad.isEmpty()) {
+        alert("画布为空，请先手绘签名再提交！");
+    } else {
+        var canvas = document.getElementById("canvas");
+        var canvasData = canvas.toDataURL("image/jpeg");
+
+        window.drawSeal = {
+            orderid: $("#orderid").val(),
+            devId: window.devId,
+            accountId: window.accountId,
+            accountType: window.accountType,
+            sealData: canvasData,
+            color: $('.color.select').attr('name')
+        };
+        
+        toast.loading({
+            title: "正在验证",
+            duration: 2000
+        });
+        callService("/api/Signapi.do", $.extend(window.drawSeal, window.project), (callback = function(data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                window.sealType = "draw";
+                window.sealData = data.sealData;
+                // api.hideProgress();
+                // alert('手签成功，请点击下一步');
+                $("#next").click();
+            } else {
+                alert(data.msg);
+            }
+        }));
+    }
+});
+//0，1下一步，2确认
+$("body").on("click", "#next", function() {
+    if (click_status == 0) {
+        checkstat();
+    } else if (click_status == 1) {
+	    if(!$(".look-pdf").hasClass('pdfshow')){
+		
+        $("#next").hide();
+			$.post("/api/Signapi/topdf.do", { orderid: $("#orderid").val() }, function(ret) {
+				console.log(ret);
+				$(".look-pdf").html(ret);
+				$("#next").show();
+				$("#login span").css("background","none").css("position","inherit").css("color","#757575");
+			});
+			$(".look-pdf").addClass('pdfshow');
+			return;
+		}
+		$("#login span").css("position","absolute").css("color","#ffffff");
+		$(".look-pdf").removeClass('pdfshow');
+        
+        $("#progressBar,.write").show();
+        $("#queren").hide();
+        $("#second_input").hide();
+        $("#third_input").show();
+        $("#second_").addClass('div-active');
+        $("#third").addClass('btn-active');
+        $("#toptitle").text('提交合同');
+        $("#progressBar").css({
+            "margin-top": "30px"
+        });
+        $("#toptitle").css({
+            "margin-bottom": "0"
+        });
+        $(".write").show();
+        $("#next").html("下一步");
+        // $(this).text('确认');
+        click_status++;
+        return;
+    } else if (click_status == 2) {
+	
+        window.drawSeal = { orderid: $("#orderid").val() };
+        callService("/api/Signapi/create.do", $.extend(window.drawSeal, window.project), (callback = function(data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                $("#progressBar,.write").hide();
+                $("#queren").show();
+                toast.hide();
+                alert('签约成功');
+				window.location = "mybystagesdetail_frm.html?id="+$("#orderid").val();
+                closeTowin();
+            } else {
+                $("#progressBar,.write").hide();
+                $("#queren").show();
+                $(".blue a").text('审核失败').css({
+                    'color': '#FF611C',
+                });
+                $("img").attr('src', '../image/fail.png');
+                $(".chakan").html("原因如下<br />（" + data.msg + "）");
+                $("#next").html("上一步");
+                click_status--;
+                return;
+            }
+        }));
+    } else if (click_status == 3) {
+        $(".blue a").text('审核失败').css({
+            'color': '#FF611C',
+        });
+        $("img").attr('src', '../image/fail.png');
+        $(".chakan").html("原因如下<br />（综合评分不足等原因）")
+        click_status++;
+        return;
+    }
+});
+$("#position").click(function() {
+    var citySelector = api.require('citySelector');
+    citySelector.open({
+        y: api.frameHeight / 1.6,
+        fixedOn: api.frameName,
+        anim: true
+    }, function(ret, err) {
+        if (ret) {
+            $("#province").text(ret.province);
+            $("#city").text(ret.city);
+            // alert(json);
+            // alert(JSON.stringify(ret));
+        } else {
+            // alert(JSON.stringify(err));
+        }
+    });
+});
+
+
+
+$(".select").click(function() {
+    $(".select").removeClass('active');
+    // $(".selecttype").hide();
+    $(this).addClass('active');
+    // $(this).children('.selecttype').show();
+})
+</script>

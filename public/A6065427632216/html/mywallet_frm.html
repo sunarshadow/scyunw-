@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的钱包</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css" media="screen">
+    .aui-dialog-body input {
+        text-align: center;
+    }
+    </style>
+</head>
+
+<body>
+    <section id="redpackageuser" class="aui-grid">
+        <div class="aui-row">
+            <div class="aui-col-xs-12">
+                <div class="out">
+                    <div class="icon icon-user" id="wxavatar"></div>
+                    <div class="aui-grid-label name" id="username">Lori Johnson</div>
+                    <div class="aui-grid-label"><span id="balance">0</span></div>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" onclick="withdrawals()">
+                <div class="out">
+                    <div class="icon icon-1"></div>
+                    <div class="aui-grid-label">提现</div>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" onclick="recharge()">
+                <div class="out">
+                    <div class="icon icon-2"></div>
+                    <div class="aui-grid-label">充值</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="redpackage" class="aui-content set">
+        <ul class="aui-list">
+            <li class="aui-list-item" onclick="openWin('detail')">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-5"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    红包明细
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="openWin('detail')">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-6"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    流水明细
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+// alert($api.getStorage('wxavatar'));
+$("#wxavatar").css("background-image", "url('" + $api.getStorage('wxavatar') + "')");
+$("#username").text($api.getStorage('username'));
+$("#money_free").text($api.getStorage('money_free'));
+var dialog = new auiDialog();
+
+function recharge() {
+    dialog.prompt({
+        title: "请输入充值金额(元)",
+        text: '1-100',
+        type: 'number',
+        buttons: ['取消', '确定']
+    }, function(ret) {
+        if (ret.buttonIndex == 2) {
+            dialog.alert({
+                title: "提示",
+                msg: "您输入的内容是：" + ret.text,
+                buttons: ['确定']
+            });
+        }
+    });
+}
+
+function withdrawals() {
+    dialog.prompt({
+        title: "请输入提现金额(元)",
+        text: '1-100',
+        type: 'number',
+        buttons: ['取消', '确定']
+    }, function(ret) {
+        if (ret.buttonIndex == 2) {
+            dialog.alert({
+                title: "提示",
+                msg: "您输入的内容是：" + ret.text,
+                buttons: ['确定']
+            });
+        }
+    })
+}
+</script>
+
+</html>

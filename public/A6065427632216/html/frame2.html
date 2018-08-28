@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-pull-refresh.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body class="usercenter">
+    <section id="user" class="aui-grid">
+        <div class="aui-row">
+            <div class="aui-col-xs-12" onclick="changemsg()">
+                <div class="out">
+                    <div class="icon icon-user" id="wxavatar"></div>
+                    <div class="aui-grid-label" id="username">&emsp;</div>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" onclick="openWin('mywallet')">
+                <div class="out">
+                    <div class="icon icon-1"></div>
+                    <div class="aui-grid-label">我的钱包</div>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" onclick="openWin('mybystages')">
+                <div class="out">
+                    <div class="icon icon-2"></div>
+                    <div class="aui-grid-label">我的分期</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="frame2" class="aui-content">
+        <ul class="aui-list">
+            <li class="aui-list-item" onclick="openWin('redpackage')">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-1"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    红包
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="openWin('mypolicy')">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-2"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    我的保单
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="openWin('msgfeedback')">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-3"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    留言反馈
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="share()">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-4"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    我要推广
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="binding()">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-5"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    绑定第三方账号
+                </div>
+            </li>
+            <!--  <li class="aui-list-item" onclick="getContacts()">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-4"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    获取通讯录
+                </div>
+            </li> -->
+            <li class="aui-list-item" onclick="logout()">
+                <div class="aui-list-item-label-icon">
+                    <div class="icon icon-6"></div>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    退出登录
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/aui-sharebox.js"></script>
+<script type="text/javascript">
+
+var title, description, thumb, contentUrl;
+apiready = function() {
+    api.parseTapmode();
+    getUserInfo();
+    $.post($api.getStorage('serviceAddr') + "/api/index/getconfig.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var json_ = eval("(" + json.share_value + ")");
+        title = json_.title;
+        description = json_.description;
+        contentUrl = json_.url;
+        if (json_.thumb.indexOf("http")) {
+            thumb = $api.getStorage('serviceAddr') + json_.thumb;
+        } else {
+            thumb = json_.thumb;
+        }
+    });
+}
+
+function getUserInfo() {
+    // alert(1);
+    $.post($api.getStorage('serviceAddr') + "/api", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var headimgurl_;
+        if (json) {
+            if (json["wxnickname"] != '0' && json["wxavatar"] != '0') {
+                $("#username").html(json["wxnickname"]);
+                headimgurl_ = json["wxavatar"];
+
+            } else if (json["qqnickname"] != '0' && json["qqavatar"] != '0') {
+                $("#username").html(json["qqnickname"]);
+                headimgurl_ = json["qqavatar"];
+            } else {
+                $("#username").html($api.getStorage('loginsuccesstel'));
+                headimgurl_ = "../image/user.png";
+            }
+            $("#wxavatar").css("background-image", "url('" + headimgurl_ + "')");
+            $api.setStorage('username', $("#username").html());
+            $api.setStorage('wxavatar', headimgurl_);
+            $api.setStorage('money_free', json["money_free"]);
+        }
+    });
+}
+
+function changemsg() {
+
+}
+var sharebox = new auiSharebox();
+
+function share() {
+    var wx = api.require('wx');
+    var MNActionButton = api.require('MNActionButton');
+    MNActionButton.open({
+        layout: {
+            row: 1,
+            col: 4,
+            rowSpacing: 30,
+            colSpacing: 30,
+            offset: 0
+        },
+        animation: false,
+        autoHide: true,
+        styles: {
+            maskBg: 'rgba(0,0,0,0.75)',
+            bg: '#F8F8F8',
+            cancelButton: {
+                size: 30,
+                bg: '#ffffff',
+                icon: '../image/share/cancel.png'
+            },
+            item: {
+                titleColor: '#000',
+                titleHighlight: '#000',
+                titleSize: 10
+            },
+            indicator: {
+                color: '#9e9e9e',
+                highlight: '#000'
+            }
+        },
+        items: [{
+            icon: '../image/share/1.png',
+            // highlight: '../image/share//0.png',
+            title: '朋友圈'
+        }, {
+            icon: '../image/share/2.png',
+            title: '微信好友'
+        }, {
+            icon: '../image/share/3.png',
+            title: 'QQ'
+        }, {
+            icon: '../image/share/4.png',
+            title: '空间'
+        }]
+    }, function(ret) {
+        switch (ret.index) {
+            case 0:
+                shareWX('timeline'); //朋友圈
+                break;
+            case 1:
+                shareWX('session'); // 微信好友
+                break;
+            case 2:
+                shareQQ('QFriend');
+                break;
+            case 3:
+                shareQQ('QZone');
+                break;
+
+        }
+    });
+
+}
+
+function shareWX(scene) {
+    var wx = api.require('wx');
+    wx.isInstalled(function(ret, err) {
+        if (ret.installed) {
+            // alert("当前设备已安装微信客户端");
+            wx.shareWebpage({
+                scene: scene,
+                title: title,
+                description: description,
+                thumb: '../image/sharelogo.png',
+                contentUrl: contentUrl
+            }, function(ret, err) {
+                if (ret.status) {
+                    alert('分享成功');
+                } else {
+                    alert('您取消了分享！');
+                }
+            });
+        } else {
+            alert('当前设备未安装微信客户端');
+        }
+    });
+}
+
+function shareQQ(type) {
+    var qq = api.require('qq');
+    qq.shareNews({
+        url: contentUrl,
+        title: title,
+        description: description,
+        imgUrl: thumb,
+        type: type
+    });
+}
+
+function logout() {
+    $.post($api.getStorage('serviceAddr') + "/api/index/loginout.do", {}, function(ret) {
+        $api.clearStorage();
+        // alert(1);
+        openWin('login');
+    });
+}
+
+function bdwx() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    var wx = api.require('wx');
+    wx.auth({
+        // apiKey: ''
+    }, function(ret, err) {
+        if (ret.status) {
+            wx.getToken({
+                code: ret.code
+            }, function(ret_, err_) {
+                if (ret_.status) {
+                    wx.getUserInfo({
+                        accessToken: ret_.accessToken,
+                        openId: ret_.openId
+                    }, function(retinfo, errinfo) {
+                        if (retinfo.status) {
+                            var openid = retinfo.openid;
+                            console.log(openid);
+                            $.post($api.getStorage('serviceAddr') + "/api/index/bdwx.do", {
+                                wxopenid: retinfo.openid,
+                                wxunionid: retinfo.unionid,
+                                wxnickname: retinfo.nickname,
+                                wxavatar: retinfo.headimgurl,
+                                phone: $api.getStorage('loginsuccesstel'),
+                            }, function(status) {
+                                if (status) {
+                                    alert('绑定成功');
+                                    location.reload();
+                                } else {
+                                    alert("绑定失败");
+                                }
+                            });
+                        } else {
+                            alert(errinfo.code);
+                        }
+                    });
+                } else {
+                    alert(err_.code);
+                }
+            });
+        } else {
+            alert(err.code);
+        }
+    });
+}
+
+function bdqq() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    var qq = api.require('qq');
+    qq.login(function(ret, err) {
+        var openid = ret.openId;
+        qq.getUserInfo(function(retinfo, errinfo) {
+            if (retinfo.status) {
+                $.post($api.getStorage('serviceAddr') + "/api/index/bdwx.do", {
+                    qqopenid: openid,
+                    qqunionid: "qq" + openid,
+                    qqnickname: retinfo.info.nickname,
+                    qqavatar: retinfo.info.figureurl_qq_2,
+                    phone: $api.getStorage('loginsuccesstel'),
+                }, function(status) {
+                    if (status) {
+                        alert('绑定成功');
+                        location.reload();
+                    } else {
+                        alert("绑定失败");
+                    }
+                });
+            } else {
+                alert(errinfo.code);
+            }
+        });
+    });
+}
+
+
+// function getContacts() {
+//     var contacts = api.require('contacts');
+//     contacts.queryByPage({
+//         count: 10000,
+//         pageIndex: 0
+//     }, function(ret, err) {
+//         if (ret) {
+//             alert(JSON.stringify(ret));
+//         } else {
+//             alert(JSON.stringify(err));
+//         }
+//     });
+// }
+
+
+function binding() {
+    api.actionSheet({
+        title: "绑定第三方账号",
+        cancelTitle: '取消',
+        buttons: ['微信', 'QQ']
+    }, function(retb, errb) {
+        if (retb.buttonIndex == 3) {
+            return;
+        }
+        if (retb.buttonIndex == 1) {
+            bdwx();
+        } else {
+            bdqq();
+        }
+    });
+}
+
+var pullRefresh = new auiPullToRefresh({
+    container: document.querySelector('body'),
+    triggerDistance: 50
+}, function(ret) {
+    if (ret.status == "success") {
+        setTimeout(function() {
+            pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
+            location.reload();
+        }, 500)
+    }
+});
+</script>
+
+</html>

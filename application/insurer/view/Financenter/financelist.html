@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>财务中心</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+    <style>
+        .topsearch .search-type {
+            width: 600px;
+        }
+    .search-type .input_type {
+            display: inline-block;
+            vertical-align: middle;
+            width: 40px;
+            margin-top: 0px;
+    }
+    .search-type>span {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 36px;
+    }
+    </style>
+
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <div class="menu"><a>财务中心</a><i class="fa fa-angle-right blue"></i><a class="blue">结款信息</a></div>
+        <div class="topsearch">
+            <div class="search-input">
+                <input type="text" name="keywords" value="{$keywords}" id="keywords"/>
+                <button type="button" id="search">查询</button>
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="search-type">
+                <span><label><input name="search" class="input_type" {if $radio == 'knotman'}checked{/if}  type="radio" value="knotman" >结款人</label></span>
+                <span><label><input name="search" class="input_type" {if $radio == 'bank'}checked{/if} type="radio" value="bank">银行</label></span>
+                <span><label><input name="search" class="input_type" {if $radio == 'bankcarnub'}checked{/if} type="radio" value="bankcarnub">卡号</label></span>
+                <span><label><input name="search" class="input_type" {if $radio == 'paytime'}checked{/if} type="radio" value="paytime">结款时间</label></span>
+                <span><label><input name="search" class="input_type" {if $radio == 'addtime'}checked{/if} type="radio" value="addtime">添加时间</label></span></div>
+        </div></label>
+        <div id="offer-list" class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <!-- <th>保单总数</th> -->
+                        <th>结款金额</th>
+                        <th>结款人</th>
+                        <th>银行</th>
+                        <th>卡号</th>
+                        <th>结款时间</th>
+                        <th>添加时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist id="vo" name="list"}
+                    <tr>
+                        <td>{$vo.amount}</td>
+                        <td>{$vo.knotman}</td>
+                        <td>{$vo.bank}</td>
+                        <td>{$vo.bankcarnub}</td>
+                        <td>{$vo.paytime}</td>
+                        <td>{$vo.addtime}</td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagermsg">
+            共{$list->total()}条记录 每页{$list->listRows()}条记录 共{$list->lastPage()}页 当前第{$list->currentPage()}页
+            <nav aria-label="Page navigation">
+                {$list->render()}
+            </nav>
+        </div>
+       
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+    $("input").focus(function() {
+        $('.fa-search').hide();
+    });
+    $('#search').click(function(){
+        if($('.input_type').is(':checked')) {
+            var keywords = $('#keywords').val();
+            var radio=$('input:radio[name="search"]:checked').val();
+            location.href = "{:url('financenter/financelist')}?keywords="+keywords+"&radio="+radio;
+    }
+    })
+    </script>
+
+</html>

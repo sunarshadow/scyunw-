@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>报价</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body id="details">
+    <div class="out">
+        <section class="aui-grid aui-grid-0">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label aui-text-left">保单金额</div>
+                <div class="num aui-text-left"><span class="small">￥</span><font class="order_price"></font></div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label op0">账户余额</div>
+                <div class="num name"><font class="companyname"></font></div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-1">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">被保车辆</div>
+                <div class="aui-grid-label fw"><font class="car_license"></font></div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">车主信息</div>
+                <div class="aui-grid-label fw"><font class="car_name"></font></div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-0 bgw">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">身份证</div>
+                <div class="aui-grid-label"><font class="id_code"></font></div>
+                <div class="aui-grid-label">行驶证</div>
+                <div class="aui-grid-label"><font class="car_code"></font></div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">
+                    <img src="../image/circle.png">
+                </div>
+            </div>
+        </section>
+        <div id="details-list">
+            <div class="top">&nbsp;保单信息</div>
+            <div class="toptitle">详情<span class="aui-pull-right">￥<font class="order_price"></font></span></div>
+            <div class="midlist">
+                <div class="aui-content">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    交强险<span class="aui-pull-right">￥<font class="jqprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    车船税<span class="aui-pull-right">￥<font class="csprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-media">
+                                    <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                                </div>
+                                <div class="aui-list-item-inner">
+                                    商业险<span class="aui-pull-right">￥<font class="syprice"></font></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="aui-text-center fixbottom" style="z-index: 100">
+        <button type="button" id="buy">生成订单</button>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+    $(function(){
+        //获取已报价未确认订单
+        $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+            var json = eval("(" + ret + ")");
+            for(key in json){
+                $("."+key).html(json[key]);
+            }
+            if(json["stat"]<2){
+                $("#buy").html("等待报价");
+                $("#buy").css("background","#CCCCCC");
+                $("#buy").css("box-shadow","0 0 10px #CCCCCC");
+                $("#buy").attr("id","re");
+            }
+        });
+    });
+        //生成订单
+        $("body").on("click","#buy",function(){
+            //传ID参数
+            openWin('order');     
+        });
+</script>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>保险询价</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <!-- time -->
+    <script src="__STATIC__/web/js/distpicker.data.js"></script>
+    <script src="__STATIC__/web/js/distpicker.js"></script>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="">
+        <div class="npagePage Pageyemian" id="page_none">
+            <div id="banner" class="">
+                <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124956492.jpg);"></div>
+            </div>
+            <div class="content">
+                <div id="progressBar">
+                    <button id="first" class="btn-active">1<a>身份认证</a></button>
+                    <div id="first_" class="div-active"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="second">2<a>运营商认证</a></button>
+                    <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="third">3<a>平台审核</a></button>
+                    <div id="third_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="fourth"><span><i class="fa fa-check"></i></span><a>申请成功</a></button>
+                </div>
+                <div class="fw bystages maintain">
+                    <form id="orderform"  method="post">
+                    
+                        <input id="file" type="file">
+                        <div id="no1" class="row">
+                            <div class="col-lg-6">
+                                <div>
+                                    填写信息
+                                </div>
+                                <div>
+                                    车主姓名：
+                                    <input type="text" id="car_name" name="car_name"  value="">
+                                </div>
+                                <div>
+                                    车牌号码：
+                                    <input type="text" id="car_license" name="car_license" value="">
+                                </div>
+                                <div>
+                                    手机号码：
+                                    <input type="text" id="apply_phone" name="apply_phone" value="">
+                                </div>
+                                <div>
+                                    预约时间：
+                                    <input id="awakedate"  name="awakedate" placeholder="请选择时间">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    上传证件
+                                </div>
+                                
+                                <input id="IDPicZ_" type="hidden" name="id_img" value="0" data-desc='七牛云图片路径'>
+                                <input id="IDPicZ_text" type="hidden" name="id_img_text" value="0" data-desc='64位编码'>
+                                
+                                <input id="IDPicF_" type="hidden" name="id_img_b" value="0" data-desc='七牛云图片路径'>
+                                <input id="IDPicF_text" type="hidden" name="id_img_b_text" value="0" data-desc='64位编码'>
+
+                                <input id="IDPicS_" type="hidden" name="id_img_r" value="0" data-desc='七牛云图片路径'>
+                                <input id="IDPicS_text" type="hidden" name="id_img_r_text" value="0" data-desc='64位编码'>
+
+                                <input type="hidden" id="orderid" value="">
+                                <div class="row">
+                                    <div class="col-lg-6 text-center" onclick="getPicture('IDPicZ','people','身份证正面');">
+                                        <div id="IDPicZ" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            身份证正面照
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center" onclick="getPicture('IDPicF','camera','身份证反面')">
+                                        <div id="IDPicF" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            身份证反面照
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center" onclick="getPicture('IDPicS','camera','人脸识别')">
+                                        <div id="IDPicS" class="uploadimg">
+                                        </div>
+                                        <div class="red">
+                                            上传图片
+                                        </div>
+                                        <div class="gray">
+                                            手持身份证
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="apply">
+                                <button id="subapply" type="button" class="btn">提交申请</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="__STATIC__/web/js/upload.js"></script>
+<script type="text/javascript">
+$(function(){  
+    var data = {};
+    {if $id}
+    var id = {$id};
+    data["id"] = id;
+    {/if}
+    $.post("/api/order/getuserorder.do", data, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("#" + key).val(json[key]);
+        }        
+        if(ret == 'login'){
+            alert("购买车险请先登录！");
+            $("#login").show();
+        }else{
+            $("#orderid").val(json["orderid"]);
+        }        
+    });    
+})
+$("#subapply").click(function() {
+    var fromary = $("#orderform").serialize();
+    var id = $("#orderid").val();
+    fromary += "&id=" + id + "&fktype=0";
+    $.post("/api/order/buy.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("认证成功");
+            window.location = "/web/index/phoneauth";
+        } else {
+            alert(ret);
+        }
+
+    });   
+    return false;
+});
+
+
+</script>

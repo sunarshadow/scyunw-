@@ -1,0 +1,15 @@
+无需登录接口：
+    登录：/api/index/login.do , 参数：phone(电话)
+    注销：/api/index/loginout.do
+    注册：/api/index/reg.do
+    获取列表:/api/index/getlist.do , 参数：t(1:公司类型表)
+需登录接口：
+    获取个人信息: /api(注：未登录判断本地缓存，跳转登录接口后)
+    订单相关接口：
+        获取保单列表：/api/order
+        保单询价：/api/order/create.do
+        获取询价订单详情：/api/order/getuserorder.do ， 参数：id(对应id)
+        获取分期账单列表：/api/order/getinstall.do
+    红包相关接口：
+        红包统计信息: /api/red/count.do
+        红包/流水明细: /api/red , 参数：t(0:红包，1:流水)

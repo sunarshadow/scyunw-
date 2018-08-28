@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>查看物流</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+    <style>
+        #logistics .detail{
+            font-size: 14px;
+            line-height: 20px;
+        }
+      
+    </style>
+</head>
+
+<body>
+    
+    <div id="header"></div>
+    <div id="main">
+        <div class="menu"><a>物流信息</a><i class="fa fa-angle-right blue"></i><a>待收保单</a><i class="fa fa-angle-right blue"></i><a class="blue">查看物流</a></div>
+        <div id="logistics">
+            <div class="address">
+                <i class="fa fa-map-marker"></i> 收货地址：{$order.express_address}
+            </div>
+            <div class="con" id="wlinfo">
+                <div class="num">订单编号:{$order.express_id}</div>
+                <div class="time">发货时间:{$order.express_time}</div>
+                
+            </div>
+        </div>
+        <div class="botbtn">
+            <a href="{:url('index/index')}" class="btn btn-default cancel finish">返回首页</a>
+            <a href="{:url('logisticslist/index')}" class="btn btn-default cancel finish">返回物流信息</a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+    
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+
+<script type="text/javascript">
+function getexpress(){
+    $.post("/api/index/getexpress.do", {express_id:{$order.express_id}}, function(ret) {
+        var data = eval("(" + ret + ")");
+        var json = data.result.result.list;
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += '<div class="detail"><i class="fa fa-circle"></i><div class="text">'+json[i].status+'</div><div class="eachtime">'+json[i].time+'</div></div>';
+        } 
+        $("#wlinfo").append(html);
+    }); 
+}
+getexpress();
+</script>
+
+</html>

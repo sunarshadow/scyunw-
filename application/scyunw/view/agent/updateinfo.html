@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>
+    body {
+        margin: 10px;
+    }
+
+    .layui-table a {
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>商户信息修改</legend>
+</fieldset>
+<table class="layui-table">
+  <colgroup>
+    <col width="50%">
+    <col width="50%">
+  </colgroup>
+  <form id="infobox">
+  <tbody style="text-align:center">
+    <tr>
+      <td>{$info.ress}</td>
+      <td>{$info.servicetype|getservertype}</td>
+    </tr>
+    <tr>
+      <td>商户地址</td>
+      <td>{$info.address}</td>
+    </tr>
+    <tr>
+      <td>公司名称</td>
+      <td><input type="text" name="company"  value="{$info.company}" lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>负责人/联系人</td>
+      <td><input type="text" name="nickname"  value="{$info.nickname}" lay-verify="required" placeholder="请输入负责人/联系人" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>联系电话</td>
+      <td><input type="text" name="nickphone"  value="{$info.nickphone}" lay-verify="required" placeholder="请输入联系电话" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>登录用户名</td>
+      <td>{$info.nickphone}</td>
+    </tr>
+    <tr>
+      <td>登录密码</td>
+      <td><input type="text" name="password"  value="" lay-verify="required" placeholder="请输入登录密码" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>注册时间</td>
+      <td>{$info.addtime}</td>
+    </tr>
+    <tr>
+      <td>预约总次数</td>
+      <td>{$info.id|getbespokecount}</td>
+    </tr>
+    <tr>
+      <td>成交总次数</td>
+      <td>{$info.id|getconsumptioncount}</td>
+    </tr>
+    <tr>
+      <td>出单成交率</td>
+      <td>{$info.id|getconsumptionrate}</td>
+    </tr>
+    <tr style="text-align:center">
+      <td colspan="2">结算详情</td>
+    </tr>
+    <tr>
+      <td>结算账户名</td>
+      <td><input type="text" name="acholder"  value="{$info.id|bankinfo='acholder'}" lay-verify="required" placeholder="请输入结算账户名" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>结算卡号</td>
+      <td><input type="text" name="bankaccount"  value="{$info.id|bankinfo='bankaccount'}" lay-verify="required" placeholder="请输入结算卡号" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>开户银行</td>
+      <td><input type="text" name="openacstore"  value="{$info.id|bankinfo='openacstore'}" lay-verify="required" placeholder="请输入开户银行" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <tr>
+      <td>消费返点</td>
+      <td><input type="text" name="rebate"  value="{$info.rebate}" lay-verify="required" placeholder="请输入消费返点" autocomplete="off" class="layui-input"></td>
+    </tr>
+    <!-- <tr>
+        <td>消费返点</td>
+        <td><input type="text" name="rebate"  value="{$info.rebate}" lay-verify="required" placeholder="请输入消费返点" autocomplete="off" class="layui-input"></td>
+    </tr> 
+    <tr>
+      <td>商户验证码</td>
+      <td><input type="text" name="smscode" style=" width:200px;    display: inline-block;" lay-verify="required" placeholder="请输入商户验证码" autocomplete="off" class="layui-input">
+        <button class="layui-btn" id="getsmscode" lay-submit="" lay-filter="demo3">获取验证码</button></td>
+    </tr>-->
+    <tr style="text-align:center">
+      <td colspan="2">
+      <button type="button" class="layui-btn" id="updateinfo">立即提交</button>
+      <button type="button" class="layui-btn" id="getdel" data-id="{$info.id}">删除</button>
+      </td>
+    </tr>
+    <!-- <tr style="text-align:center">
+      <td colspan="2">相关证明资料扫描件（包括营业执照，门店洗照片等）</td>
+    </tr>
+    <tr>
+      <td colspan="2" id="imgbox">
+          {volist name="info['com_other_img']" id="vo" key="k" }
+              <img style="max-width:500px;" order="{$k}" src="{$vo}" />
+           {/volist}
+      </td>
+    </tr> -->
+  <!-- <tr>
+      <td colspan="2" style="height:300px;">
+          <button type="button" class="layui-btn" id="test1">
+              <i class="layui-icon" id="updateinfo">&#xe67c;</i>上传图片
+          </button>
+      </td>
+  </tr> -->
+
+    
+  </tbody>
+</form>
+</table>
+ 
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form', 'layedit', 'laydate','upload', 'jquery'], function(){
+    var $ = layui.$,form = layui.form,layer = layui.layer,layedit = layui.layedit,laydate = layui.laydate,upload = layui.upload;;
+    //自定义验证规则
+    form.verify({
+    });
+
+    form.on('submit(demo3)', function (data) {
+                console.log(data);
+                var fromary = {
+                  apply_phone: '{$info.nickphone}'
+              }
+                $.post("/api/index/sms_sendcode.do", fromary, function (ret) {
+                    if (ret == 1) {
+                        layer.msg("短信已成功发送！");
+                    } else {
+                        layer.msg(ret.msg);
+                    }
+                    return false;
+                });
+                return false;
+            });
+    $('#updateinfo').click(function(res){
+      var postdata = {
+        type : 'info',
+        company : $("input[name='company']").val(),
+        nickname : $("input[name='nickname']").val(),
+        nickphone : $("input[name='nickphone']").val(),
+        password : $("input[name='password']").val(),
+        acholder : $("input[name='acholder']").val(),
+        bankaccount : $("input[name='bankaccount']").val(),
+        openacstore : $("input[name='openacstore']").val(),
+        rebate : $("input[name='rebate']").val(),
+        smscode : $("input[name='smscode']").val(),
+      }
+      $.post('',postdata,function(res){
+          layer.msg(res.msg);
+            setTimeout(function(){
+              parent.location.reload();
+            },800);  
+      })
+      console.log(postdata);
+      return;
+    });
+
+
+    $('#getdel').click(function(res){
+        var id = $(this).data("id");
+        layer.confirm('您确定删除该商户吗', function (index) {
+            $.post("{:url('agent/getdel')}", { ids: id }, function (ret) {
+                if (ret.code) {
+                  setTimeout(function(){
+                    parent.location.reload();
+                  },800); 
+                }
+            });
+        });
+    });    
+    //监听提交
+    form.on('submit(set)', function(data){
+      $.post("{:url('admingroup/getset')}",data.field,function(res){
+        if(res.msg){
+          layer.msg(res.msg);
+        }else{
+            layer.msg("分组权限编辑成功");
+            setTimeout(function(){
+              parent.location.reload();
+            },800);          
+        }
+      });
+      return false;
+    });
+    var uploadInst = upload.render({
+        elem: '#test1' //绑定元素
+        , url: "{:url('agent/info')}" //上传接口
+        , data:{'id':{$info.id}}
+        , done: function (res) {
+            var html = '';
+            $.each(res.list,function(index,item){
+                console.log(index);
+                console.log('-------');
+                console.log(item);
+                html += '<img style="max-width:500px;" order="'+index+'" src="'+ item+'" />';
+            })
+            $('#imgbox').html(html);
+        }
+        , error: function () {
+            //请求异常回调
+        }
+    })
+  
+  
+});
+</script>
+
+</body>
+</html>

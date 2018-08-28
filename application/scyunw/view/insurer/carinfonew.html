@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+
+    </div>
+    <table class="layui-table">
+        <colgroup>
+            <col width="25%">
+            <col width="25%">
+            <col width="25%">
+            <col>
+        </colgroup>
+        <tbody>
+            <tr>
+                <td>车牌</td>
+                <td>{$carinfo.car_license}</td>
+                <td>发动机</td>
+                <td>{$carinfo.car_motor}</td>
+            </tr>
+            <tr>
+                <td>车主</td>
+                <td>{$carinfo.car_name}</td>
+                <td>联系方式</td>
+                <td>{$carinfo.apply_phone}</td>
+            </tr>
+            <tr>
+                <td>车主身份证</td>
+                <td>{$carinfo.id_code}</td>
+                <td>车主行驶证</td>
+                <td>{$carinfo.car_code}</td>
+            </tr>
+            <tr>
+                <td>车价</td>
+                <td>{$carinfo.car_price}（万）</td>
+                <td>添加时间</td>
+                <td>{$carinfo.addtime}</td>
+            </tr>
+            <tr>
+                <td>审核人</td>
+                <td>{$carinfo.checkadminid}</td>
+                <td>审核时间</td>
+                <td>{$carinfo.checktime}</td>
+            </tr>
+            <tr>
+                <td>报价保险公司</td>
+                <td>{$carinfo.offerinsurerid}</td>
+                <td>报价时间</td>
+                <td>{$carinfo.offertime}</td>
+            </tr>
+            <tr>
+                <td>保单总价（报价）</td>
+                <td>{$carinfo.order_price}</td>
+                <td>管理员备注</td>
+                <td>{$carinfo.admin_note}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>保单操作</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="newsPage" class="npagePage Pagenews">
+        <div id="banner">
+            <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124501768.jpg);"></div>
+        </div>
+        <div class="content">
+            <div class="header">
+                <a href="usercenter.html">
+                    <p class="title">我的账户</p>
+                    <p class="subtitle">My account</p>
+                </a>
+            </div>
+            <div id="category">
+                <a href="/web/user/capital" {if $action eq "capital"}class="active"{/if}>资金管理</a>
+                <a href="/web/user/agentorder" {if $action eq "agentorder"}class="active"{/if}>商户预约</a>
+                <a href="/web/user/order" {if $action eq "orderdetail"}class="active"{/if}>我的保单</a>
+                <!-- <a href="/web/user/bill" {if $action eq "bill"}class="active"{/if}>我的账单</a> -->
+                <a href="/web/user/info" {if $action eq "info"}class="active"{/if}>个人资料</a>
+                <a href="/web/user/security" {if $action eq "security"}class="active"{/if}>账户安全</a>
+                <!-- <a href="/web/user/award" {if $action eq "award"}class="active"{/if}>推广奖励</a> -->
+            </div>
+            <div id="newslist" class="rightcon">
+                <div class="wrapper usermsg policy">
+                    <div class="black">
+                        提交合同
+                    </div>
+                    <div class="table-responsive">
+                        
+                        <form id="orderform"  method="post">
+                        <table class="table">
+                            <tbody>
+                                <tr class="orange">
+                                    <td class="text-left" colspan="2">订单编号：<font id="ordernum"></font></td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr class="gray gray-2">
+                                    <td colspan="2">
+                                        <canvas id="canvas" width="100" height="100">Your browser doesn't support signing</canvas>
+                   
+                                    </td>
+                                </tr>
+
+                                <tr class=" gray gray-2 step step4" >
+                                    <td colspan="2">
+                                        <div class="selyuyue" style="padding:0px; margin:0px;">
+                                        <font id="orderid" value="{id}" style="display:none;"></font>
+                                            <button class="btn next" id="sign" type="button" style="margin-top:0px;" >签约合同</button>
+                                            <button class="btn next" id="clear" type="button" style="margin-top:0px;" >清除签名</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/mobile/js/jquery-1.12.1.js"></script>
+<script type="text/javascript" src="/mobile/js/bootstrap.js"></script>
+<script type="text/javascript" src="/mobile/js/signature_pad.min.js"></script>
+<script type="text/javascript" src="/mobile/js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="/mobile/js/service.js"></script>
+<script type="text/javascript" src="/mobile/js/jquery.json.js"></script>
+<script type="text/javascript">
+function changeSize() {
+    if (window.innerHeight > window.innerWidth) {
+        $('#sig').css("min-height", ((window.innerHeight / 2) - 100));
+        $("#canvas").attr({ "height": ((window.innerHeight / 2) - 100), "width": "882px" });
+    } else {
+        $('#sig').css("min-height", (window.innerHeight - 350));
+        $("#canvas").attr({ "height": (window.innerHeight - 350), "width": "882px" });
+    }
+    var canvasX = $("#canvas")[0];
+    signaturePad = new SignaturePad(canvasX, {
+        dotSize: 0,
+        velocityFilterWeight: 1,
+        minWidth: 2.0,
+        maxWidth: 5.2,
+        penColor: "rgb(255,0,0)",
+        backgroundColor: "rgb(255,255,255)"
+    });
+}
+var click_status = 0; 
+//获取已报价未确认订单
+changeSize();
+$("body").on("click", "#sign", function() {
+    if (signaturePad.isEmpty()) {
+        alert("请先手绘签名再提交！");
+    } else {
+        var canvas = document.getElementById("canvas");
+        var canvasData = canvas.toDataURL("image/jpeg");
+
+        window.drawSeal = {
+            orderid: $("#orderid").html(),
+            devId: window.devId,
+            accountId: window.accountId,
+            accountType: window.accountType,
+            sealData: canvasData,
+            color: $('.color.select').attr('name')
+        };
+        callService("/api/Signapi.do", $.extend(window.drawSeal, window.project), (callback = function(data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                window.sealType = "draw";
+                window.sealData = data.sealData;
+                window.drawSeal = { orderid: $("#orderid").html() };
+                callService("/api/Signapi/create.do", $.extend(window.drawSeal, window.project), (callback = function(data) {
+                    hideLoading();
+                    if (data.errCode == 0) {
+                        alert('签约成功');
+                        window.location = "/web/user/orderdetail.html?id="+$("#orderid").html();
+                    } else {
+                        alert(data.msg);
+                    }
+                }));
+            } else {
+                alert(data.msg);
+            }
+        }));
+    }
+});
+$(function() {
+    //获取已报价未确认订单
+    var data = {};
+    {if $id}
+    var id = {$id};
+    data["id"] = id;
+    {/if}
+    $.post("/api/order/getuserorder.do", data, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            console.log(key + ":" + json[key]);
+            $("#" + key).html(json[key]);
+        }
+    }); 
+});
+
+$('#clear').click(function() {
+    signaturePad.clear();
+});
+$("body").on("click",".install",function(){
+    var id = $("#orderid").html();
+    window.location = "/web/index/buy.html?id="+id;
+});
+$("body").on("click",".sign",function(){
+    var id = $("#orderid").html();
+})
+//创建保单
+function createorder() {
+    var fromary = $("#orderform").serialize();
+    var id = $("#orderid").html();
+    fromary += "&id=" + id + "&fktype=0";
+    $.post("/api/order/buy.do", fromary, function(ret) {
+        alert("分期申请已经提交，请等待审核！");
+        window.location.reload();
+    });
+};
+</script>
+</html>

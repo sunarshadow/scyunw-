@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>预约商户订单信息</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+    .pdfimg {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+        display: none;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .pdfimg img {
+        width: 100%;
+    }
+
+    .adminote {
+        display:none;
+    }
+    </style>
+</head>
+
+<body id="details">
+    <div class="out outshow">
+        <section class="aui-grid aui-grid-0">
+            <div class="aui-col-xs-6" style="width: 100%;">
+                <div class="aui-grid-label aui-text-left">服务金额：
+                    <span class="num aui-text-left"><span class="small">￥</span>
+                    <font class="order_fee"></font>
+                    </span>
+                </div>
+                <div class="aui-grid-label order-num" style="z-index: 1">订单编号:
+                    <font class="order_id"></font>
+                </div>
+                <div class="aui-grid-label order-time">预约时间:
+                    <font class="addtime"></font>
+                </div>
+                <div class="aui-grid-label order-time">预约时间:
+                    <font class="bespeaktime"></font>
+                </div>
+                <div class="aui-grid-label order-time">支付时间:
+                    <font class="paytime"></font>
+                </div>
+                <div class="aui-grid-label order-time">服务类型:
+                    <font class="order_type"></font>
+                </div>
+                <!-- <span class="num name"><font class="companyname"></font></span> -->
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-1">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">服务车辆</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_license"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">车主信息</div>
+                <div class="aui-grid-label fw">
+                    <font class="realname"></font>
+                </div>
+            </div>
+        </section>
+
+        <section class="aui-grid aui-grid-0 bgw evaluatediv">
+             <div class="aui-col-xs-12" style="padding: 0 15px 15px 15px;">
+                <div class="aui-grid-label aui-text-left">留言评价</div>
+                <div class="aui-grid-label">
+                    <textarea name="evaluate" id="evaluate" style="width:300px; min-height:100px;border:1px solid;width: 100%;border-radius: 5px;"></textarea>
+                </div>
+            </div>
+        </section>
+         
+    </div>
+     <div class="aui-text-center fixbottom" style="z-index: 100">
+            <input type="hidden" value="" id="id">
+            <button type="button" id="next">提交评价</button>
+        </div>    
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+$(function() {
+    var id = GetQueryString("id");
+    $.post("/api/agent/getagentorderdetail.do", { id: id }, function(ret) {
+        var json = eval("(" + ret + ")");
+        $("#id").val(json["id"]);
+        $("#evaluate").val(json["evaluate"]);
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+        if(json["paystat"]==0&&json["order_fee"]>0){
+            $(".evaluatediv").hide();
+            $("#next").html("支付订单");
+            $("#next").attr("id","pay");
+        }
+    });
+});
+
+$("body").on("click","#next",function(){
+    var id = $("#id").val();
+    $.post("/api/agent/updatemsg.do", { id: id,evaluate:$("#evaluate").val() }, function(ret) {
+        if (ret == 1) {
+            alert("成功添加订单评价");
+            window.location.reload();
+        } else {
+            alert(ret);
+        }
+        return;
+    });
+});
+
+
+$("body").on("click","#pay",function(){
+    if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+            document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+        }else if (document.attachEvent){
+            document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+            document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+        }
+    }else{
+        jsApiCall();
+    }    
+})
+</script>
+
+<script type="text/javascript">
+	//调用微信JS api 支付
+	function jsApiCall()
+	{
+    var id = $(".orderid").html();
+    var qishu = $(".nowqishu").html();
+        $.post("/api/webuser/payagentorder.do", {id:id,qishu:qishu}, function(ret) {      
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest',
+                ret,
+                function(res){
+                    if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                        WeixinJSBridge.log(res.err_msg);
+                        alert("支付成功");
+                        window.location.reload();
+                    }
+                }
+            );
+        });   
+	}
+</script>
+</html>

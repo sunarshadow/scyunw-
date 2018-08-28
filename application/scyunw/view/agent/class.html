@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="demoTable">
+        关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="addclass">添加商户类型</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('agent/getclass')}',  limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'name', width:180,edit:'text'}">名称</th>
+                <th lay-data="{field:'status', width:150,  templet: '#statusTpl'}">状态</th>
+                <th lay-data="{field:'createtime', width:150}">创建时间</th>
+                <th lay-data="{fixed:'right', width:200, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+        </thead>
+    </table>
+    <script type="text/html" id="statusTpl">    
+    {{#  if(d.status==0){         }}
+    已停用【<a style="color: #5FB878;" lay-event="chgstatus">启用</a>】
+    {{# }else{                    }}
+    已启用【<a style="color: #F581B1;" lay-event="chgstatus">停用</a>】
+    {{#   }                       }}
+    </script>
+    <script type="text/html" id="barDemo">
+    <!-- <a class="layui-btn layui-btn-mini"  lay-event="edit">查看</a> -->
+    <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+    </script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['table', 'jquery'], function () {
+            var table = layui.table,
+                $ = layui.jquery;
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //监听单元格编辑
+            table.on('edit(demo)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data;
+                layer.confirm('您确定修改该商户类型名称吗', function (index) {
+                         $.post("{:url('agent/crdclass')}", obj.data, function () {
+                        layer.msg("修改成功");
+                        layer.close(index);
+                        table.reload('idTest');
+                        })
+                    });
+            });
+            //监听工具条
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('您确定删除该商户类型吗', function (index) {
+                        $.post("{:url('agent/delclass')}", { ids: data.id }, function (ret) {
+                            if (ret.code) {
+                                obj.del();
+                                layer.close(index);
+                            }
+                        });
+                    });
+                }else if(obj.event === 'chgstatus'){
+                    switch (data.status) {
+                        case 0:
+                            status = 1;
+                            break;
+                        case 1:
+                            status = 0;
+                            break;
+                        default:
+                            return false;
+                    }
+                    layer.confirm("是否更改商户状态?", function (index) {
+                        $.post("{:url('agent/crdclass')}", { id: data.id, status: status }, function (ret) {
+                            layer.msg("状态修改成功");
+                            table.reload('idTest');
+                        });
+                    });
+                }
+            });
+
+            var active = {
+                reload: function () {
+                    var demoReload = $('#demoReload');
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            keyword: demoReload.val(),
+                            type: type
+                        }
+                    });
+                },
+                addclass: function () {
+                    dourl("{:url('agent/crdclass')}",'添加商户类型','返回商户类型',['100%','100%']);
+                    
+                }
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+
+
+    </script>
+
+</body>
+
+</html>

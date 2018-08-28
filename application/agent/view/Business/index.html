@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>layui</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+	<style>
+		body {
+			margin: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+
+		<label style="padding-left: 10px;">用户名：</label>
+		<div class="layui-inline">
+			<input class="layui-input" name="username" placeholder="用户名" id="username" autocomplete="off">
+		</div>
+		<label style="padding-left: 10px;">车牌：</label>
+		<div class="layui-inline">
+			<input class="layui-input" name="car_license" placeholder="车牌" id="car_license" autocomplete="off">
+		</div>
+		<label style="padding-left: 10px;">电话：</label>
+		<div class="layui-inline">
+			<input class="layui-input" name="phone" placeholder="电话" id="phone" autocomplete="off">
+		</div>
+
+		<label style="padding-left: 10px;">服务类型：</label>
+		<div class="layui-inline">
+			<select name="order_type" id="order_type"  >
+				<option value="">请选择服务类型</option>
+				{volist name="ordertype" id="vo"}
+				<option value="{$vo.id}">{$vo.name}</option>
+				{/volist}
+			</select>
+		</div>
+		<label style="padding-left: 10px;">预约时间：</label>
+		<div class="layui-inline">
+		<input class="layui-input" id="bespeaktime" readonly placeholder="开始日期 - 结束日期" type="text">
+		</div>
+		<br/>
+	<!-- <label style="padding-left: 10px;">到期时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="end" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+	<label style="padding-left: 10px;">出单时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="start" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div> -->
+		<button class="layui-btn" data-type="reload">搜索</button>
+		<button class="layui-btn" data-type="toexcel">导出数据</button>
+	</div>
+	<table class="layui-table">
+     <tbody>
+       <tr>
+            <td>未审核</td>
+            <td><label id="count[0]">0</label>个</td>
+            <td>服务中</td>
+            <td><label id="count[1]">0</label>个</td>
+            <td>已完成</td>
+            <td><label id="count[2]">0</label>个</td>
+            <td>￥<label id="sum[2]">0</label></td>
+            <td style="display:none"><label id="sum[0]">0</label><label id="sum[1]">0</label></td>
+       </tr>
+     </tbody>
+	</table>	
+	<table class="layui-table" lay-data="{ url:'{:url('Business/getserver')}',width:'full',limit:10 ,where:{istoday:'{if $istoday}{$istoday}{/if}',stat:'{if $stat}{$stat}{/if}'} , limits: [1, 5, 10, 30] , page:true,  id:'idTest', 
+done:function(res){
+    for(var i=0;i<=2;i++){
+        document.getElementById('count['+i+']').innerHTML = res.totaldata[i].count;
+        document.getElementById('sum['+i+']').innerHTML = res.totaldata[i].sum;
+    }
+}}" lay-filter="demo" >
+		<thead>
+			<tr>
+				<th lay-data="{checkbox:true, fixed: true}"></th>
+				<th lay-data="{field:'order_id',align:'center' ,width:'180'}">订单号</th>
+				<th lay-data="{field:'username',align:'center' ,width:'120'}">用户</th>
+				<th lay-data="{field:'car_license',align:'center' ,width:'120'}">车牌</th>
+				<th lay-data="{field:'phone',align:'center',width:'130'}">电话</th>
+				<th lay-data="{field:'order_type',align:'center',width:'100'}">项目</th>
+				<th lay-data="{field:'addtime' ,align:'center',width:'200'}">添加时间</th>
+				<th lay-data="{field:'bespeaktime' ,align:'center',width:'200'}">预约时间</th>
+				<th lay-data="{field:'statname',align:'center',width:'200'}">状态</th>
+				<th lay-data="{fixed:'right', width:'200', align:'center', toolbar: '#barDemo'}">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<script type="text/html" id="barDemo">
+	<button class="layui-btn layui-btn-xs" lay-event="edit">查看信息</button>
+	{{#  if(d.stat === 0){ }}
+	<button class="layui-btn layui-btn-xs" lay-event="check">审核</button>
+	<button class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="dego">驳回</button>
+	{{# }else{   }}
+	<a class="layui-btn layui-btn-xs layui-btn-disabled">已审核</a>
+  	{{#  } }}
+  	
+</script>
+
+	<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+	<script>
+		layui.use(['form', 'table', "element", "laydate"], function () {
+			var table = layui.table, form = layui.form, element = layui.element, laydate = layui.laydate;
+			//监听表格复选框选择
+			// table.on('checkbox(demo)', function(obj){
+			//     console.log(obj)
+			// });
+			laydate.render({
+				elem: '#bespeaktime'
+				,range: true
+			});	
+			// laydate.render({
+			// 	elem: '#end'
+			// 	,range: true
+			// });
+			// laydate.render({
+			// 	elem: '#start'
+			// 	,range: true
+			// });
+			// form.on('radio(stat-btn)', function(data){
+			// 	table.reload('idTest', {
+			// 			where: {
+			// 				stat :data.value
+			// 			}
+			// 		});
+			// 	console.log(data.value); //被点击的radio的value值
+			// });  
+			//监听工具条
+			table.on('tool(demo)', function (obj) {
+				var data = obj.data;
+				if (obj.event === 'del') {
+					layer.confirm('您确定删除该保单吗', function (index) {
+						$.post("{:url('order/getdel')}", { ids: data.id }, function (ret) {
+							if (ret.code) {
+								obj.del();
+								layer.close(index);
+							}
+						});
+					});
+				} else if (obj.event === 'toexcel') {
+					var id = data.id;
+					window.location = "{:url('order/toexcel')}" + '?id=' + id;
+				} else if (obj.event === 'detail') {
+					var id = data.id;
+					var index = layui.layer.open({
+						title: "保单详情",
+						type: 2,
+						area: ['50%', '90%'],
+						content: "{:url('order/info')}" + '?id=' + id,
+						success: function (layero, index) {
+							setTimeout(function () {
+								layui.layer.tips('点击此处返回保单列表', '.layui-layer-setwin .layui-layer-close', {
+									tips: 3
+								});
+							}, 500)
+						}
+					})
+				}
+				else if (obj.event === 'check') {
+					var id = data.id;
+					layer.confirm('您确定通过此预约吗', function (index) {
+						$.post("{:url('Business/toexamine')}", { id: data.id }, function (ret) {
+							if (ret.code) {
+								obj.del();
+								layer.msg(ret.msg);
+								layer.close(index);
+							}
+						});
+					});
+				}
+				else if (obj.event === 'dego') {
+					var id = data.id;
+					var postdata = {
+						id: data.id,
+						code: 1
+					}
+					layer.confirm('您确定驳回此预约吗', function (index) {
+						$.post("{:url('Business/toexamine')}", postdata, function (ret) {
+							if (ret.code) {
+								obj.del();
+								layer.msg(ret.msg);
+								layer.close(index);
+							}
+						});
+					});
+				}
+				else if (obj.event === 'edit') {
+					var id = data.id;
+					var index = layui.layer.open({
+						title: "商户预约",
+						type: 2,
+						area: ['50%', '90%'],
+						content: "{:url('Business/likebespoke')}" + '?id=' + id,
+						success: function (layero, index) {
+							setTimeout(function () {
+								layui.layer.tips('点击此处返回商户预约', '.layui-layer-setwin .layui-layer-close', {
+									tips: 3
+								});
+							}, 500)
+						}
+					})
+				}
+
+
+
+			});
+
+			var $ = layui.$, active = {
+				reload: function () {
+					table.reload('idTest', {
+						where: {
+							username: $('#username').val(),
+							car_license: $('#car_license').val(),
+							phone: $('#phone').val(),
+							order_type: $('#order_type').val(),
+							bespeaktime: $('#bespeaktime').val(),
+						}, page: {
+							curr: 1 //重新从第 1 页开始
+						}
+					});
+				},
+				toexcel: function () { //导出数据
+					var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+					for (var i = 0; i < data.length; i++) {
+						ids[i] = data[i].id;
+					}
+					ids = ids.join(",");
+					var url = "{:url('Business/getserver')}?toexcel=1&stat={$stat}";
+					if (ids) { url += "&ids=" + ids; }//获取选中数据
+					if ($('#username').val()) { url += "&username=" + $('#username').val(); }//获取状态		
+					if ($('#car_license').val()) { url += "&car_license=" + $('#car_license').val(); }//获取状态		
+					if ($('#phone').val()) { url += "&phone=" + $('#phone').val(); }//获取状态
+					if ($('#order_type').val()) { url += "&order_type=" + $('#order_type').val(); }//获取关键字
+					if ($('#bespeaktime').val()) { url += "&bespeaktime=" + $('#bespeaktime').val(); }//获取预约时间
+					window.location = url;
+				}
+			};
+			$('.demoTable .layui-btn').on('click', function () {
+				var type = $(this).data('type');
+				active[type] ? active[type].call(this) : '';
+			});
+
+		});
+
+	</script>
+
+</body>
+
+</html>

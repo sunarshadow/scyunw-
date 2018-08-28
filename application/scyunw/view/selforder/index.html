@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <!-- <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief"> -->
+            <!-- <ul class="layui-tab-title switch-list"> -->
+                <!-- <li layui-data="" class="layui-this">全部</li> -->
+                <!-- <li layui-data="0" ;>待出单</li> -->
+                <!-- <li layui-data="1" ;>待发货</li> -->
+                <!-- <li layui-data="2" ;>待收货</li> -->
+                <!-- <li layui-data="3" ;>已收货</li> -->
+
+            <!-- </ul> -->
+        <!-- </div> -->
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="companyname" placeholder="车牌号" id="companyname" autocomplete="off">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <!-- <button class="layui-btn" data-type="toexcel">导出数据</button> -->
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('selforder/getlist',array("stat"=>$stat))}',  limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'car_license', width:120 ,templet: '#car_licenseTpl'}">申请车辆</th>
+                <th lay-data="{field:'car_code', width:180}">行驶证</th>
+                <th lay-data="{field:'username', width:120}">车主姓名</th>
+                <th lay-data="{field:'id_code', width:180}">身份证</th>
+                <th lay-data="{field:'companyname', width:100,templet: '#companynameTpl'}">保险公司</th>
+                <th lay-data="{field:'jqprice', width:100}">交强险</th>
+                <th lay-data="{field:'csprice', width:100}">车船税</th>
+                <th lay-data="{field:'syprice', width:100}">商业险</th>
+                <th lay-data="{field:'order_price', width:160,templet: '#priceTpl'}">保单总额</th>
+                <th lay-data="{fixed:'right', width:210, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+        </thead>
+    </table>
+    <!-- 账单详情 -->
+    <script type="text/html" id="priceTpl">
+       {{d.order_price}} 
+    </script>
+    <!-- 保险公司名称 -->
+    <script type="text/html" id="companynameTpl">
+        <a style="color:#32CD32"   lay-event="bfcount"  lay-data="{{ d.userid}}" >平台</a>
+    </script>
+    <script type="text/html" id="car_licenseTpl">
+              <a lay-event="carinfo" color="#B3EE3A">{{ d.car_license}}</a>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        {if in_array("order_1",$sary)}<a class="layui-btn layui-btn-xs {{#  if(d.stat==4){ }}layui-btn-disabled {{#  } }}"  lay-event="create">生成订单</a>{/if}
+        {if in_array("order_2",$sary)}<a class="layui-btn layui-btn-xs layui-btn-warm {{#  if(d.express_id != ''){ }}layui-btn-disabled {{#  } }}"  lay-event="express">发货</a>{/if}
+        {if in_array("order_3",$sary)}<a class="layui-btn layui-btn-danger layui-btn-xs {{#  if(d.express_id = ''){ }}layui-btn-disabled {{#  } }}"  lay-event="showexpress">查看物流</a>{/if}
+    </script>
+
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //监听工具条
+
+            function hasClass(element, cls) {
+                return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+            } 
+            table.on('tool(demo)', function (obj) {
+                if(hasClass(this, 'layui-btn-disabled')){
+                    return false;
+                }
+                var data = obj.data;
+                if (obj.event === 'create') {
+                    var id = data.id;
+                    dourl("{:url('selforder/info')}?stat=0&id=" + data.id, '生成订单', '点此返回管理列表', ['50%', '80%']);
+                } else if (obj.event === 'express') {
+                    var id = data.id;
+                    dourl("{:url('selforder/info')}?stat=1&id=" + data.id, '发货', '点此返回管理列表', ['50%', '80%']);
+         
+                } else if (obj.event === 'showexpress') {
+                    var id = data.id;
+                    dourl("{:url('selforder/info')}?stat=2&id=" + data.id, '查看物流', '点此返回管理列表', ['50%', '80%']);
+         
+                } else if (obj.event === 'carinfo') {
+                    dourl("{:url('insurer/carinfonew')}?rs=" + data.rs, '查看车辆详情', '点此返回管理列表', ['50%', '80%']);
+                }
+                
+            });
+            var active = {
+                reload: function () {
+                    var stat = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            stat: stat,
+                            companyname: $('#companyname').val(),
+                            inspectadminid: $('#inspectadminid').val(),
+                            inspecttime: $('#inspecttime').val(),
+                            comfirmadminid: $('#comfirmadminid').val(),
+                            comfirmtime: $('#comfirmtime').val(),
+                            approadminid: $('#approadminid').val(),
+                            approtime: $('#approtime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                        , page: { curr: 1 }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    
+                     for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type=' + type : '';
+                    get += $('#companyname').val() ? '&companyname=' + $('#companyname').val() : '';
+                    get += $('#inspectadminid').val() ? '&inspectadminid=' + $('#inspectadminid').val() : '';
+                    get += $('#inspecttime').val() ? '&inspecttime=' + $('#inspecttime').val() : '';
+                    get += $('#comfirmadminid').val() ? '&comfirmadminid=' + $('#comfirmadminid').val() : '';
+                    get += $('#comfirmtime').val() ? '&comfirmtime=' + $('#comfirmtime').val() : '';
+                    get += $('#approadminid').val() ? '&approadminid=' + $('#approadminid').val() : '';
+                    get += $('#approtime').val() ? '&approtime=' + $('#approtime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('insurer/getorder')}" + "?toexcel=1" + get;
+                },
+
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    table.reload('idTest', {
+                        url: "{:url('insurer/getorder')}"
+                        , page: { curr: 1 }
+                        , where: {
+                            type: type
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

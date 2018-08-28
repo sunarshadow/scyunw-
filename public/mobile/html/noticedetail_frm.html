@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css" media="screen">
+    #title {
+        padding: 15px;
+        font-size: 20px;font-weight: bold;
+        text-align: center;
+    }
+    #info{
+        padding:0 10px 10px 10px;
+        width: 100%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="title">
+    </div>
+    <div id="info">
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+$(function() {
+    $.post("/api/index/getlist.do", { t: 5 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].id == GetQueryString('id')) {
+                $("#title").text(json[i].title);
+                $("#info").html(json[i].info);
+                // $("#list").append('<li class="aui-list-item aui-list-item-arrow"><div class="aui-media-list-item-inner"><div class="aui-list-item-inner"><div class="aui-list-item-text"><div class="aui-list-item-title">' + json[i].title + '</div><div class="aui-list-item-right">08:00</div></div><div class="aui-list-item-text aui-ellipsis-2">' + json[i].info + '</div></div></div></li>');
+            }
+        }
+    });
+});
+
+
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return unescape(r[2]);
+    }
+    return null;
+}
+</script>
+
+</html>

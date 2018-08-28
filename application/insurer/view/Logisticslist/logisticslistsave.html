@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>填写发货信息</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+
+<body onload="moneychange()">
+    <div id="header"></div>
+    <div id="main">
+        <div class="menu"><a>保单中心</a><i class="fa fa-angle-right blue"></i><a>待发货</a><i class="fa fa-angle-right blue"></i><a class="blue">填写发货信息</a></div>
+        <div id="offer-write" class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="6"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="blue w1">车主姓名</td>
+                        <td class="w2">{$info.car_name}</td>
+                        <td class="blue w1">身份证号</td>
+                        <td class="w3">{$info.id_code}</td>
+                        <td class="blue w1">车牌号码</td>
+                        <td>{$info.car_license}</td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">行驶证号</td>
+                        <td class="w2">{$info.car_code}</td>
+                        <td class="blue w1">行驶证号</td>
+                        <td class="w3">000000</td>
+                        <td class="blue w1">订单号</td>
+                        <td>{$info.ordernumber}</td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">创建时间</td>
+                        <td colspan="5">{$info.addtime}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <style>
+            .imgl{
+                overflow:auto;
+            }
+            </style>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>身份证:</div>
+                            <div class="imgl"> 
+                                <img src="{$info.id_img}" width="100%"/>
+                            </div>
+                            <div class="imgl">
+                                <img src="{$info.id_img_b}" width="100%"/>
+                            </div>
+                        </td>
+                        <td>
+                            <div>行驶证:</div>
+                            <div class="imgl">
+                                <img src="{$info.car_img}" width="100%"/>
+                            </div>
+                            <div class="imgl">
+                                <img src="{$info.car_img_b}" width="100%"/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form id="from_go"> 
+            <table class="table" style="clear:both;">
+                <tbody>
+                    <tr>
+                        <td class="blue w1">快递单号</td>
+                        <td class="w2"><input type="text" style="max-width:100%;" name="express_id"/></td>
+                        <td class="blue w1">快递公司</td>
+                        <td class="w2"><input type="text" style="max-width:100%;" name="express_company"/></td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">联系电话</td>
+                        <td class="w2"><input type="text" value="{$useraddress.apply_phone}" style="max-width:100%; " name="express_phone"/></td>
+                        <td class="blue w1">快递地址</td>
+                        <td class="w2"><input type="text" value="{$useraddress.address}" style="max-width:100%;" name="express_address"/></td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">保险单扫描件</td>
+                        <td class="w2">
+                            <input type="text" value="" style="max-width:100%; " id="orderpic" name="orderpic"/>
+
+                            <div class="layui-form" action="" style="width:97px;float:right;">
+                            <button type="button" class="layui-btn" id="test2">上传</button>
+                            </div>
+                        </td>
+                        <td class="blue w1">物流扫描件</td>
+                        <td class="w2">
+                            <input type="text" value="" style="max-width:100%;" id="expresspic" name="expresspic"/>
+
+                            <div class="layui-form" action="" style="width:97px;float:right;">
+                            <button type="button" class="layui-btn" id="test1">上传</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">其他资料</td>
+                        <td class="w2">
+                            <input type="text" value="" style="max-width:100%; " id="otherpic" name="otherpic"/>
+
+                            <div class="layui-form" action="" style="width:97px;float:right;">
+                            <button type="button" class="layui-btn" id="test3">上传</button>
+                            </div>
+                        </td>
+                        <td class="w1"></td>
+                        <td class="w2"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            </form>
+        </div>
+        <div class="botbtn">
+            <a href="javascript:" class="btn btn-default confirm quitebtn">确定</a><a class="btn btn-default cancel">清空内容</a>
+            <!-- policywritefinish.html -->
+        </div>
+        <div class="modal fade" id="msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="out-content">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">提示消息</h4>
+                        </div>
+                        <div class="modal-body" id="okbaodan"><i class="fa fa-check-circle"></i>成功填写发货信息</div>
+                        <div class="modal-footer">
+                            <a href="{:url('index/index')}" type="button" class="btn cancel finish btn-return pull-left">返回首页</a>
+                            <a href="{:url('policylist/index')}" type="button" class="btn cancel finish btn-return">返回保单中心</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+</body>
+<style>
+.layui-upload-file{display:none!important;}
+</style>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+$(function(){
+
+})
+$("input").focus(function() {
+    $('.fa-search').hide();
+});
+function moneychange(){
+    var allmoney = Number($('#jqprice').val())+Number($('#cqprice').val())+Number($('#syprice').val());
+    $('#allmoney').text(allmoney);
+}
+$('.quitebtn').click(function(){
+    var data= $('#from_go').serializeArray();
+    console.log(data);
+    var postdata ={ rs : '{$rs}'};
+    $.each(data,function(index,item){
+        postdata[item.name] = item.value;
+    })
+    console.log(postdata);
+    $.post('{:url("Logisticslist/update")}',postdata,function(res){
+        if(res.code == 1){
+            $("#msg").modal('show');
+        }else{
+            alert(res.msg);
+        }
+    })
+    return ;
+});
+
+</script>
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate', 'upload'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, upload = layui.upload, $ = layui.jquery;
+
+            var uploadInst = upload.render({
+                elem: '#test2' //绑定元素
+                , url: '/scyunw/upload/img' //上传接口
+                , done: function (res, index, upload) {
+                    //上传完毕回调
+                    if (res.path) {
+                        $('#orderpic').val(res.path);
+                    }
+                }
+            });
+
+            var uploadInst = upload.render({
+                elem: '#test1' //绑定元素
+                , url: '/scyunw/upload/img' //上传接口
+                , done: function (res, index, upload) {
+                    //上传完毕回调
+                    if (res.path) {
+                        $('#expresspic').val(res.path);
+                    }
+                }
+            });
+
+            var uploadInst = upload.render({
+                elem: '#test3' //绑定元素
+                , url: '/scyunw/upload/img' //上传接口
+                , done: function (res, index, upload) {
+                    //上传完毕回调
+                    if (res.path) {
+                        $('#otherpic').val(res.path);
+                    }
+                }
+            });
+
+        });
+
+
+    </script>
+
+</html>

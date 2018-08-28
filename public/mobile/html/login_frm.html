@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>匀享车险</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+
+<body id="login">
+    <div>
+        <img src="../image/logo.png">
+    </div>
+    <div class="aui-content">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="text" id="phone" placeholder="手机号码" value="">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="password" id="password" placeholder="密码">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="forget" onclick="openWin('forgetpassword')">
+        忘记密码?
+    </div>
+    <div class="aui-text-center">
+        <button type="button" onclick="login()">登录</button>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-toast.js"></script>
+<script type="text/javascript">
+
+
+function login() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    showDefault('loading', 1, 0);
+}
+
+
+
+var toast = new auiToast();
+
+function showDefault(type, unionid, tel, logintype) {
+    switch (type) {
+        case "success":
+            toast.success({
+                title: "提交成功",
+                duration: 2000
+            });
+            break;
+        case "fail":
+            toast.fail({
+                title: "用户名或者密码错误，请重新输入！",
+                duration: 2000
+            });
+            break;
+        case "custom":
+            toast.custom({
+                title: "提交成功",
+                html: '<i class="aui-iconfont aui-icon-laud"></i>',
+                duration: 2000
+            });
+            break;
+        case "loading":
+            if (unionid == 1) {
+                var phone = $("#phone").val();
+                var password = $("#password").val();
+                if (phone == '') {
+                    alert('请输入手机号?');
+                    return;
+                }
+                if (password == '') {
+                    alert('请输入密码?');
+                    return;
+                }
+                $.post("/api/index/login.do", {
+                    phone: phone,
+                    password: password
+                }, function(ret) {
+                    if (ret == 1) {
+                        toast.loading({
+                            title: "正在登录",
+                            duration: 2000
+                        }, function(ret) {
+                            $api.setStorage('loginstatus', 'success');
+                            $api.setStorage('loginsuccesstel', phone);
+                            setTimeout(function() {
+                                toast.hide();
+                                openWin('index');
+                                // closeWin('lgoin');
+                                // api.openWin({
+                                //     name: 'frame0',
+                                //     url: 'index.html',
+                                //     bounces: false,
+                                //     slidBackEnabled: false,
+                                // });
+                            }, 1500)
+                        });
+                    } else {
+                        alert('用户名或密码输入错误，请重新输入！');
+                        $("#password").val('');
+                    }
+
+                });
+            } else {
+                $.post("/api/index/login.do", {
+                    unionid: unionid,
+                    type: logintype
+                }, function(ret) {
+                    if (ret == 1) {
+                        toast.loading({
+                            title: "正在登录",
+                            duration: 2000
+                        }, function(ret) {
+                            $api.setStorage('loginstatus', 'success');
+                            $api.setStorage('loginsuccesstel', tel);
+                            setTimeout(function() {
+                                toast.hide();
+                                // closeWin('lgoin');
+                                openWin('index');
+                            }, 1500)
+                        });
+                    } else {
+                        alert('用户名或密码输入错误，请重新输入！');
+                        $("#password").val('');
+                    }
+                });
+            }
+
+            break;
+        default:
+            break;
+    }
+}
+</script>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>web demo</title>
+</head>
+<body>
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">创建印章</div>
+        <div class="panel-body">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6 panel panel-default">
+                <div class="panel-body tabs">
+                    <ul id="sealTabs" class="nav nav-tabs">
+                        <li class="active"><a href="#tab1" data-toggle="tab">模板印章</a></li>
+                        <li><a href="#tab2" data-toggle="tab">手绘印章</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!--选择模板印章-->
+                        <div class="tab-pane fade in active" id="tab1">
+                            <form id="template-seal" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="accountId" class="col-sm-3 control-label">账户标识</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="accountId" readonly >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">模板类型</label>
+                                    <div id="template" class="col-sm-9" style="max-width: 500px;display: none;">
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType1" value="square" checked>
+                                            <img src="img/square.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType2" value="rectangle" >
+                                            <img src="img/rectangle.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType3" value="borderless" >
+                                            <img src="img/bdless.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType4" value="yygxsf" >
+                                            <img src="img/art-3.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType5" value="fzkc" >
+                                            <img src="img/art-4.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="templateTypeRadios" id="modelType6" value="hylsf" >
+                                            <img src="img/art-5.png" class="square">
+                                        </label>
+                                    </div>
+                                    <div id="ent-template" class="col-sm-9" style="max-width: 500px;display: none;">
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" name="entTemplateTypeRadios" id="entModelType1" value="star" checked>
+                                            <img src="img/ent-1.png" class="square">
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" class="square-radio" style="height: 65px;" name="entTemplateTypeRadios" id="entModelType2" value="oval" >
+                                            <img src="img/ent-2.png" class="square" style="height: 65px;">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group ent-seal-text">
+                                    <label for="hText" class="col-sm-3 control-label">横向文</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="hText" placeholder="可为空" >
+                                    </div>
+                                </div>
+                                <div class="form-group ent-seal-text">
+                                    <label for="qText" class="col-sm-3 control-label">下弦文</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="qText" placeholder="可为空" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">印章类型</label>
+                                    <div class="col-sm-9">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="colorRadios" id="sealType1" value="red" checked>红
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="colorRadios" id="sealType2" value="blue" >蓝
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="colorRadios" id="sealType3" value="black" >黑
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group text-right">
+                                    <div class="col-sm-12">
+                                        <button type="button" class="btn btn-default" onclick="back()">上一步</button>
+                                        <button type="button" class="btn btn-default" id="submit">下一步</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!--手绘印章-->
+                        <div class="tab-pane fade" id="tab2">
+                            <form id="draw-seal" class="form-horizontal">
+                                <div class="form-group" hidden>
+                                    <label for="drawAccountId" class="col-sm-3 control-label">账户标识</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="drawAccountId" readonly >
+                                    </div>
+                                </div>
+                                <div id="draw-area" class="draw-area">
+                                    <div class="draw" id="draw">
+                                        <div class="sig" id="sig">
+                                            <canvas id="canvas" width="100" height="100">Your browser doesn't support signing</canvas>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <span id="clear">清除</span>
+                                            </li>
+                                            <li style="text-align: right;">
+                                                <span>颜色:</span>
+                                                <p class="color select" name="RED" style="background-color: red;"></p>
+                                                <p class="color" name="BLUE" style="background-color: blue;"></p>
+                                                <p class="color" name="BLACK" style="background-color: black;"></p>
+
+                                            </li>
+                                        </ul>
+                                        <!-- <p>
+                                            <button id="clear">清除</button>
+                                        </p> -->
+                                    </div>
+                                </div>
+                                <div class="form-group text-right">
+                                    <div class="col-sm-12">
+                                        <button type="button" class="btn btn-default" onclick="back()">上一步</button>
+                                        <button type="button" class="btn btn-default" id="draw-submit">下一步</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    function changeSize(){
+        if(window.innerHeight>window.innerWidth){
+            $('#sig').css("min-height",((window.innerHeight/2)-100));
+            $("#canvas").attr({"height":((window.innerHeight/2)-100),"width":"882px"});
+        }else{
+            $('#sig').css("min-height",(window.innerHeight-350));
+            $("#canvas").attr({ "height": (window.innerHeight - 350), "width": "882px" });
+        }
+        var canvasX = $("#canvas")[0];
+        signaturePad = new SignaturePad(canvasX,{
+            dotSize : 0 ,
+            velocityFilterWeight :1,
+            minWidth: 2.0,
+            maxWidth: 5.2,
+            penColor: "rgb(255,0,0)",
+            backgroundColor:"rgb(255,255,255)"
+        });
+    }
+    
+    function isWeiXin(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    function CloseWebPage(){
+        if (navigator.userAgent.indexOf("MSIE") > 0) {
+            if (navigator.userAgent.indexOf("MSIE 6.0") > 0) {
+                window.opener = null;
+                window.close();
+            } else {
+                window.open('', '_top');
+                window.top.close();
+            }
+        }
+        else if (navigator.userAgent.indexOf("Firefox") > 0) {
+            window.location.href = 'about:blank ';
+        }else {
+            window.opener = null;
+            window.open('', '_self', '');
+            window.close();
+        }
+    }
+    
+    $(function() {
+        $('#accountId').val(window.accountId);
+        if (window.accountType == 0) {
+            $('#template').show();
+            $('#ent-template').hide();
+            $('.ent-seal-text').hide();
+        } else if (window.accountType == 1) {
+            $('#template').hide();
+            $('#ent-template').show();
+            $('.ent-seal-text').show();
+        }
+    });
+
+    $('a[href="#tab2"]').click(function(){
+        changeSize();
+        $(window).resize(function(){
+            changeSize();
+        });
+        $('#clear').click(function() {
+            signaturePad.clear();
+        });
+        $('.color').click(function() {
+            var canvasX = $("#canvas")[0];
+            signaturePad = new SignaturePad(canvasX,{
+                dotSize : 0 ,
+                velocityFilterWeight :1,
+                minWidth: 2.0,
+                maxWidth: 5.2,
+                penColor: $(this).css("background-color"),
+                backgroundColor:"rgb(255,255,255)"
+            });
+            $('.color').removeClass("select");
+            $(this).addClass("select");
+        });
+        
+        $('#draw-submit').click(function() {
+            if(signaturePad.isEmpty()){
+                alertError("画布为空，请先手绘签名再提交！");
+            }else{
+                var canvas = document.getElementById("canvas");
+                var canvasData = canvas.toDataURL("image/jpeg");
+
+                window.drawSeal = {
+                        devId : window.devId,
+                        accountId : window.accountId,
+                        accountType : window.accountType,
+                        sealData : canvasData,
+                        color: $('.color.select').attr('name')
+                };
+
+                    callService("CommonHandle.php?action=addFileSeal",$.extend(window.drawSeal,window.project),(callback = function (data) {
+                    hideLoading();
+                    if (data.errCode == 0) {
+                        window.sealType = "draw";
+                        window.sealData =data.sealData;
+                        $('#main').load("sign.html");
+                    } else {
+                        alertError(data.msg);
+                    }
+                }));
+            }
+        });
+
+        $("#close").click(function(){
+            if(isWeiXin()){
+                WeixinJSBridge.call('closeWindow');
+            }else{
+                CloseWebPage();
+            }
+        });
+    });
+    
+    $('#submit').click(function() {
+        window.templateSeal = {
+            devId : window.devId,
+            accountId : window.accountId,
+            accountType : window.accountType,
+            templateType : window.accountType == 0 ? $('input[name="templateTypeRadios"]:checked').val() : $('input[name="entTemplateTypeRadios"]:checked').val(),
+            color : $('input[name="colorRadios"]:checked').val(),
+            hText : $('#hText').val(),
+            qText : $('#qText').val()
+        };
+        callService("CommonHandle.php?action=addTemplateSeal", $.extend(window.templateSeal,window.project), (callback = function (data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                window.sealType = "template";
+                window.sealData =data.imageBase64;
+                $('#main').load("sign.html");
+            } else {
+                alertError(data.msg);
+            }
+        }));
+    });
+    
+    function back() {
+        $('#main').load("account.html", function() {
+            if (window.accountType == 0 && window.person != undefined) {
+                $('#person-mobile').val(window.person.mobile);
+                $('#person-email').val(window.person.email);
+                $('#person-name').val(window.person.name);
+                $('#person-id').val(window.person.id);
+                $('input[name="person-areaRadios"][value=' + window.person.area + ']').attr("checked","checked");
+                $('#accountTabs a[href="#tab1"]').tab('show');
+            }
+            if (window.accountType == 1 && window.organize != undefined) {
+                $('#enterprise-mobile').val(window.organize.mobile);
+                $('#enterprise-email').val(window.organize.email);
+                $('#enterprise-name').val(window.organize.name);
+                $('input[name="organTypeRadios"][value=' + window.organize.organType + ']').attr("checked","checked");
+                $('input[name="enterpriseRegisterTypeRadios"][value=' + window.organize.regType + ']').attr("checked","checked");
+                $('#enterprise-code').val(window.organize.organCode);
+                $('input[name="registerTypeRadios"][value=' + window.organize.userType + ']').attr("checked","checked");
+                $('#agent-name').val(window.organize.agentName);
+                $('#agent-id').val(window.organize.agentIdNo);
+                $('#legal-name').val(window.organize.legalName);
+                $('#legal-id').val(window.organize.legalIdNo);
+                $('input[name="legalRadios"][value=' + window.organize.legalArea + ']').attr("checked","checked");
+                $('#accountTabs a[href="#tab2"]').tab('show');
+            }
+        });
+    }
+</script>
+</html>

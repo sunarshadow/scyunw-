@@ -1,0 +1,81 @@
+<div class="left-nav">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{:url('index/index')}">
+                    <div class="first active"><i class="fa fa-home pullleft"></i>首页<i class="fa fa-chevron-circle-down pullright op-0"></i></div>
+                </a>
+            </div>
+            <div id="collapseZero" class="panel-collapse collapse">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="first" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> <i class="fa fa-home pullleft"></i>保单中心 <i class="fa fa-chevron-circle-down pullright"></i></div>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <a href="{:url('policylist/index')}?stat=1">
+                        <div>未报价</div>
+                    </a>
+                    <a href="{:url('policylist/index')}?stat=2">
+                        <div>已报价</div>
+                    </a>
+                    <a href="{:url('policylist/index')}?stat=4">
+                        <div>已出单</div>
+                    </a>
+                    <a href="{:url('policylist/index')}?stat=5,6">
+                        <div>失效</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="first" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><i class="fa fa-home pullleft"></i>物流信息<i class="fa fa-chevron-circle-down pullright"></i></div>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <a href="{:url('Logisticslist/index')}?express_id=wei">
+                        <div>待发保单</div>
+                    </a>
+                    <a href="{:url('Logisticslist/index')}?express_id=dai">
+                        <div>待收保单</div>
+                    </a>
+                    <a href="{:url('Logisticslist/index')}?express_id=shou">
+                        <div>用户已收</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{:url('financenter/index')}">
+                    <div class="first"> <i class="fa fa-home pullleft"></i>财务中心<i class="fa fa-chevron-circle-down pullright op-0"></i></div>
+                </a>
+            </div>
+            <div id="collapseThress" class="panel-collapse collapse">
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{:url('User/usercenter')}">
+                    <div class="first"> <i class="fa fa-home pullleft"></i>个人中心<i class="fa fa-chevron-circle-down pullright op-0"></i></div>
+                </a>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="top-nav">
+    <div class="logo">LOGO</div>
+    <div class="admin">
+        <div class="righttop">
+            <i class="fa fa-bell"></i> 欢迎您，
+            <span id="name">{:session('insurer_name')}</span>
+            <!-- <img src="__STATIC__/insureradmin/images/admin.png"> -->
+            【<a href="{:url('login/delogin')}" >注销</a>】
+        </div>
+    </div>
+</div>

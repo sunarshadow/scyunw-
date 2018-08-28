@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <style>
+    body,
+    html {
+        padding-bottom: 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header>
+            <ul>
+                <li class="border-b active">匀享车险</li>
+                <li class="border-b">保险订单</li>
+                <li class="border-b">
+                    个人中心
+                    <a id="menu" onclick="openWin('set')">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </a>
+                </li>
+            </ul>
+        </header>
+        <div id="main" class="flex-con" style="height: 0;">
+        </div>
+        <div id="footer" class="border-t">
+            <ul class="flex-wrap">
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active"><span>首页</span></li>
+                <li tapmode="hover" onclick="buy()" class="flex-con"><span>订单</span></li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con"><span>我的</span></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/openWin.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    $api.setStorage('serviceAddr', 'http://chexian.302s.cn');
+    api.parseTapmode();
+    $api.fixStatusBar($api.dom('header'));
+    // $api.fixTabBar($api.byId('footer'));
+    api.setStatusBarStyle({
+        style: 'dark',
+        color: '#6ab494'
+    });
+    //  打开首页默认关闭登录时用到
+    api.closeWin({
+        name: 'login'
+    });
+    api.closeWin({
+        name: 'register'
+    });
+    api.closeWin({
+        name: 'forgetpassword'
+    });
+    api.closeWin({
+        name: 'set'
+    });
+    // 如果没有登录泽打开登录页
+    // api.openWin({
+    //     name: 'login',
+    //     url: 'login_win.html',
+    //     bounces: false,
+    //     delay: 300,
+    //     slidBackEnabled: true,
+    //     vScrollBarEnabled: false
+    // });
+
+    funIniGroup();
+}
+
+
+
+function funIniGroup() {
+    var eHeaderLis = $api.domAll('header li'),
+        frames = [];
+    for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+        frames.push({
+            name: 'frame' + i,
+            url: 'html/frame' + i + '.html',
+            bounces: true,
+            bgColor: '#F9F9F9',
+            vScrollBarEnabled: false,
+            // scrollEnabled:false //是否可以滚动
+        })
+    }
+    api.openFrameGroup({
+        name: 'group',
+        scrollEnabled: false,
+        rect: {
+            x: 0,
+            y: $api.dom('header').offsetHeight,
+            w: api.winWidth,
+            h: $api.dom('#main').offsetHeight
+        },
+        index: 0,
+        frames: frames
+    }, function(ret, err) {
+
+    });
+}
+
+// 随意切换按钮
+function randomSwitchBtn(tag) {
+    if (tag == $api.dom('#footer li.active')) return;
+    var eFootLis = $api.domAll('#footer li'),
+        eHeaderLis = $api.domAll('header li'),
+        index = 0;
+    for (var i = 0, len = eFootLis.length; i < len; i++) {
+        if (tag == eFootLis[i]) {
+            index = i;
+        } else {
+            $api.removeCls(eFootLis[i], 'active');
+            $api.removeCls(eHeaderLis[i], 'active');
+        }
+    }
+    $api.addCls(eFootLis[index], 'active');
+    $api.addCls(eHeaderLis[index], 'active');
+    api.setFrameGroupIndex({
+        name: 'group',
+        index: index
+    });
+}
+
+function buy() {
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            alert("您未询价，请先询价！");
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                alert("您未询价，请先询价！");
+                openWin('inquiry');
+            } else {
+                if (json["step"] == 0) {
+                    openWin('buy');
+                } else if (json["step"] == 1) {
+                    openWin('identification');
+                } else if (json["step"] == 2) {
+                    openWin('phoneauth');
+                } else if (json["step"] == 3) {
+                    openWin('billbystages');
+                } else if (json["step"] == 4) {
+                    openWin('auditbystages');
+                }
+            }
+
+        }
+    });
+}
+</script>

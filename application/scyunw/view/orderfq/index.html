@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+    <input type="hidden" value="{$stat}" id="stat">
+    <label style="padding-left: 10px;">关键字搜索：</label>
+    <div class="layui-inline">
+        <input class="layui-input" style="width: 650px"  name="keyword" placeholder="手机号/车牌号/姓名" id="keyword" autocomplete="off">
+    </div>
+    <label style="padding-left: 10px;">审核状态：</label>
+    <div class="layui-inline">
+        <select name="modules" id="fqstat" >
+            <option value="">审核状态</option>
+            <option value="0">待认证</option>
+            <option value="1">待审核</option>
+            <option value="2">已初审</option>
+            <option value="3">已复审</option>
+            <option value="4">已签约</option>
+        </select>
+    </div>
+	<label style="padding-left: 10px;">提交时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="add" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <br>
+	<label style="padding-left: 10px;">风控初审：</label>
+    <div class="layui-inline">
+        <select name="modules" id="firstid" >
+            <option value="">选择管理员</option>
+            {volist name="adminlist" id="vo"}
+            <option value="{$vo.id}">{$vo.nickname}</option>
+			{/volist}
+        </select>
+    </div>
+	<label style="padding-left: 10px;">初审时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="first" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+	<label style="padding-left: 10px;">风控复审：</label>
+    <div class="layui-inline">
+        <select name="modules" id="secondid" >
+            <option value="">选择管理员</option>
+            {volist name="adminlist" id="vo"}
+            <option value="{$vo.id}">{$vo.nickname}</option>
+			{/volist}
+        </select>
+    </div>
+	<label style="padding-left: 10px;">复审时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="second" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+    <button class="layui-btn" data-type="toexcel">导出数据</button>
+</div>
+<table class="layui-table" lay-data="{ width: 'full',url:'{$url}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+      <th lay-data="{field:'username', width:120}">用户名</th>
+      <th lay-data="{field:'phone', width:120}">手机</th>
+      <th lay-data="{field:'car_license', width:100}">车牌号</th>
+      <th lay-data="{field:'orderarea', width:120}">投保地区</th>
+      <th lay-data="{field:'company', width:160}">投保公司</th>
+      <th lay-data="{field:'order_price', width:120}">保费总额</th>
+      <th lay-data="{field:'install_count', width:80}">分期数</th>
+      <th lay-data="{field:'install_fee', width:120}">每月还款</th>
+      <th lay-data="{field:'statshow', width:120}">审核状态</th>
+      <th lay-data="{field:'', width:120, align:'center', toolbar: '#showxz'}">投保险种/证件/详情</th>
+      <th lay-data="{field:'addtime', width:120}">提交时间</th>
+      <th lay-data="{field:'firstadmin', width:180}">风控初审</th>
+      <th lay-data="{field:'firsttime', width:120}">初审时间</th>
+      <th lay-data="{field:'secondadmin', width:180}">风控复审</th>
+      <th lay-data="{field:'secondtime', width:120}">复审时间</th>
+      <th lay-data="{field:'rejecttime', width:120}">驳回时间</th>
+      <th lay-data="{field:'admin_note', width:120}">驳回理由</th>
+      <th lay-data="{fixed:'right', width:210, align:'center', toolbar: '#barDemo'}">操作</th>
+    </tr>
+  </thead>
+</table>
+<script type="text/html" id="showxz">
+  <a class="layui-btn layui-btn-xs" lay-event="showxz">查看</a>
+</script>
+<script type="text/html" id="barDemo">
+  {if in_array("fqorder_2",$sary)}<a class="layui-btn layui-btn-xs {{#  if(d.fqstat>1){ }}layui-btn-disabled {{#  } }}" lay-stat="2" lay-event="chgstatus">初审</a>{/if}
+  {if in_array("fqorder_3",$sary)}<a class="layui-btn layui-btn-normal layui-btn-xs {{#  if(d.fqstat>2){ }}layui-btn-disabled {{#  } }}" lay-stat="3" lay-event="chgstatus">复审</a>{/if}
+  <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="toexcel">导出</a>
+  {if in_array("fqorder_-1",$sary)}<a>|</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-stat="-1" lay-event="chgstatus">回收</a>{/if}
+</script>
+     
+
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form','table',"element","laydate"],function(){
+	
+    var table = layui.table,form = layui.form,element = layui.element,laydate = layui.laydate;	
+    //监听表格复选框选择
+    table.on('checkbox(demo)', function(obj){
+        console.log(obj)
+    });
+	//日期渲染
+	laydate.render({elem: '#add',range: true});	
+	laydate.render({elem: '#first',range: true});
+	laydate.render({elem: '#second',range: true});
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+
+        if(obj.event === 'chgstatus'){
+            
+            if(hasClass(this, 'layui-btn-disabled')){ return false;}
+			var id = data.id;
+			var fqstat = $(this).attr("lay-stat");
+            var index = dourl("{:url('orderfq/check')}"+'?id='+id+'&fs='+fqstat,"分期审核","点击此处返回分期订单列表",['50%', '90%']);
+            // console.log(fqstat);
+            // layer.confirm("是否更改订单状态?", function(index){
+            //     $.post("{:url('orderfq/getset')}", {id:data.id,fqstat:fqstat},function(ret){
+            //         layer.msg("状态修改成功");
+            //         table.reload('idTest');
+            //     });
+            // });
+        }else if(obj.event === 'toexcel'){
+			var id = data.id;
+			window.location = "{:url('order/toexcel')}"+'?id='+id;
+        }else if(obj.event === 'showxz'){
+			var id = data.bid;
+			var index = layui.layer.open({
+				title : "投保险种/证件/详情",
+				type : 2,
+				area: ['50%', '90%'],
+				content : "{:url('userorder/info')}"+'?id='+id,
+				success : function(layero, index){
+					setTimeout(function(){
+						layui.layer.tips('点击此处返回分期订单列表', '.layui-layer-setwin .layui-layer-close', {
+							tips: 3
+						});
+					},500)
+				}
+			})
+        }
+    });
+
+    var $ = layui.$, active = {
+        reload: function(){
+			table.reload('idTest', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+				where: {
+					keyword : $('#keyword').val(),
+					add : $('#add').val(),
+					fqstat : $('#fqstat').val(),
+					first : $('#first').val(),
+					firstid : $('#firstid').val(),
+					second : $('#second').val(),
+					secondid : $('#secondid').val(),
+				}
+			});
+        },
+        //导出数据
+		toexcel: function(){ 
+			var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+			for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+			var url = "{:url('orderfq/getlist')}?toexcel=1";
+			if(ids){ url += "&ids="+ids;}//获取选中数据
+			if($('#stat').val()){ url += "&stat="+$('#stat').val();}//获取状态
+			if($('#keyword').val()){ url += "&keyword="+$('#keyword').val();}//获取关键字
+			if($('#add').val()){ url += "&add="+$('#add').val();}//	
+			if($('#fqstat').val()){ url += "&fqstat="+$('#fqstat').val();}//获取分期状态
+			if($('#first').val()){ url += "&first="+$('#first').val();}//	
+			if($('#firstid').val()){ url += "&firstid="+$('#firstid').val();}//
+			if($('#second').val()){ url += "&second="+$('#second').val();}//
+			if($('#secondid').val()){ url += "&secondid="+$('#secondid').val();}//
+			window.location = url;	
+		}
+    };   		
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });    
+	
+    function dourl(url,title,tips,area){
+        layui.layer.open({
+            title : title,
+            type : 2,
+            content : url,
+            area: area,
+            success : function(layero, index){
+                setTimeout(function(){
+                    layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                },500)
+            }
+        })
+    }
+    function hasClass(element, cls) {
+        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    } 
+});
+	
+</script>
+
+</body>
+</html>

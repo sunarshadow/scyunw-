@@ -1,0 +1,639 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>保险询价</title>
+    <!-- 城市选择 -->
+    <link rel="stylesheet" href="../script/picker/css/mui.min.css">
+    <link href="../script/picker/css/mui.picker.css" rel="stylesheet" />
+    <link href="../script/picker/css/mui.poppicker.css" rel="stylesheet" />
+    <script src="../script/picker/js/mui.min.js"></script>
+    <script src="../script/picker/js/mui.picker.js"></script>
+    <script src="../script/picker/js/mui.poppicker.js"></script>
+    <script src="../script/picker/js/city.data.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../script/picker/js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 城市选择 -->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=c8c0c12de000163656a1f1afa6063133"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+    #login {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 47px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #login #discount .midlist .aui-list {
+        padding: 0;
+    }
+
+    #login #discount .midlist .aui-list img {
+        margin-top: 0;
+    }
+
+    #discount .midlist .aui-list .aui-list-item .aui-list-item-inner {
+        color: #ffffff !important;
+    }
+
+
+
+    #discount .midlist .aui-list .bg-white .aui-list-item-inner {
+        color: #000000 !important;
+    }
+
+    .zwxian_cn {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #D2D2D2 !important;
+        color: #000;
+        width: 80px !important;
+        text-align: center;
+        display: inline !important;
+    }
+
+    .select a {
+        color: #666666
+    }
+
+    .progressnum {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.75);
+        height: 0%;
+        /*display: none;*/
+    }
+    </style>
+</head>
+
+<body>
+    <div id='container' style="opacity: 0;z-index: -1"></div>
+    <div id="login">
+        <div id="progressBar">
+            <div id="toptitle" class="toptitle">信息填写</div>
+            <button id="first" class="btn-active">1<a>信息填写</a></button>
+            <div id="first_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="second">2<a>证件上传</a></button>
+            <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="third">3<a>险种选择</a></button>
+            <div id="third_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="fourth"><span>完成</span><a>提交完成</a></button>
+        </div>
+        <div class="aui-content">
+            <form id="orderform">
+                <div id="first_input">
+                    <!-- <div id="#">
+                        <section class="aui-grid">
+                            <div class="aui-row">
+                                <div class="aui-col-xs-12">
+                                    <div class="aui-grid-label">投保地区选择</div>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <div id="province" class="aui-grid-label">福建</div>
+                                    <input id="province_" type="hidden" name="province" value="福建">
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <div id="city" class="aui-grid-label">泉州</div>
+                                    <input id="city_" type="hidden" name="city" value="泉州">
+                                    <input type="hidden" id="cityval" value="泉州">
+                                </div>
+                            </div>
+                        </section>
+                    </div> -->
+                    <ul class="aui-list aui-form-list">
+                        <li class="aui-list-item" id="position">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input" style="padding-right: 0">
+                                    <div class="typename">投保地区选择</div>
+                                    <div class="aui-col-xs-12" style="padding: 0;">
+                                        <div id="province" class="aui-grid-label" style="font-size: 14px;float: left;color: #000">福建</div>
+                                        <div id="city" class="aui-grid-label" style="font-size: 14px;color: #000;padding-left: 10px;float: left;">泉州</div>
+                                        <input id="province_" type="hidden" name="province" value="福建">
+                                    </div>
+                                    <div class="aui-col-xs-6" style="padding: 0;">
+                                        <input id="city_" type="hidden" name="city" value="泉州">
+                                        <input type="hidden" id="cityval"  value="泉州">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <div class="typename">车主姓名</div>
+                                    <input type="text" id="realname" name="car_name" placeholder="请输入姓名" value="">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <div class="typename">车牌号码</div>
+                                    <input type="hidden" id="isNewcar" name="isNewcar" value="0">
+                                    <input type="text" id="carlicense" name="car_license" onchange="uppercar()" placeholder="请输入车牌号码" value="">
+                                    <span id="nonepai">未上牌</span>
+                                </div>
+								<script>
+								function uppercar(){
+									var carlicense = $("#carlicense").val();
+									$("#carlicense").val(carlicense.toUpperCase());
+								}
+								</script>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <div class="typename">手机号码</div>
+                                    <input type="text" id="phone" name="apply_phone" placeholder="请输入手机号" value="">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div id="discount">
+                        <input type="hidden" value="0" name="company" id="insurerid">
+                        <div class="top">&nbsp;保险公司列表</div>
+                        <div class="midlist" style="background: transparent;">
+                            <div class="aui-content" style="background: transparent;">
+                                <ul class="aui-list aui-media-list" style="background: transparent;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="second_input">
+                    <div class="toptitle cartext">行驶证</div>
+                    <input id="file" type="file">
+                    <section class="aui-grid">
+                        <div class="aui-row">
+                            <!-- 行驶证正面 -->
+                            <div class="aui-col-xs-6">
+                                <div class="aui-grid-label" id="drivinglicensePicZ" onclick="getPicture('drivinglicensePicZ','camera','行驶证正面')">
+                                    <div class="ts">
+                                        <img class="from" src="../image/fromcamera.png">
+                                        <div class="tsmsg">行驶证正面</div>
+                                    </div>
+                                    <input id="drivinglicensePicZ_" type="hidden" name="car_img" value="">
+                                    <div class="progressnum"></div>
+                                </div>
+                                <input id="drivinglicensePicZ_text" type="hidden" name="car_img_text" value="0">
+                                <div class="ckexp" onclick="example('drivinglicensePicZ','xsz')">
+                                    查看示例
+                                </div>
+                            </div>
+                            <!-- 行驶证反面 -->
+                            <div class="aui-col-xs-6">
+                                <div class="aui-grid-label" id="drivinglicensePicF" onclick="getPicture('drivinglicensePicF','camera','行驶证反面')">
+                                    <div class="ts">
+                                        <img class="from" src="../image/fromcamera.png">
+                                        <div class="tsmsg">行驶证反面</div>
+                                    </div>
+                                    <input id="drivinglicensePicF_" type="hidden" name="car_img_b" value="">
+                                    <div class="progressnum"></div>
+                                </div>
+                                <input id="drivinglicensePicF_text" type="hidden" name="car_img_b_text" value="0">
+                                <div class="ckexp" onclick="example('drivinglicensePicF','xsf')">
+                                    查看示例
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <img src="#" id="test" style="width: 100%"> -->
+                    </section>
+                    <div class="toptitle">身份证</div>
+                    <section class="aui-grid">
+                        <div class="aui-row">
+                            <!-- 身份证正面 -->
+                            <div class="aui-col-xs-6">
+                                <div class="aui-grid-label" id="IDPicZ" onclick="getPicture('IDPicZ','camera','身份证正面')">
+                                    <div class="ts">
+                                        <img class="from" src="../image/fromcamera.png">
+                                        <div class="tsmsg">身份证正面</div>
+                                    </div>
+                                    <input id="IDPicZ_" type="hidden" name="id_img" value="0">
+                                    <div class="progressnum"></div>
+                                </div>
+                                <input id="IDPicZ_text" type="hidden" name="id_img_text" value="0">
+                                <div class="ckexp" onclick="example('IDPicZ','idz')">
+                                    查看示例
+                                </div>
+                            </div>
+                            <!-- 身份证反面 -->
+                            <div class="aui-col-xs-6">
+                                <div class="aui-grid-label" id="IDPicF" onclick="getPicture('IDPicF','camera','身份证反面')">
+                                    <div class="ts">
+                                        <img class="from" src="../image/fromcamera.png">
+                                        <div class="tsmsg">身份证反面</div>
+                                    </div>
+                                    <input id="IDPicF_" type="hidden" name="id_img_b" value="0">
+                                    <div class="progressnum"></div>
+                                </div>
+                                <input id="IDPicF_text" type="hidden" name="id_img_b_text" value="0">
+                                <div class="ckexp" onclick="example('IDPicF','idf')">
+                                    查看示例
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="third_input">
+                    <div>
+                        <div class="type">险种选择</div>
+                        <div class="type1">强制险</div>
+                        <div class="label">
+                            <input class="aui-checkbox aui-checked" type="checkbox" name="insurer[jqxian]" checked value="1" readonly> 交强险
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox aui-checked" type="checkbox" name="insurer[ccxian]" checked value="1" readonly> 车船税
+                        </div>
+                        <div class="type2">商业险</div>
+                        <input class="aui-checkbox" type="checkbox" name="insurer[syxian]" checked value="1" style="display:none">
+                        <div class="label">
+                            <input class="aui-checkbox aui-checkboxleft" type="checkbox" name="insurer[csxian]" id="csxian" value="1"> 车损险
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox aui-checkboxright" type="checkbox"  name="insurer[bj_cs]"  value="1"> 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input id="dszxian" class="aui-checkbox aui-checkboxleft" type="checkbox" name="insurer[dszxian]" value="1"> 第三者险
+                            <input id="dszxian_opt" type="hidden" name="insurer[dszxian_opt]">
+                            <div class="select"><a>下拉选择</a>
+                                <div id="dszxianlist" class="selecttype">
+                                </div>
+                            </div>
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox aui-checkboxright" name="insurer[bj_dsz]" type="checkbox"  value="1"> 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox aui-checkboxleft" type="checkbox" name="insurer[dqxian]" value="1"> 盗抢险
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox aui-checkboxright" type="checkbox" name="insurer[bj_dq]"  value="1"> 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input id="driver" class="aui-checkbox aui-checkboxleft" type="checkbox" name="insurer[zwxian]" value="1"> 司机座位险
+                            <input id="drivernum" class="zwxian_cn" name="insurer[zwxian_cn]" type="hidden">
+                            <div class="select"><a>下拉选择</a>
+                                <div id="zwxianlist" class="selecttype">
+                                </div>
+                            </div>
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox aui-checkboxright" type="checkbox" name="insurer[bj_zw]"  value="1"> 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input id="passenger" class="aui-checkbox aui-checkboxleft" type="checkbox" name="insurer[ckxian]" value="1"> 乘客座位险
+                            <input id="passengernum" class="zwxian_cn" name="insurer[ckxian_cn]" type="hidden">
+                            <div class="select"><a>下拉选择</a>
+                                <div id="ckxianlist" class="selecttype">
+                                </div>
+                            </div>
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox aui-checkboxright" type="checkbox" name="insurer[bj_ck]"  value="1"> 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox cs-checkbox aui-checkboxleft bxcs" type="checkbox" name="insurer[zrxian]" value="1"> 自燃险
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox cs-checkbox aui-checkboxright bxcs" type="checkbox" name="insurer[bj_zr]"  value="1" > 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label">
+                            <input id="blxian" class="aui-checkbox cs-checkbox bxcs" type="checkbox" name="insurer[blxian]" value="1"> 玻璃险
+                            <input id="blxian_opt" type="hidden" name="insurer[blxian_opt]">
+                            <div class="select" class="cs-checkbox"><a>下拉选择</a>
+                                <div id="blxianlist" class="selecttype" data-cs="1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox cs-checkbox bxcs" type="checkbox" name="insurer[ssxian]" value="1"> 涉水险
+                        </div>
+                        <div class="label">
+                            <input id="hhxian" class="aui-checkbox cs-checkbox aui-checkboxleft bxcs" type="checkbox" name="insurer[hhxian]" value="1"> 车身划痕险
+                            <input id="hhxian_opt" type="hidden" name="insurer[hhxian_opt]">
+                            <div class="select" class="cs-checkbox"><a>下拉选择</a>
+                                <div id="hhxianlist" class="selecttype" data-cs="1">
+                                </div>
+                            </div>
+                            <span class="aui-pull-right">
+                                <input class="aui-checkbox cs-checkbox aui-checkboxright bxcs" type="checkbox" name="insurer[bj_zr]" value="1" > 不计免赔险
+                            </span>
+                        </div>
+                        <div class="label conmsg">
+                            说明：
+                            <br> 1.根据保险条款规定，只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险”；
+                            <br> 2.根据保险条款规定规定，如未投保“不计免赔险”出险后仅赔付80%；
+                            <br> 3.以上说明仅供参考，详细情况以保险法及保险条款为准。
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <ul id="queren" class="aui-list aui-form-list">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <img src="../image/finish.png">
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        询价已受理 处理中请等待
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="aui-text-center fixbottom" style="z-index: 100">
+        <button type="button" id="next">下一步</button>
+    </div>
+    <img class="example" id="xsz" src="../image/xsz.png" alt="">
+    <img class="example" id="xsf" src="../image/xsf.png" alt="">
+    <img class="example" id="idz" src="../image/idz.png" alt="">
+    <img class="example" id="idf" src="../image/idf.png" alt="">
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-toast.js"></script>
+<script type="text/javascript" src="../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+// 城市选择初始化
+(function($, doc) {
+    $.init();
+    $.ready(function() {
+        var cityPicker = new $.PopPicker({
+            layer: 2
+        });
+        cityPicker.setData(cityData);
+        var showCityPickerButton = doc.getElementById('position');
+        showCityPickerButton.addEventListener('tap', function(event) {
+            cityPicker.show(function(items) {
+                document.getElementById("province").innerHTML = items[0].text;
+                document.getElementById("province_").value = items[0].text;
+                document.getElementById("city").innerHTML = items[1].text;
+                document.getElementById("city_").value = items[1].text;
+                document.getElementById("cityval").value = items[1].text;
+				
+									$.post("/static/shopadmin/json/carcode.json", {}, function(ret) {
+										for(var i=0;i<ret.length;i++){
+											console.log(items[1].text);
+											if(ret[i].city+"市"==items[1].text || ret[i].city==items[1].text){
+												document.getElementById("carlicense").value = ret[i].code;
+											}
+										}
+									});
+            });
+        }, false);
+    });
+})(mui, document);
+
+$(function() {
+    $("#phone").val($api.getStorage('loginsuccesstel'));
+    //获取保险公司列表
+    $.post("/api/index/getlist.do", { t: 1 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        // console.log(json);
+        var html = "";
+        for (var i = 0; i < json.length; i++) {
+            html += "<li id='aui-media-list_" + json[i].id + "'  onclick=selectcompany('" + json[i].id + "')  class='aui-list-item aui-list-item-middle insurerid bg-white'><div class='aui-media-list-item-inner'>";
+            html += '<div class="aui-list-item-media"><img src="../image/car.png" class="aui-img-round aui-list-img-sm"></div>';
+            html += '<div class="aui-list-item-inner">' + json[i].name + '</div>';
+            html += '</div></li>';
+        }
+        $(".aui-media-list").html(html);
+    });
+    $.post("/api/index/getconfig.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        json = eval("(" + json.orderset_value + ")");
+        for (var i = 0; i < json.dszxian.length; i++) {
+            $("#dszxianlist").append('<div>' + json.dszxian[i] + '</div>')
+        }
+
+        for (var i = 0; i < json.blxian.length; i++) {
+            $("#blxianlist").append('<div>' + json.blxian[i] + '</div>')
+        }
+        for (var i = 0; i < json.hhxian.length; i++) {
+            $("#hhxianlist").append('<div>' + json.hhxian[i] + '</div>')
+        }
+        for (var i = 0; i < json.ckxian.length; i++) {
+            $("#ckxianlist").append('<div>' + json.ckxian[i] + '</div>')
+        }
+        for (var i = 0; i < json.zwxian.length; i++) {
+            $("#zwxianlist").append('<div>' + json.zwxian[i] + '</div>')
+        }
+    });
+});
+
+// 未上牌
+$("#nonepai").click(function() {
+    if ($(this).text() === '未上牌') {
+        $(this).addClass('red').text('已上牌');
+        $(this).prev().attr('readonly', '1').attr('placeholder', '未上牌无需输车牌号').val('');
+        $(".cartext").html("购车发票/车辆合格证");
+        $("#drivinglicensePicZ .tsmsg").text('购车发票');
+        $("#drivinglicensePicF .tsmsg").text('车辆合格证');
+        $("#xsz").attr('src', '../image/gc.jpg');
+        $("#xsf").attr('src', '../image/hg.jpg');
+        $("#isNewcar").val(1);
+    } else {
+        $(this).removeClass('red').text('未上牌');
+        $(this).prev().removeAttr('readonly').attr('placeholder', '请输入车牌号码');
+        $(".cartext").html("行驶证");
+        $("#IDPicZ .tsmsg").text('行驶证正面');
+        $("#IDPicF .tsmsg").text('行驶证反面');
+        $("#xsz").attr('src', '../image/xsz.png');
+        $("#xsf").attr('src', '../image/xsf.png');
+        $("#isNewcar").val(0);
+    }
+});
+
+
+
+// $("body").on("click", ".insurerid", function() {
+//     var id = $(this).data("id");
+//     $("#insurerid").val(id);
+// });
+// 选择保险公司
+
+var click_status = 0; //0，1下一步，2确认
+$("#next").click(function() {
+    if (click_status == 0) {
+        if ($("input[name='car_name']").val() == '' || (!$("#nonepai").hasClass('red') && $("input[name='car_license']").val() == '') || $("input[name='apply_phone']").val() == '') {
+            alert("输入框不能为空,请确认输入!");
+            return false;
+        }
+        if ($("#insurerid").val() == 0) {
+            alert("请选择保险公司类型！");
+            return false;
+        }
+        $("#first_input").hide();
+        $("#second_input").show();
+        $("#first_").addClass('div-active');
+        $("#second").addClass('btn-active');
+        $("#toptitle").text('证件上传');
+        click_status++;
+        return;
+    } else if (click_status == 1) {
+        if ($("#drivinglicensePicZ_text").val() == 0 || $("#drivinglicensePicF_text").val() == 0 || $("#IDPicZ_text").val() == 0 || $("#IDPicF_text").val() == 0) {
+            alert("还有证件未上传，请先上传证件!");
+            return false;
+        }
+        $("#second_input").hide();
+        $("#third_input").show();
+        $("#second_").addClass('div-active');
+        $("#third").addClass('btn-active');
+        $("#toptitle").text('选择险种');
+        click_status++;
+        return;
+    } else if (click_status == 2) {
+        if ($("#driver").hasClass('aui-checked') && $("#drivernum").val() == '') {
+            alert('请输入司机座位险金额');
+            return;
+        }
+        if ($("#passenger").hasClass('aui-checked') && $("#passengernum").val() == '') {
+            alert('请输入乘客座位险金额');
+            return;
+        }
+        if ($("#dszxian").hasClass('aui-checked') && $("#dszxian_opt").val() == '') {
+            alert('请选择第三者险类型');
+            return;
+        }
+        if ($("#blxian").hasClass('aui-checked') && $("#blxian_opt").val() == '') {
+            alert('请选择玻璃险类型');
+            return;
+        }
+        if ($("#hhxian").hasClass('aui-checked') && $("#hhxian_opt").val() == '') {
+            alert('请选择车身划痕险类型');
+            return;
+        }
+        $("#queren").show();
+        $("#third_input").hide();
+        $("#fourth").addClass('btn-active');
+        $("#third_").addClass('div-active');
+        $("#toptitle").text('提交完成');
+        $.post("/api/order/create.do", $("#orderform").serialize(), function(ret) {
+            // alert(ret);
+            if (ret == 1) {
+                if(confirm("是否填写您的收货地址，以便出单后寄件，如已添加收货地址，请点击取消返回订单列表！")){
+                    openWin('address');
+                }else{
+                    window.location = "/mobile/html/index_frm.html?l=1";
+                }
+            } else {
+                alert(ret);
+            }
+        });
+        click_status++;
+        return;
+    } else if (click_status == 3) {
+		window.location = "/mobile/html/index_frm.html?l=1";
+        //创建询价
+        // alert($("#orderform").serialize());
+
+    }
+});
+
+
+
+function selectcompany(id) {
+    $(".aui-media-list li").addClass('bg-white');
+    $("#aui-media-list_" + id).removeClass('bg-white');
+
+    $("#insurerid").val(id);
+}
+
+
+$(".select").click(function() {
+
+    $(".select").removeClass('active');
+    $(this).addClass('active');
+});
+$(document).on("click", ".select .selecttype div", function() {
+	if($(this).parent().data("cs")==1){
+		alert('只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险');
+		return;
+	}
+    // alert($(this).text());
+    $(this).parent().parent().children('a').text($(this).text());
+    $(this).parent().parent().prev().val($(this).text());
+    $(this).parent().parent().prev().prev().addClass('aui-checked').attr('checked', true);
+    $(".select").removeClass('active');
+});
+$("input").click(function() {
+    $(".select").removeClass('active');
+});
+$(".aui-checkboxright").click(function() {
+    if ($(this).hasClass('aui-checked')) {
+        $(this).removeClass('aui-checked');
+        $(this).removeAttr('checked');
+    } else {
+        $(this).addClass('aui-checked').attr('checked', true);
+        $(this).parent().parent().children('.aui-checkbox').addClass('aui-checked').attr('checked', true);
+    }
+});
+$(".aui-checkboxleft").click(function() {
+    if ($(this).hasClass('aui-checked')) {
+        $(this).removeClass('aui-checked');
+        $(this).removeAttr('checked');
+        $(this).nextAll().children('.aui-checkbox').removeClass('aui-checked').removeAttr('checked');
+    } else {
+        $(this).addClass('aui-checked').attr('checked', true);
+    }
+});
+// 必选车损
+$(".bxcs").click(function() {
+    if (!$('#csxian').hasClass('aui-checked')) {
+        $('.bxcs').each(function() {
+            $(this).removeClass('aui-checked');
+            $(this).removeAttr('checked');
+        })
+        alert('只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险');
+    } else {
+
+    }
+});
+
+$("#csxian").click(function() {
+    var a = 0;
+    $('.bxcs').each(function() {
+        if ($(this).is(':checked')) {
+            a++;
+        }
+    });
+    if (a > 0) {
+        $(this).addClass('aui-checked').attr('checked', true);
+        alert('只有投保“车损险”才能投保“自燃险、玻璃险、 涉水险、车身划痕险');
+    }
+    // if ($('#csxian').is(':checked')) {
+    //     $(".cs-checkbox").removeAttr("disabled");
+    // } else {
+    //     $(".cs-checkbox").attr("disabled", "disabled");
+    // }
+});
+$("#drivernum").click(function() {
+    $(this).prev().addClass('aui-checked').attr('checked', true);
+});
+$("#passengernum").click(function() {
+    $(this).prev().addClass('aui-checked').attr('checked', true);
+});
+$("#driver").click(function() {
+    $(this).next().val('');
+});
+$("#passenger").click(function() {
+    $(this).next().val('');
+});
+</script>
+<script type="text/javascript" src="../script/map.js"></script>

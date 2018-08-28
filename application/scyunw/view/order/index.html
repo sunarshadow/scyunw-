@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <input type="hidden" value="{$stat}" id="stat">
+    关键字搜索：
+    <div class="layui-inline">
+        <input class="layui-input" name="keyword" placeholder="手机号/车牌号/姓名" id="keyword" autocomplete="off">
+    </div>
+	<label style="padding-left: 10px;">生效时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="awake" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+	<label style="padding-left: 10px;">到期时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="end" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+	<label style="padding-left: 10px;">出单时间：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="start" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <br>
+    <div class="layui-inline">
+        <select name="modules" id="province" lay-filter="province" >
+            <option value="">选择省份</option>
+            {volist name="province" id="vo"}
+            <option value="{$vo.province_id}">{$vo.province_name}</option>
+			{/volist}
+        </select>
+    </div>
+    <div class="layui-inline">
+        <select name="modules" id="city" lay-filter="city">
+            <option value="">选择城市</option>
+        </select>
+    </div>
+    <div class="layui-inline">
+        <select name="modules" id="area" lay-filter="area">
+            <option value="">选择地区</option>
+        </select>
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+    <button class="layui-btn" data-type="toexcel">导出数据</button>
+</div>
+<table class="layui-table" lay-data="{ width: 'full-335',url:'{$url}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}" lay-filter="demo" >
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'car_license', width:100}">车牌号</th>
+      <th lay-data="{field:'realname', width:90}">姓名</th>
+      <th lay-data="{field:'phone', width:120}">手机</th>
+      <th lay-data="{field:'orderarea', width:120}">归属地</th>
+      <th lay-data="{field:'insurname', width:120}">保险公司</th>
+      <th lay-data="{field:'companyname', width:120}">出单公司</th>
+      <th lay-data="{field:'jqprice', width:120}">交强险</th>
+      <th lay-data="{field:'csprice', width:120}">车船税</th>
+      <th lay-data="{field:'syprice', width:120}">商业险</th>
+      <th lay-data="{field:'order_price', width:120}">保费总额</th>
+      <th lay-data="{field:'checktime', width:120}">出单时间</th>
+      <th lay-data="{field:'awaketime', width:120}">生效时间</th>
+      <th lay-data="{field:'endtime', width:120}">到期时间</th>
+      {if !$stat}
+      <th lay-data="{field:'reason', width:90}">原因</th>
+      {/if}
+      <th lay-data="{field:'fktype', width:90}">支付方式</th>
+      <th lay-data="{fixed:'right', width:120, align:'center', toolbar: '#barDemo'}">详情</th>
+    </tr>
+  </thead>
+</table>
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs"  lay-event="detail">查看</a>
+  <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="toexcel">导出</a>
+</script>
+     
+
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form','table',"element","laydate"],function(){
+    var table = layui.table,form = layui.form,element = layui.element,laydate = layui.laydate;
+    //监听表格复选框选择
+    table.on('checkbox(demo)', function(obj){
+        console.log(obj)
+    });
+	laydate.render({
+		elem: '#awake'
+		,range: true
+	});	
+	laydate.render({
+		elem: '#end'
+		,range: true
+	});
+	laydate.render({
+		elem: '#start'
+		,range: true
+	});
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'del'){
+			layer.confirm('您确定删除该保单吗', function(index){
+                $.post("{:url('order/getdel')}", {ids:data.id},function(ret){
+                    if(ret.code){              
+                        obj.del();
+                        layer.close(index);
+                    }
+                });  
+			});
+        }else if(obj.event === 'toexcel'){
+			var id = data.id;
+			window.location = "{:url('order/toexcel')}"+'?id='+id;
+        }else if(obj.event === 'detail'){
+			var id = data.id;
+			var index = layui.layer.open({
+				title : "保单详情",
+				type : 2,
+				area: ['50%', '90%'],
+				content : "{:url('order/info')}"+'?id='+id,
+				success : function(layero, index){
+					setTimeout(function(){
+						layui.layer.tips('点击此处返回保单列表', '.layui-layer-setwin .layui-layer-close', {
+							tips: 3
+						});
+					},500)
+				}
+			})
+        }
+    });
+
+    var $ = layui.$, active = {
+        reload: function(){
+			table.reload('idTest', {
+				where: {
+					keyword : $('#keyword').val(),
+					area : $('#area').val(),
+					awake : $('#awake').val(),
+					end : $('#end').val(),
+					start : $('#start').val(),
+				}
+			});
+        },
+		toexcel: function(){ //导出数据
+			var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+			for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+			var url = "{:url('order/getlist')}?toexcel=1";
+			if(ids){ url += "&ids="+ids;}//获取选中数据
+			if($('#stat').val()){ url += "&stat="+$('#stat').val();}//获取状态
+			if($('#keyword').val()){ url += "&keyword="+$('#keyword').val();}//获取关键字
+			if($('#area').val()){ url += "&area="+$('#area').val();}//获取地区	
+			if($('#awake').val()){ url += "&awake="+$('#awake').val();}//获取生效时间	
+			if($('#end').val()){ url += "&end="+$('#end').val();}//获取到期时间
+			if($('#start').val()){ url += "&start="+$('#start').val();}//获取出单时间
+			window.location = url;	
+		}
+    };   
+	//省市区三级联动
+	form.on('select(province)', function(data){
+		var html = "<option value=''>选择城市</option>";
+		$.post("{:url('lib/base/province')}", {id:data.value},function(ret){
+			for(var i=0;i<ret.length;i++){
+				console.log(ret[i].name);
+				html += "<option value='"+ret[i].id+"'>"+ret[i].name+"</option>";
+			}
+			$("#city").html(html);
+			form.render('select','search');
+		});		
+	}); 
+	form.on('select(city)', function(data){
+		var html = "<option value=''>选择地区</option>";
+		$.post("{:url('lib/base/city')}", {id:data.value},function(ret){
+			for(var i=0;i<ret.length;i++){
+				console.log(ret[i].name);
+				html += "<option value='"+ret[i].id+"'>"+ret[i].name+"</option>";
+			}
+			$("#area").html(html);
+			form.render('select','search');
+		});		
+	}); 	
+	
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+    
+});
+	
+</script>
+
+</body>
+</html>

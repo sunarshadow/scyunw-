@@ -1,0 +1,437 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>资金管理</title>
+    <link rel="stylesheet" href="__STATIC__/web/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/lib.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/web/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/web/css/style.css">
+    <script src="__STATIC__/web/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/web/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.min.js"></script>
+    <script src="__STATIC__/web/js/swiper.animate.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/web/js/org.min.js" data-main="indexMain"></script>
+    <style>
+    .getsmscode{
+        width:100px!important;
+        height:34px!important;
+        margin-top:0px!important;
+        font-size:14px!important;
+        margin-left:5px!important;
+    }
+    </style>    
+</head>
+
+<body>
+    {include file="/index/head"}
+    <div id="newsPage" class="npagePage Pagenews">
+        <div id="banner">
+            <div style="background-image:url(http://resources.jsmo.xin/templates/upload/4101/201709/1505124501768.jpg);"></div>
+        </div>
+        <div class="content">
+            <div class="header">
+                <a href="usercenter.html">
+                    <p class="title">我的账户</p>
+                    <p class="subtitle">My account</p>
+                </a>
+            </div>
+            <div id="category">
+                <a href="/web/user/capital" {if $action eq "capital"}class="active"{/if}>资金管理</a>
+                <a href="/web/user/agentorder" {if $action eq "agentorder"}class="active"{/if}>商户预约</a>
+                <a href="/web/user/order" {if $action eq "orderdetail"}class="active"{/if}>我的保单</a>
+                <!-- <a href="/web/user/bill" {if $action eq "bill"}class="active"{/if}>我的账单</a> -->
+                <a href="/web/user/info" {if $action eq "info"}class="active"{/if}>个人资料</a>
+                <a href="/web/user/security" {if $action eq "security"}class="active"{/if}>账户安全</a>
+                <!-- <a href="/web/user/award" {if $action eq "award"}class="active"{/if}>推广奖励</a> -->
+            </div>
+            <div id="newslist" class="rightcon">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#tab_0" data-toggle="tab">充值</a></li>
+                    <li><a href="#tab_1" data-toggle="tab">提现</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">我的银行卡</a></li>
+                    <li><a href="#tab_3" data-toggle="tab">流水明细</a></li>
+                    <li><a href="#tab_4" data-toggle="tab">红包明细</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="tab_0">
+                        <div class="wrapper usermsg policy">
+                            <div class="change">
+                            <form id="rechargeform">
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;充值金额：</span>&emsp;&emsp;
+                                    <input class="text-center" type="text" name="money" placeholder="最低充值100元">
+                                </div>
+                                <!-- <div class="leftmsg paytype">
+                                    <span>&emsp;&emsp;支付方式：</span>&emsp;&emsp;
+                                    <img class="checked" src="__STATIC__/web/images/ali.png" alt="" data-paytype="1">
+                                    <img src="__STATIC__/web/images/wx.png" alt="" data-paytype="2">
+                                    <input id="paytype" type="hidden" name="paytype" value="1">
+                                </div> -->
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                    <button class="btn changebtn" type="button" onclick="recharge()">充值</button>
+                                </div>
+                            </form>
+                            </div>
+                            <div class="black top-50">
+                                历史充值记录
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="orange">
+                                            <td>编号</td>
+                                            <td>充值订单号</td>
+                                            <td>金额</td>
+                                            <td>付款方式</td>
+                                            <td>提交时间</td>
+                                            <td>付款时间</td>
+                                            <td>状态</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody  class="rechargelist"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_1">
+                        <div class="wrapper usermsg policy">
+                            <div class="change">
+                            <form id="withdrawalform">
+                                <div class="leftmsg">
+                                    <span>&emsp;选择银行卡：</span>&emsp;&emsp;
+                                    <div class="banklist banklist_t"></div>
+                                </div>
+                                <div class="leftmsg tt">
+                                    <span>&emsp;&emsp;提现金额：</span>&emsp;&emsp;
+                                    <input class="text-center" type="number" name="money" id="txmoney" placeholder="当前可提现{$user['money_free']}元">
+                                    <button class="btn getcode" onclick="setmoney()">全额</button>
+                                </div>
+                                <div class="leftmsg ">
+                                    <span>&emsp;&emsp;&emsp;验证码：</span>&emsp;&emsp;
+                                    <input name="smscode" type="text" placeholder="">
+                                    <input name="bankid" id="bankid" type="hidden" placeholder="">
+                                    <button class="btn changebtn getsmscode" onclick="getsmscode()">获取验证码</button>
+                                    <br>
+                                    <span class="ts">
+                                        验证码将发送到您绑定的手机: {$user["showphone"]}
+                                    </span>
+                                </div>
+                                <div class="leftmsg">
+                                    <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                    <button class="btn changebtn" type="button" onclick="withdrawal()">提现</button>
+                                </div>
+                            </form>
+                            </div>
+                            <div class="black top-50">
+                                历史提现记录
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="orange">
+                                            <td>编号</td>
+                                            <td>提现订单号</td>
+                                            <td>金额</td>
+                                            <td>银行信息</td>
+                                            <td>提交时间</td>
+                                            <td>付款时间</td>
+                                            <td>状态</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="tixianlist"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_2">
+                        <div class="wrapper usermsg policy">
+                            <div class="table-responsive top-50">
+                                <div class="change">
+                                    <div class="leftmsg">
+                                        <span>&emsp;我的银行卡：</span>&emsp;&emsp;
+                                        <div class="banklist banklist_c"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="change">
+                                <form id="bankform">
+                                    <input type="hidden" id="id" name="id" value="0">
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;卡号：</span>&emsp;&emsp;
+                                        <input type="text" id="bank_account" name="bank_account" placeholder="请输入卡号">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;卡类型：</span>&emsp;&emsp;
+                                        <input type="text" id="bank_name" name="bank_name" placeholder="卡类型">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;持卡人：</span>&emsp;&emsp;
+                                        <input type="text" id="acholder" name="acholder" placeholder="请输入真实姓名">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;证件号：</span>&emsp;&emsp;
+                                        <input type="text" id="acmenid" name="acmenid" placeholder="请输入身份证">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;手机号：</span>&emsp;&emsp;
+                                        <input type="number" id="bank_phone" name="bank_phone" placeholder="请输入手机号">
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;验证码：</span>&emsp;&emsp;
+                                        <input name="smscode" type="text" placeholder="">
+                                        <button class="btn changebtn getsmscode" onclick="getsmscode()">获取验证码</button>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;默认银行：</span>&emsp;&emsp;
+                                        <input class="aui-checkbox aui-fq" id="ischeckbank" style="width:auto;height:auto" type="radio" value="1" name="isdefault">
+                                        &emsp;<span style="font-size:12px!important;">选中后设置为默认银行</span>
+                                    </div>
+                                    <div class="leftmsg">
+                                        <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span>&emsp;&emsp;
+                                        <button class="btn changebtn" type="button" onclick="addbank()">提交</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_3">
+                        <div class="wrapper usermsg policy">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="orange">
+                                            <td>编号</td>
+                                            <td>类型</td>
+                                            <td>金额</td>
+                                            <td>内容</td>
+                                            <td>时间</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="moneylist">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab_4">
+                        <div class="wrapper usermsg policy">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="orange">
+                                            <td>编号</td>
+                                            <td>类型</td>
+                                            <td>金额</td>
+                                            <td>内容</td>
+                                            <td>时间</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="redlist">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function(){
+    //充值列表
+    $.post("/api/webuser/getlist.do", {v:0}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        for (var i = 0; i < json.length; i++) {
+            html += '<tr class="gray">';
+            html += '<td>' + json[i].id + '</td>';
+            html += '<td>' + json[i].ordernum + '</td>';
+            html += '<td>' + json[i].money + '</td>';
+            html += '<td>' + json[i].paytype + '</td>';
+            html += '<td>' + json[i].addtime + '</td>';
+            html += '<td>' + json[i].paytime + '</td>';
+            html += '<td>' + json[i].paystat + '</td>';
+            html += ' </tr>';
+        }
+        $(".rechargelist").html(html);
+    });
+    //提现列表
+    $.post("/api/webuser/getlist.do", {v:1}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        for (var i = 0; i < json.length; i++) {
+            html += '<tr class="gray">';
+            html += '<td>' + json[i].id + '</td>';
+            html += '<td>' + json[i].ordernum + '</td>';
+            html += '<td>' + json[i].money + '</td>';
+            html += '<td>' + json[i].bank + '</td>';
+            html += '<td>' + json[i].addtime + '</td>';
+            html += '<td>' + json[i].paytime + '</td>';
+            html += '<td>' + json[i].paystat + '</td>';
+            html += ' </tr>';           
+        }
+        $(".tixianlist").html(html);
+    });    
+    //银行卡列表
+    $.post("/api/user/bank.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += '<div  data-id="' + json[i].id + '"  ';
+            if(json[i].isdefault==1){
+                html += ' class=" bankidetail sel selbankcard bankchecked" name="">';
+            }else{
+                html += ' class=" bankidetail sel selbankcard" name="">';
+            }
+            html += '<img class="bankcheckedimg" src="__STATIC__/web/images/dian.png" alt="">';
+            html += '<img class="bankimg" src="__STATIC__/web/images/xz.png" alt="">' + json[i].bankname + ' 卡号：' + json[i].bank_account;
+            html += '</div>';
+        }
+        $(".banklist").html(html);
+    });   
+    //流水明细
+    $.post("/api/red", {t:1}, function(ret) {
+        var json = eval("(" + ret + ")");
+        for(key in json){
+            if(key=="list"){
+                var html = "";
+                var price = 0;
+                for(var i=0;i<json[key].length;i++){
+                    price = json[key][i].money>0?"+" + json[key][i].money:json[key][i].money;
+                    html += '<tr class="gray">';
+                    html += '<td>' + json[key][i].id + '</td>';
+                    html += '<td>' + json[key][i].content + '</td>';
+                    html += '<td>￥' + price + '</td>';
+                    html += '<td>' + json[key][i].info + '</td>';
+                    html += '<td>' + json[key][i].addtime + '</td>';
+                    html += '</tr>';
+                }
+                $(".moneylist").html(html);
+            }
+        }
+    });     
+    //红包明细
+    $.post("/api/webuser/getlist.do", {v:3}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        var price = 0;
+        for(var i=0;i<json.length;i++){
+            price = json[i].money>0?"+" + json[i].money:json[i].money;
+            html += '<tr class="gray">';
+            html += '<td>' + json[i].id + '</td>';
+            html += '<td>' + json[i].content + '</td>';
+            html += '<td>￥' + price + '</td>';
+            html += '<td>' + json[i].info + '</td>';
+            html += '<td>' + json[i].addtime + '</td>';
+            html += '</tr>';
+        }
+        $(".redlist").html(html);
+
+    });   
+});
+$(".paytype img").click(function() {
+    $(".checked").removeClass('checked');
+    $(this).addClass('checked');
+    $("#paytype").val($(this).data("paytype"));
+});
+$(".selbankcard").click(function() {
+    $(".bankchecked").removeClass('bankchecked');
+    $(this).addClass('bankchecked');
+});
+//获取银行类型
+$("body").on("blur", "#bank_account", function() {
+    $.post("/api/user/getbanktype.do", { bankaccount: $(this).val() }, function(ret) {
+        $("#bank_name").val(ret);
+    });
+});
+//编辑选中银行
+$("body").on("click", ".banklist_c .bankidetail", function() {
+    var id = $(this).data("id");
+    $.post("/api/user/getbank.do", { id: id }, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("#" + key).val(json[key]);
+        }
+        if(json["isdefault"]==1){
+            $("#ischeckbank").prop("checked","checked").attr("checked","checked");
+        }else{
+            $("#ischeckbank").removeAttr("checked");
+        }
+    });    
+});
+//提现选中银行
+$("body").on("click", ".banklist_t .bankidetail", function() {
+    var id = $(this).data("id");
+    $(".banklist_t .bankidetail").removeClass("bankchecked");
+    $(this).addClass("bankchecked");
+    $("#bankid").val(id);
+});
+//获取短信验证码
+function getsmscode() {
+    var fromary = $("#bankform").serialize();
+    fromary += "&apply_phone=" + $("#bank_phone").val();    
+    $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+            setTimeout("clock(60)",1000);
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+//获取全额
+function setmoney(){
+    var money = "{$user['money_free']}";
+    $("#txmoney").val(money);
+}
+//银行卡编辑
+function addbank() {
+    var fromary = $("#bankform").serialize();
+    $.post("/api/user/addbank.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("银行卡编辑成功！");
+        } else {
+            alert(ret);
+        }
+    });
+}
+//提现
+function withdrawal(){
+    var fromary = $("#withdrawalform").serialize();
+    $.post("/api/user/withdrawal.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("成功添加提现，请等待审核");
+            window.location.reload();
+        } else {
+            alert(ret);
+        }
+    });
+}
+//充值
+function recharge(){
+    var fromary = $("#rechargeform").serialize();
+    $.post("/api/webuser/recharge.do", fromary, function(ret) {
+        window.location = ret;   
+    });
+}
+function clock(r){
+    if(r>0){
+        $("#getsmscode").html(r+"s").css("background-color","#929292");  
+        setTimeout("clock("+(r-1)+")",1000);
+    }else{
+        $("#getsmscode").html("获取验证码").css("background-color","#2196f3");  
+    }
+}
+</script>
+</html>

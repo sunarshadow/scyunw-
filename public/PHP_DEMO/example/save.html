@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>web demo</title>
+</head>
+<body>
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">文档保全</div>
+        <div class="panel-body">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6 panel panel-default">
+                <div style="margin-top: 15px;">
+                    <form id="person" class="form-horizontal">
+                        <!-- <div class="col-sm-12 text-center sign-succeed" style="margin-bottom: 15px;" id="signSucceed">签署成功</div>
+                        <div class="col-sm-12 text-center sign-failed" style="margin-bottom: 15px;display: none;" id="signFailed">签署失败</div> -->
+                        <div class="form-group">
+                            <label for="signed-file" class="col-sm-3 control-label">本地文档路径</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="signed-file" value=""  >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signed-fileName" class="col-sm-3 control-label">文件名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="signed-fileName" value="test" >
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-default" onclick="back()">上一步</button>
+                                <button type="button" class="btn btn-default" id="submit">下一步</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+
+    $(function(){
+        $('#signed-file').val(window.finalFilePath);
+    });
+
+    $('#submit').click(function() {
+        var save = {
+                signer : '816796391F4641F88006226BFB756B7E',
+                accountId : window.accountId,
+                docFilePath : $('#signed-file').val(),
+                docName : $('#signed-fileName').val(),
+                signServiceId: window.signServiceId
+        };
+            callService("CommonHandle.php?action=saveSignedFile",$.extend(save,window.project), (callback = function (data) {
+            hideLoading();
+            if (data.errCode == 0) {
+                window.peid = data.selfEviNum;
+                window.ueid = data.userEviInfo;
+                $('#main').load("end.html");
+            } else {
+                alertError(data.msg);
+            }
+        }));
+    });
+
+    function back() {
+        $('#main').load("selfSign.html", function() {
+            if (window.selfSign != undefined) {
+                $('#accountId').val(window.accountId);
+                $('#src-file').val(window.selfSign.srcFile);
+                $('#dst-file').val(window.selfSign.dstFile);
+                $('input[name="signTypeRadios"][value=' + window.selfSign.signType + ']').attr("checked","checked");
+                $('input[name="posTypeRadios"][value=' + window.selfSign.posType + ']').attr("checked","checked");
+                $('#pos-page').val(window.selfSign.posPage);
+                $('#pos-x').val(window.selfSign.posX);
+                $('#pos-y').val(window.selfSign.posY);
+                $('#pos-key').val(window.selfSign.key);
+                $('#file-name').val(window.selfSign.fileName);
+                $('#seal').val(window.sealData);
+            }
+        });
+    }
+</script>
+</html>

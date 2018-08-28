@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>身份认证</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+    #login {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 47px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #login #discount .midlist .aui-list {
+        padding: 0;
+    }
+
+    #login #discount .midlist .aui-list img {
+        margin-top: 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="login">
+        <div id="progressBar">
+            <div id="toptitle" class="toptitle">信息填写</div>
+            <button id="first" class="btn-active">1<a>信息填写</a></button>
+            <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="third">2<a>密码验证</a></button>
+            <div id="third_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <button id="fourth"><span>完成</span><a>提交验证</a></button>
+        </div>
+        <div class="aui-content">
+            <form id="orderform">
+                <input type="hidden" id="orderid">
+                <div id="third_input" style="display: block" class="third_inputone">
+                    <ul class="aui-list aui-form-list pad-0">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <input type="text" id="apply_phone" name="apply_phone" placeholder="手机号码">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <input type="text" id="car_name" name="car_name" placeholder="户主姓名">
+                                    <input type="hidden" id="id_code" name="id_code">
+                                    <input type="hidden" id="order_price" name="order_price">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <input type="text" id="carrier" placeholder="手机运营商">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="third_input" class="third_inputtwo">
+                    <ul class="aui-list aui-form-list pad-0">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-input">
+                                    <input type="text" id="smscode" name="smscode" placeholder="验证码">
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <ul id="queren" class="aui-list aui-form-list">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <img id="resultimg" src="../image/finish.png">
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner returnresult">
+                            验证成功！
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <div class="aui-text-center fixbottom" style="z-index: 100">
+        <button type="button" id="next">立即验证</button>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-toast.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+var click_status = 0; //0，1下一步，2确认
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+$(function() {
+    //获取已报价未确认订单
+    // alert(1);
+    $.post("/api/order/getuserorder.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("#" + key).val(json[key]);
+        }
+        getToken();
+
+
+    });
+});
+
+function getToken() {
+    var id = $("#orderid").val();
+    $.post("/api/index/getphonetoken.do", { id: id }, function(rett) {
+        if (rett) {
+            // alert(rett);
+            getphonedate(rett);
+        }
+    });
+}
+
+function getphonedate(token) {
+    // var token = $api.getStorage('token');
+    // alert(token);
+    // return;
+    var fromary = $("#orderform").serialize();
+    var id = $("#orderid").val();
+    var price = $("#order_price").val();
+    fromary += "&id=" + id + "&fktype=0";
+    var toast = new auiToast();
+    toast.loading({
+        title: "正在验证",
+        duration: 2000
+    });
+    $.post("/api/index/getphonedata?token=" + token, fromary, function(res) {
+        // if (res == 0) {
+        //     // getphonedate(token);//重新获取数据验证，移除，由后台获取
+        // }
+        
+        if (res == 1 || res == 0) {
+            // alert(2);
+            toast.hide();
+            $(".third_inputone").hide();
+            $(".third_inputtwo").hide();
+            $("#queren").show();
+            $("#fourth").addClass('btn-active');
+            $("#third_").addClass('div-active');
+            $("#second_").addClass('div-active');
+            $("#third").addClass('btn-active');
+            $("#toptitle").text('提交验证');
+            $("#next").text('确认');
+            $("#resultimg").attr("src", "../image/finish.png");
+            click_status = 2;
+        } else {
+            // alert(3);
+            toast.hide();
+            $(".third_inputone").hide();
+            $(".third_inputtwo").hide();
+            $("#queren").show();
+            $("#fourth").addClass('btn-active');
+            $("#second_").addClass('div-active');
+            $("#third").addClass('btn-active');
+            $("#third_").addClass('div-active');
+            $("#toptitle").text('提交验证');
+            $("#next").text('确认');
+            $(".returnresult").html(res);
+            $("#resultimg").attr("src", "../image/fail.png");
+            $("#next").attr("id", "return");
+            click_status = 2;
+        }
+    });
+}
+$("body").on("click", "#return", function() {
+    closeWin();
+});
+$("body").on("click", "#next", function() {
+    var carrier;
+    $.post("/api/index/getconfig.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        if (json.carrier_value > 0) {
+            carrier = json.carrier_value;
+        } else {
+            carrier = 0;
+        }
+
+        var fromary = $("#orderform").serialize();
+        var id = $("#orderid").val();
+        var price = $("#order_price").val();
+        fromary += "&id=" + id + "&fktype=0&w=1";
+        var token = GetQueryString("token");
+        if (click_status == 0) {
+            if (price > carrier) {
+                $.post("/api/index/getphoneurl.do", fromary, function(ret) {
+                    var json = eval("(" + ret + ")");
+                    console.log(json.result.url);
+                    location.href = json.result.url;
+                    return;
+                });
+            } else {
+                $.post("/api/index/sms_sendcode.do", fromary, function(ret) {
+                    if (ret == 1) {
+                        $(".third_inputone").hide();
+                        $(".third_inputtwo").show();
+                        $("#second_").addClass('div-active');
+                        $("#third").addClass('btn-active');
+                        $("#toptitle").text('密码验证');
+                        click_status++;
+                    } else {
+                        alert(ret.msg);
+                    }
+                    return;
+                });
+            }
+        } else if (click_status == 1) {
+            $.post("/api/order/buy.do", fromary, function(ret) {
+                if (ret == 1) {
+                    $(".third_inputtwo").hide();
+                    $("#queren").show();
+                    $("#fourth").addClass('btn-active');
+                    $("#third_").addClass('div-active');
+                    $("#toptitle").text('提交验证');
+                    $("#next").text('确认');
+                    click_status++;
+                } else {
+                    alert(ret);
+                }
+                return;
+            });
+        } else if (click_status == 2) {
+            openWin('billbystages');
+        }
+    });
+});
+</script>

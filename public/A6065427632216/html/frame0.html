@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云车险</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-pull-refresh.css" />
+    <link rel="stylesheet" type="text/css" href="../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css" media="screen">
+    .aui-slide-node img {
+        height: auto !important;
+    }
+    </style>
+</head>
+
+<body>
+    <!--  <div id="myswiper" class="swiper-container swiper-1">
+        <div class="swiper-wrapper ad-list">
+        </div>
+        <div class="swiper-pagination"></div>
+    </div> -->
+    <div id="aui-slide3">
+        <div class="aui-slide-wrap ad-list">
+        </div>
+        <div class="aui-slide-page-wrap">
+            <!--分页容器-->
+        </div>
+    </div>
+    <section id="frame0" class="aui-grid">
+        <div class="aui-row">
+            <div class="aui-col-xs-4" onclick="inquiry()">
+                <div class="icon icon-1"></div>
+                <div class="aui-grid-label">保险询价</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="buy()">
+                <div class="icon icon-2"></div>
+                <div class="aui-grid-label">车险购买</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="openWin('guide')">
+                <div class="icon icon-3"></div>
+                <div class="aui-grid-label">理赔指南</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="openWin('yuyuesc')">
+                <div class="icon icon-4"></div>
+                <div class="aui-grid-label">预约审车</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="openWin('carmaintain')">
+                <div class="icon icon-5"></div>
+                <div class="aui-grid-label">汽车维护</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="openWin('search')">
+                <div class="icon icon-6"></div>
+                <div class="aui-grid-label">违章查询</div>
+            </div>
+        </div>
+    </section>
+    <!-- 消息 -->
+    <div id="msg" class="aui-content">
+        <ul class="aui-list">
+            <li>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        车险快报
+                    </div>
+                    <div class="aui-list-item-inner  info">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 分期账单 -->
+    <div id="fenqi-list" class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-media-list"></ul>
+    </div>
+    <!-- 合作方 -->
+    <div id="together">
+        <div class="top">
+            <div class="border"></div>
+            <span>共享车险合作方</span>
+        </div>
+        <ul class="partner">
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/swiper.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script src="../script/aui-pull-refresh.js"></script>
+<script type="text/javascript" src="../script/aui-slide.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    // getconfig.do
+
+    //广告图
+
+    $.post($api.getStorage('serviceAddr') + "/api/index/getlist.do", { t: 4 }, function(ret) {
+        var picfinish;
+        var json = eval("(" + ret + ")");
+        var html = "";
+        var pic;
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].pic.indexOf("http")) {
+                pic = $api.getStorage('serviceAddr') + json[i].pic;
+            } else {
+                pic = json[i].pic;
+            }
+            if (i == 0) {
+                html += '<div class="aui-slide-node bg-dark"><img id="mypic" src="' + pic + '" /></div>';
+            } else {
+                html += '<div class="aui-slide-node bg-dark"><img src="' + pic + '" /></div>';
+            }
+
+            if (i == 0) {
+                picfinish = pic;
+            }
+        }
+        $('.ad-list').append(html);
+        var img = new Image;
+        img.src = picfinish;
+        img.onload = function() {
+            var slide3 = new auiSlide({
+                container: document.getElementById("aui-slide3"),
+                // "width":300,
+                "height": $("#mypic").height(),
+                "speed": 500,
+                "autoPlay": 3000, //自动播放
+                "loop": true,
+                "pageShow": true,
+                "pageStyle": 'dot',
+                'dotPosition': 'center'
+            })
+        }
+    });
+
+    //获取分期账单列表
+    // alert($api.getStorage('serviceAddr'));
+    $.post($api.getStorage('serviceAddr') + "/api/order/getinstall.do", {}, function(ret) {
+        if (ret != "login") {
+            var json = eval("(" + ret + ")");
+            json = json.list;
+            var html = "";
+            for (var i = 0; i < json.length; i++) {
+                html += '<li class="aui-list-item"><div class="aui-media-list-item-inner">';
+                html += '<div class="aui-list-item-media"><img src="../image/car.png"></div>';
+                html += '<div class="aui-list-item-inner"><div class="aui-list-item-text"><div class="aui-list-item-title">分期账单</div></div>';
+                html += '<div class="aui-list-item-text">' + json[i].car_license + ' 保险账单已经更新咯，请记得查询哟！</div>';
+                html += '<div class="aui-info"><div class="aui-info-item"><span class="money">金额 ￥' + json[i].order_price + '</span></div>';
+                if (json[i].endtime == "") {
+                    html += '<div class="aui-info-item time">' + json[i].statstr + ' </div>';
+                } else {
+                    html += '<div class="aui-info-item time">' + json[i].endtime + ' 到期</div>';
+                }
+                html += '</div></div></div></li>';
+            }
+            $(".aui-media-list").html(html);
+        } else {
+            // alert('未登录');
+            var phone = $api.getStorage('loginsuccesstel');
+            if (phone != '' && phone != null && phone != 'undefined' && phone != undefined) {
+                $.post($api.getStorage('serviceAddr') + "/api/index/login.do", {
+                    phone: phone,
+                    issession: 1
+                }, function(ret) {
+                    location.reload();
+                    return;
+                });
+            } else {
+                openWin('login');
+            }
+        }
+    });
+
+    //获取合作伙伴列表
+    $.post($api.getStorage('serviceAddr') + "/api/index/getlist.do", { t: 2 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        for (var i = 0; i < json.length; i++) {
+            html += '<li><div><img src="' + $api.getStorage('serviceAddr') + json[i].pic + '"></div><div class="name">' + json[i].title + '</div></li>';
+        }
+        $(".partner").html(html);
+
+    });
+    //车险快报
+    $.post($api.getStorage('serviceAddr') + "/api/index/getlist.do", { t: 5 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        $(".info").text(json[0].info);
+    });
+};
+
+//下拉刷新
+var pullRefresh = new auiPullToRefresh({
+    container: document.querySelector('body'),
+    triggerDistance: 50
+}, function(ret) {
+    if (ret.status == "success") {
+        setTimeout(function() {
+            pullRefresh.cancelLoading(); //刷新成功后调用此方法隐藏
+            location.reload();
+        }, 500)
+    }
+});
+
+function inquiry() {
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["stat"] == 2) {
+                openWin('inquiry');
+            } else {
+                alert("您已询价，请等待审核！");
+            }
+        }
+    });
+}
+
+
+
+function buy() {
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            alert("您未询价，请先询价！");
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                alert("您未询价，请先询价！");
+                openWin('inquiry');
+            } else {
+                if (json["step"] == 0) {
+                    openWin('buy');
+                } else if (json["step"] == 1) {
+                    openWin('identification');
+                } else if (json["step"] == 2) {
+                    openWin('phoneauth');
+                } else if (json["step"] == 3) {
+                    openWin('billbystages');
+                } else if (json["step"] == 4) {
+                    openWin('auditbystages');
+                }
+            }
+
+        }
+    });
+}
+</script>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>保险超市</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body>
+    <!--  <div class="swiper-container swiper-1">
+        <div class="swiper-wrapper banner"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <section id="frame1" class="aui-grid">
+        <div class="aui-row">
+            <div class="aui-col-xs-6" onclick="inquiry()">
+                <div class="out">
+                    <div class="icon icon-1"></div>
+                    <div class="aui-grid-label">保险询价</div>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" onclick="buy()">
+                <div class="out">
+                    <div class="icon icon-2"></div>
+                    <div class="aui-grid-label">车险购买</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="discount">
+        <div class="top">&nbsp;保险优惠</div>
+        <div class="midlist">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list"></ul>
+            </div>
+        </div>
+    </div> -->
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/swiper.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+$(function() {
+    //获取保险公司列表
+    // $.post($api.getStorage('serviceAddr') + "/api/index/getlist.do", { t: 1 }, function(ret) {
+    //     var json = eval("(" + ret + ")");
+    //     var html = "";
+    //     for (var i = 0; i < json.length; i++) {
+    //         html += '<li class="aui-list-item aui-list-item-middle"><div class="aui-media-list-item-inner">';
+    //         html += '<div class="aui-list-item-media"><img src="../image/car.png" class="aui-img-round aui-list-img-sm"></div>';
+    //         html += '<div class="aui-list-item-inner">' + json[i].name + '</div></div></li>';
+    //     }
+    //     $(".aui-media-list").html(html);
+    // });
+
+    //获取轮播图
+    // $.post($api.getStorage('serviceAddr') + "/api/index/getlist.do", { t: 4 }, function(ret) {
+    //     var json = eval("(" + ret + ")");
+    //     var html = "";
+    //     var pic;
+    //     for (var i = 0; i < json.length; i++) {
+
+    //         if (json[i].pic.indexOf("http")) {
+    //             pic=$api.getStorage('serviceAddr')+json[i].pic;
+    //         }else{
+    //             pic=json[i].pic;
+    //         }
+    //         // alert(pic);
+    //         html += '<div class="swiper-slide"><img src="' + pic + '"></div>';
+    //     }
+    //     $(".banner").html(html);
+    //     var mySwiper = new Swiper('.swiper-1', {
+    //         loop: true,
+    //         autoplay: 3000, //可选选项，自动滑动
+    //         pagination: '.swiper-pagination',
+    //         autoHeight:true
+    //     });
+    // });
+});
+
+function inquiry() {
+    // $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+    //     // openWin('inquiry');
+    //     if (ret == "null") {
+    //         openWin('inquiry');
+    //     } else {
+    //         alert("您已询价，请等待审核！");
+    //     }
+    // });
+}
+
+function buy() {
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            alert("您未询价，请先询价！");
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                alert("您未询价，请先询价！");
+                openWin('inquiry');
+            } else {
+                if (json["step"] == 0) {
+                    openWin('buy');
+                } else if (json["step"] == 1) {
+                    openWin('identification');
+                } else if (json["step"] == 2) {
+                    openWin('phoneauth');
+                } else if (json["step"] == 3) {
+                    openWin('billbystages');
+                } else if (json["step"] == 4) {
+                    openWin('auditbystages');
+                }
+            }
+
+        }
+    });
+}
+</script>
+
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+  <style>
+    body {margin: 10px;}
+    .info{ display:none;}
+  </style>
+</head>
+
+<body>
+
+
+  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>报告基本信息</legend>
+  </fieldset>
+
+
+<table class="layui-table phonedata">
+    <tr style="display: none">
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+    </tr>
+    
+    <!-- 报告基本信息 -->
+    <tr><td colspan="4" align="center">报告基本信息</td></tr>
+    <tr>
+      <td class="tips">报告编号</td>
+      <td>{$pdetail.basicInfo.reportID}</td>
+      <td class="tips">报告时间</td>
+      <td>{$pdetail.basicInfo.reportTime}</td>
+    </tr>
+    <tr>
+      <td class="tips">姓名</td>
+      <td>{$pdetail.basicInfo.name}</td>
+      <td class="tips">身份证号码</td>
+      <td>{$pdetail.basicInfo.certNo}</td>
+    </tr>
+    <tr>
+      <td class="tips">登记手机</td>
+      <td>{$pdetail.basicInfo.phoneNo}</td>
+      <td class="tips">年龄</td>
+      <td>{$pdetail.basicInfo.age}</td>
+    </tr>
+    <tr>
+      <td class="tips">性别</td>
+      <td>{$pdetail.basicInfo.sex}</td>
+      <td class="tips">出生日期</td>
+      <td>{$pdetail.basicInfo.birthday}</td>
+    </tr>
+    <tr>
+      <td class="tips">出生地</td>
+      <td>{$pdetail.basicInfo.birthArea}</td>
+      <td class="tips">手机归属地</td>
+      <td>{$pdetail.basicInfo.phoneBelongArea}</td>
+    </tr>
+    <!-- 运行商基本信息 -->
+    <tr><td colspan="4" align="center">运行商基本信息</td></tr>
+    <tr>
+      <td class="tips">运营商类型</td>
+      <td>{$pdetail.phoneInfo.operator}</td>
+      <td class="tips">入网时间</td>
+      <td>{$pdetail.phoneInfo.inNetDate}</td>
+    </tr>
+    <tr>
+      <td class="tips">认证实名</td>
+      <td>{$pdetail.phoneInfo.realName}</td>
+      <td class="tips">认证身份证号</td>
+      <td>{$pdetail.phoneInfo.certNo}</td>
+    </tr>
+    <tr>
+      <td class="tips">手机号</td>
+      <td>{$pdetail.phoneInfo.phoneNo}</td>
+      <td class="tips">登记邮箱</td>
+      <td>{$pdetail.phoneInfo.email}</td>
+    </tr>
+    <tr>
+      <td class="tips">当前余额</td>
+      <td>{$pdetail.phoneInfo.balance}</td>
+      <td class="tips">会员等级</td>
+      <td>{$pdetail.phoneInfo.vipLevel}</td>
+    </tr>
+    <tr>
+      <td class="tips">积分值</td>
+      <td>{$pdetail.phoneInfo.pointValue}</td>
+      <td class="tips">网龄</td>
+      <td>{$pdetail.phoneInfo.netAge}</td>
+    </tr>
+    <tr>
+      <td class="tips">最早通话时间</td>
+      <td>{$pdetail.phoneInfo.firstCallDate}</td>
+      <td class="tips">最近通话时间</td>
+      <td>{$pdetail.phoneInfo.lastCallDate}</td>
+    </tr>
+    <tr>
+      <td class="tips">登记地址</td>
+      <td  colspan="23">{$pdetail.phoneInfo.addr}</td>
+    </tr>
+    <!-- 欺诈风险 -->
+    <tr><td colspan="4" align="center">欺诈风险</td></tr>
+    <tr>
+      <td class="tips">身份证号码有效性</td>
+      <td>{if $pdetail.deceitRisk.certNoIsValid eq "True"}是{else}否{/if}</td>
+      <td class="tips">运营商是否实名</td>
+      <td>{if $pdetail.deceitRisk.phoneIsAuth eq "True"}是{else}否{/if}</td>
+    </tr>
+    <tr>
+      <td class="tips">运营商实名一致性</td>
+      <td>{if $pdetail.deceitRisk.samePeople eq "True"}是{else}否{/if}</td>
+      <td class="tips">是否长时间出现关机</td>
+      <td>{if $pdetail.deceitRisk.longTimePowerOff eq "True"}是{else}否{/if}</td>
+    </tr>
+    <tr>
+      <td class="tips">是否命中网贷黑名单</td>
+      <td>{if $pdetail.deceitRisk.inBlacklist eq "unKnow"}无{else}{$pdetail.deceitRisk.inBlacklist}{/if}</td>
+      <td class="tips">是否出现法院相关呼叫</td>
+      <td>{if $pdetail.deceitRisk.calledByCourtNo eq "unKnow"}无{else}{$pdetail.deceitRisk.calledByCourtNo}{/if}</td>
+    </tr>
+    <!-- 运营商消费分析 -->
+    <tr><td colspan="4" align="center">运营商消费分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">月份</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">主叫时间(分)</td>
+          <td class="tips">被叫时间(分)</td>
+          <td class="tips">短信数(条)</td>
+          <td class="tips">话费充值额(元)</td>
+        </tr>
+        {volist name="$pdetail.consumeInfo" id="vo"}
+        <tr>
+          <td >{$vo.month}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.callTime}</td>
+          <td >{$vo.calledTime}</td>
+          <td >{$vo.totalSmsNumber}</td>
+          <td >{$vo.payMoney}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 联系人区域分析 -->
+    <tr><td colspan="4" align="center">联系人区域分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">地区</td>
+          <td class="tips">号码数量</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">主叫时间</td>
+          <td class="tips">被叫次数</td>
+          <td class="tips">被叫时间</td>
+          <td class="tips">占比</td>
+        </tr>
+        {volist name="$pdetail.contactAreaInfo" id="vo"}
+        <tr>
+          <td >{$vo.area}</td>
+          <td >{$vo.totalNumber}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.callTime}</td>
+          <td >{$vo.calledTimes}</td>
+          <td >{$vo.calledTime}</td>
+          <td >{$vo.percent*100}%</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 联系人通话时间分析 -->
+    <tr><td colspan="4" align="center">联系人通话时间分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">时间</td>
+          <td class="tips">通话次数</td>
+          <!-- <td class="tips">通话时间</td> -->
+          <td class="tips">通话人数量</td>
+          <td class="tips">主叫次数</td>
+          <td class="tips">被叫次数</td>
+        </tr>
+        {volist name="$pdetail.connPeriodTimeAnalysis" id="vo" key="k"}
+        <tr>
+          <td >{$key}</td>
+          <td >{$vo.connTimes}</td>
+          <!-- <td >{$vo.connTime}</td> -->
+          <td >{$vo.connNumbers}</td>
+          <td >{$vo.callTimes}</td>
+          <td >{$vo.calledTimes}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 通话记录分析 -->
+    <tr><td colspan="4" align="center">通话记录分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">号码</td>
+          <td class="tips">通话时间</td>
+          <td class="tips">通话次数</td>
+          <td class="tips">号码归属地</td>
+          <td class="tips">被叫次数</td>
+          <td class="tips">主叫次数</td>
+          <!-- <td class="tips">号码标识</td> -->
+        </tr>
+        {volist name="$pdetail.callRecordsInfo" id="vo"}
+        <tr>
+          <td >{$vo.phoneNo}</td>
+          <td >{$vo.connTime}</td>
+          <td >{$vo.connTimes}</td>
+          <td >{$vo.belongArea}</td>
+          <td >{$vo.calledTimes}</td>
+          <td >{$vo.callTimes}</td>
+          <!-- <td >{$vo.identifyInfo}</td> -->
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+    <!-- 短信记录分析 -->
+    <tr><td colspan="4" align="center">短信记录分析</td></tr>
+    <tr>
+    <td colspan="4" align="center">
+      <table class="layui-table">
+        <tr>
+          <td class="tips">号码</td>
+          <td class="tips">号码归属地</td>
+          <td class="tips">条数</td>
+          <td class="tips">号码标识</td>
+        </tr>
+        {volist name="$pdetail.messageRecordsInfo" id="vo"}
+        <tr>
+          <td >{$vo.phoneNo}</td>
+          <td >{$vo.belongArea}</td>
+          <td >{$vo.totalSmsNumber}</td>
+          <td >{$vo.identifyInfo}</td>
+        </tr>
+        {/volist}
+      </table>
+    </td>
+    </tr>
+</table>
+
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+
+</body>
+
+</html>

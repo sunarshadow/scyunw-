@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>完成报价</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+
+<body onload="moneychange()">
+    <div id="header"></div>
+    <div id="main">
+        <div class="menu"><a>保单中心</a><i class="fa fa-angle-right"></i><a>未报价</a><i class="fa fa-angle-right blue"></i><a>填写报价表</a><i class="fa fa-angle-right blue"></i><a class="blue">填写报价表</a></div>
+        <div id="offer-write" class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="6"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="blue w1">车主姓名</td>
+                        <td class="w2">{$info.car_name}</td>
+                        <td class="blue w1">身份证号</td>
+                        <td class="w3">{$info.id_code}</td>
+                        <td class="blue w1">车牌号码</td>
+                        <td>{$info.car_license}</td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">行驶证号</td>
+                        <td class="w2">{$info.car_code}</td>
+                        <td class="blue w1">发动机号</td>
+                        <td class="w3">{$info.car_motor}</td>
+                        <td class="blue w1">订单号</td>
+                        <td>{$info.ordernumber}</td>
+                    </tr>
+                    <tr>
+                        <td class="blue w1">创建时间</td>
+                        <td colspan="5">{$info.addtime}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>身份证:</div>
+                            <div class="imgl"> 
+                                <img src="{$info.id_img}"/>
+                            </div>
+                            <div class="imgl">
+                                <img src="{$info.id_img_b}"/>
+                            </div>
+                        </td>
+                        <td>
+                            <div>行驶证:</div>
+                            <div class="imgl">
+                                <img src="{$info.car_img}"/>
+                            </div>
+                            <div class="imgl">
+                                <img src="{$info.car_img_b}"/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <tbody>                    
+                    <tr>
+                        <td  colspan="2">
+                        <div>险种详情:</div>
+                        {$insurance}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <table class="table check">
+                <tbody>
+                    <tr>
+                        <td class="text-r">
+                            <span>车船险</span>
+                            <input type="text" disabled name="cqprice" value="{$price.cqprice}" id="cqprice" placeholder="请输入金额" onchange="moneychange()">
+                            <span>元</span>
+                            <span class="chakan change">修&nbsp;改</span>
+                        </td>
+                        <td class="text-r">
+                            <span>商业险</span>
+                            <input type="text" disabled name="syprice" value="{$price.syprice}" id="syprice" placeholder="请输入金额" onchange="moneychange()">
+                            <span>元</span>
+                            <span class="chakan change">修&nbsp;改</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-r">
+                            <span>交强险</span>
+                            <input type="text" disabled name="jqprice" value="{$price.jqprice}" id="jqprice" placeholder="请输入金额" onchange="moneychange()">
+                            <span>元</span>
+                            <span class="chakan change">修&nbsp;改</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="brmsg">
+                           总计:<span id="allmoney" onload="moneychange()">0</span>元
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="botbtn">
+            <a id="finish" href="javascript:void(0)" class="btn btn-default cancel finish">完成报价</a>
+        </div>
+    </div>
+    <div class="modal fade" id="msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="out-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">提示消息</h4>
+                    </div>
+                    <div class="modal-body" id="okbaodan"><i class="fa fa-check-circle"></i>完成报价</div>
+                    <div class="modal-footer">
+                        <a href="{:url('index/index')}" type="button" class="btn cancel finish btn-return pull-left">返回首页</a>
+                        <a href="{:url('policylist/index')}" type="button" class="btn cancel finish btn-return">返回保单中心</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+$("input").focus(function() {
+    $('.fa-search').hide();
+});
+// $("#finish").click(function(event) {
+//     
+// });
+
+function moneychange(){
+    var allmoney = Number($('#jqprice').val())+Number($('#cqprice').val())+Number($('#syprice').val());
+    $('#allmoney').text(allmoney);
+}
+$('body').on('click','.change',function(){
+    if($(this).hasClass('on')){
+        $(this).prevAll('input').attr('disabled','disabled');
+        $(this).text('修 改').css("background","#5CB461");
+        $(this).removeClass('on');
+    }else{
+        $(this).text('确 认').css("background","#FB7115");
+        $(this).prevAll('input').removeAttr('disabled');
+        $(this).addClass('on');
+    }
+})
+$('#finish').click(function(){
+    var allmoney = $('#allmoney').text();
+    if($('.change').hasClass('on')){
+        alert("请确定");
+        return false; 
+    }
+    if(isNaN(allmoney)||allmoney == 0 ||allmoney== "undefined"||allmoney == null){ 
+        alert("数据错误");
+        return false; 
+    }
+    var post = {
+        cqprice :  $('#cqprice').val(),
+        syprice :  $('#syprice').val(),
+        jqprice :  $('#jqprice').val(),
+        allmoney:  allmoney,
+        rs      :  '{$rs}'
+        }
+    $.post('{:url("Policylist/update")}',post,function(res){
+        if(res.code == 1){
+            $("#msg").modal('show');
+        }
+    })
+
+})  
+</script>
+
+</html>

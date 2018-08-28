@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=82c6e6e6adab1b381caa5c5ef17dd7b4&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+
+        .container-fluid {
+            padding: 0 !important;
+        }
+
+        #container {
+            width: 100%;
+            height: 75%;
+        }
+
+        .shanghu-map {
+            height: 500px;
+            position: relative;
+        }
+
+        #myPageTop {
+            position: absolute;
+            top: 0;
+            right: 0
+        }
+    </style>
+    <style type="text/css">
+        body {
+            min-width: 1200px;
+        }
+
+        .bg {
+            text-align: center;
+        }
+
+        .bg img {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto
+        }
+
+        .bg .blue {
+            /*background: rgba(58, 152, 232, 0.8);*/
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #55AFEE;
+            z-index: -1
+        }
+
+        .bg .login {
+            width: 1000px;
+            height: 1500px;
+            background: #ffffff;
+            border-radius: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            left: 50%;
+            margin-left: -498.5px;
+            top: 30%;
+            margin-top: -195.5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+        }
+
+        .bg .login .logo_ {
+            text-align: center;
+            width: 100%;
+            height: auto;
+            background: #2196F3;
+        }
+
+        .bg .login .logo_ img {
+            width: 70px;
+        }
+
+        .bg .login .msg {
+            width: 301px;
+            position: relative;
+            margin: auto;
+            margin-top: 15px;
+            border-radius: 7.5px;
+            border: 1px solid #969696;
+            height: 43px;
+        }
+
+        .bg .login .msg input {
+            border: none;
+            outline: none;
+            padding: 5px 0;
+            height: 41px;
+            width: 100%;
+            padding-left: 60px;
+            margin-right: 15px;
+            background: transparent;
+        }
+
+        .bg .login .msg img {
+            width: 43px;
+            height: 43px;
+            position: absolute;
+            left: -1px;
+            top: -1px;
+            padding: 10px;
+            border-top-left-radius: 7.5px;
+            border-bottom-left-radius: 7.5px;
+            background: -webkit-linear-gradient(#3A98E8, #105BCB);
+            background: -o-linear-gradient(#3A98E8, #105BCB);
+            background: -moz-linear-gradient(#3A98E8, #105BCB);
+            background: linear-gradient(#3A98E8, #105BCB);
+        }
+
+        .bg .login .code {
+            width: 301px;
+            margin: auto;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .bg .login .code input {
+            width: 134px;
+            height: 35px;
+            border-radius: 15px;
+            border: 1px solid #969696;
+            margin: 0;
+            padding: 0;
+
+            outline: none;
+            text-align: center;
+        }
+
+        .bg .login .code .getcode {
+            width: 101px;
+            height: 35px;
+            border-radius: 5px;
+            border: 1px solid #969696;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            text-align: center;
+            background: transparent;
+            color: #919191;
+            float: right;
+        }
+
+        .bg .login .login-btn {
+            width: 301px;
+            height: 43px;
+            font-size: 24px;
+            margin: auto;
+            margin-top: 30px;
+            background: -webkit-linear-gradient(#3A98E8, #105BCB);
+            background: -o-linear-gradient(#3A98E8, #105BCB);
+            background: -moz-linear-gradient(#3A98E8, #105BCB);
+            background: linear-gradient(#3A98E8, #105BCB);
+        }
+
+        .bg .login .forget {
+            width: 301px;
+            margin: auto;
+            text-align: right;
+            margin-top: 15px;
+            color: #919191
+        }
+
+        .bg .login .forget input {
+            margin-top: 0;
+            position: relative;
+            top: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="formdata">
+        <div class="bg">
+            <div class="login">
+                <div class="logo_">
+                    <img src="__STATIC__/insureradmin/images/logo.png">
+                </div>
+                <blockquote class="layui-elem-quote layui-quote-nm">保险公司申请</blockquote>
+
+                <div class="layui-form" action="">
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属保险</label>
+                        <div class="layui-input-block">
+                            <select name="insuranceid" id="province" lay-filter="province">
+                                <option value="">选择所属保险公司</option>
+                                {volist name="insuranceid" id="vo"}
+                                <option value="{$vo.id}">{$vo.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">公司名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="companyname" value="{php}echo isset($company)? $company['companyname'] : ''; {/php}" required lay-verify="required"
+                                placeholder="请输入公司名称" autocomplete="off" class="layui-input {php}echo isset($company)? 'layui-disabled' : ''; {/php}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录帐号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="loginname" value="{php}echo isset($company)? $company['loginname'] : ''; {/php}" required lay-verify="required"
+                                placeholder="请输入登录帐号" autocomplete="off" class="layui-input  {php}echo isset($company)? 'layui-disabled' : ''; {/php}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="password" required lay-verify="required" value="{php}echo isset($company)? $company['truepassword'] : ''; {/php}"
+                                placeholder="请输入登录密码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">负责人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="corporation" value="{php}echo isset($company)? $company['corporation'] : ''; {/php}" placeholder="请输入公司负责人"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">负责人电话</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="cptphone" value="{php}echo isset($company)? $company['cptphone'] : ''; {/php}" placeholder="请输入公司负责人"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">结算账户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="cardname" value="{php}echo isset($company)? $company['cardname'] : ''; {/php}" placeholder="请输入公司结算账户名"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">结算卡号</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="carnumber" value="{php}echo isset($company)? $company['carnumber'] : ''; {/php}" placeholder="请输入结算卡号"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">开户银行</label>
+                        <div class="layui-input-block">
+                            <input type="carbank" name="carbank" value="{php}echo isset($company)? $company['carbank'] : ''; {/php}" placeholder="请输入开户银行"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地区选择</label>
+                        <div class="layui-input-inline">
+                            <select name="province" id="province" lay-filter="province">
+                                <option value="">选择省份</option>
+                                {volist name="province" id="vo"}
+                                <option {if isset($company.province)&&$vo.province_id==$company.province}selected{/if} value="{$vo.province_id}">{$vo.province_name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="city" id="city" lay-filter="city">
+                                <option value="">选择城市</option>
+                                {if isset($company)} {volist name="city" id="vo"}
+                                <option {if isset($company.city)&&$vo.city_id==$company.city}selected{/if} value="{$vo.city_id}">{$vo.city_name}</option>
+                                {/volist} {/if}
+                            </select>
+                        </div>
+
+                        <div class="layui-input-inline">
+                            <select name="area" id="area" lay-filter="area">
+                                <option value="">选择地区</option>
+                                {if isset($company)} {volist name="area" id="vo"}
+                                <option {if isset($company.area)&&$vo.area_id==$company.area}selected{/if} value="{$vo.area_id}">{$vo.area_name}</option>
+                                {/volist} {/if}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item ">
+                        <button type="button" class="layui-btn" id="test1">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                        <div id="imgbox"></div>
+                    </div>
+                    <div class="layui-form-item" id="imgmainbox"></div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商户验证码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="smscode" placeholder="商户验证码" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn " lay-submit="" lay-filter="demo3">获取验证码</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="id" value="{php}echo isset($company)? $company['id'] : ''; {/php}" autocomplete="off" class="layui-input">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate', 'upload'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, upload = layui.upload, $ = layui.jquery;
+
+            var uploadInst = upload.render({
+                elem: '#test1' //绑定元素
+                , url: '/scyunw/upload/img' //上传接口
+                , done: function (res, index, upload) {
+                    //上传完毕回调
+                    if (res.path) {
+                        var html = "<img style='display:inline-table;width:100px;'  src='" + res.path + "'/>";
+                        $('#imgbox').append(html);
+                        // console.log($('#imgmainbox input'));
+                        var i = $('#imgmainbox input').length;
+                        var html = "<input type='hidden' value='" + res.path + "' name='img[" + i + "]' />";
+                        $('#imgmainbox').append(html);
+                    }
+                }
+                , multiple: true
+                , allDone: function (obj) { //当文件全部被提交后，才触发
+                    console.log(obj.total); //得到总文件数
+                    console.log(obj.successful); //请求成功的文件数
+                    console.log(obj.aborted); //请求失败的文件数
+                    layer.msg('上传成功' + obj.successful + '张', {
+                        icon: 16
+                        , shade: 0.01
+                    });
+                }
+
+            });
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                console.log(data.field)
+                $.post('', data.field, function (res) {
+                    if(res.msg=="1"){
+                        layer.msg('提交成功,请耐心等待审核');
+                        window.location = "/agent"
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                })
+                return false;
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+                return false;
+            });
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    $("#area").html('<option  value="">选择地区</option>');
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);
+                    form.render('select');
+                });
+            });
+            form.on('submit(demo3)', function (data) {
+                console.log(data);
+                var fromary = {
+                    apply_phone: data.field.cptphone
+                }
+                $.post("/api/index/sms_sendcode.do", fromary, function (ret) {
+                    if (ret == 1) {
+                        layer.msg("短信已成功发送！");
+                    } else {
+                        layer.msg(ret.msg);
+                    }
+                    return false;
+                });
+                return false;
+            });
+
+        });
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

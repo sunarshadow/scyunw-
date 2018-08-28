@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>银行卡</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body id="bankcard">
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-media-list" id="bank"></ul>
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item aui-list-item-middle" id="addbankcard" onclick="addbank()" style="display: none;">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <img src="../image/addbankcard.png"><span> 添加银行卡</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+$(function() {
+    getcardlist();
+});
+
+function editbank(id) {
+    $api.setStorage('cardid', id);
+    openWin('addbankcard');
+}
+
+
+function addbank() {
+    $api.setStorage('cardid', 0);
+    openWin('addbankcard');
+}
+
+function getcardlist() {
+    $.post("/api/user/bank.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += "<li onclick='editbank(" + json[i].id + ")' class='aui-list-item aui-list-item-middle bankinfo'><div class='aui-media-list-item-inner'>";
+            html += '<div class="aui-list-item-media"><img src="../image/bankcard.png" class="aui-img-round aui-list-img-sm"></div>';
+            html += '<div class="aui-list-item-inner"><div class="bank"><div class="name">' + json[i].bankname + '</div>';
+            html += '<div class="type">' + json[i].cardtype + '</div></div>';
+            html += '<div class="num">' + json[i].bank_account + '</div></div></div></li>';
+            ';'
+        }
+        $("#bank").html(html);
+         $("#addbankcard").show();
+    });
+}
+</script>

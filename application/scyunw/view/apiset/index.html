@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>
+
+              
+
+ 
+
+<form class="layui-form " action="">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>Api设置</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <label class="layui-form-label">人脸识别</label>
+        <div class="layui-form-mid layui-word-aux">低于</div>
+        <div class="layui-input-inline" style="width:50px;">
+            <input type="text" name="face_value" required lay-verify="required" placeholder="" value="{$info['face_value']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">%，识别不通过</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">运营商识别</label>
+        <div class="layui-form-mid layui-word-aux">高于￥</div>
+        <div class="layui-input-inline" style="width:120px;">
+            <input type="text" name="carrier_value" required lay-verify="required" placeholder="" value="{$info['carrier_value']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">元，需获取运营商分析数据</div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>分享设置</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分享标题</label>
+        <div class="layui-input-inline">
+            <input type="text" name="share[title]" required lay-verify="required" placeholder="" value="{$info['share']['title']}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分享描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="share[description]" required lay-verify="required" placeholder="" value="{$info['share']['description']}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分享图标</label>
+        <div class="layui-input-inline" style="width:450px;">
+            <input type="text" name="share[thumb]" id="thumb" required lay-verify="required" placeholder="" value="{$info['share']['thumb']}" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+          <button type="button" class="layui-btn" id="test1">
+              <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分享链接</label>
+        <div class="layui-input-inline">
+            <input type="text" name="share[url]" required lay-verify="required" placeholder="" value="{$info['share']['url']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">外部链接必须填写http//</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信端图标</label>
+        <div class="layui-input-inline" style="width:450px;">
+            <input type="text" name="share[wxthumb]" id="wxthumb" required lay-verify="required" placeholder="" value="{$info['share']['wxthumb']}" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+          <button type="button" class="layui-btn" id="test2">
+              <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信端链接</label>
+        <div class="layui-input-inline">
+            <input type="text" name="share[wxurl]" required lay-verify="required" placeholder="" value="{$info['share']['wxurl']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">微信端分享链接与图片必须为本站链接</div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>我要推广</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推广背景</label>
+        <div class="layui-input-inline" style="width:450px;">
+            <input type="text" name="share[qrcodebg]" id="qrcodebg" required lay-verify="required" placeholder="" {if isset($info['share']['qrcodebg'])}value="{$info['share']['qrcodebg']}"{/if} class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+          <button type="button" class="layui-btn" id="test3">
+              <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">二维码位置</label>
+        <div class="layui-form-mid layui-word-aux">距顶</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="share[qrcode][top]" {if isset($info['share']['qrcode']['top'])}value="{$info['share']['qrcode']['top']}"{/if} class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">px</div>
+        <div class="layui-form-mid layui-word-aux">,</div>
+        <div class="layui-form-mid layui-word-aux">距左</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="share[qrcode][left]" {if isset($info['share']['qrcode']['left'])}value="{$info['share']['qrcode']['left']}"{/if} class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">px</div>
+    </div>
+
+    <!-- <div class="layui-form-item">
+        <label class="layui-form-label">推广文</label>
+        <div class="layui-input-block">
+          <textarea id="demo" name="share[qrcodetext]"  style="display: none;">{if isset($info['share']['qrcodetext'])}{$info['share']['qrcodetext']}{/if}</textarea>
+        </div>
+    </div>   
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推广文位置</label>
+        <div class="layui-form-mid layui-word-aux">距顶</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="share[qrcodetxt][top]" {if isset($info['share']['qrcodetxt']['top'])}value="{$info['share']['qrcodetxt']['top']}"{/if} class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">px</div>
+        <div class="layui-form-mid layui-word-aux">,</div>
+        <div class="layui-form-mid layui-word-aux">距左</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="share[qrcodetxt][left]" {if isset($info['share']['qrcodetxt']['left'])}value="{$info['share']['qrcodetxt']['left']}"{/if} class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">px</div>
+    </div>  -->
+    
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>网站地址设置</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">理赔指南</label>
+        <div class="layui-input-inline" style="width:250px;">
+            <input type="text" name="url_lp_value"  value="{$info['url_lp_value']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">外部链接必须填写http//</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">违章查询</label>
+        <div class="layui-input-inline" style="width:250px;">
+            <input type="text" name="url_wz_value"  value="{$info['url_wz_value']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">外部链接必须填写http//</div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>手续费设置</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付宝手续</label>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="alipay_charge"  value="{$info['alipay_charge']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">%</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">微信手续</label>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="wxpay_charge"  value="{$info['wxpay_charge']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">%</div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>红包设置</legend>
+    </fieldset>
+    {volist name="redvalue" id="vo"}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{$vo}</label>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="number" name="red_value[{$key}]"  value="{$info['red_value'][$key]}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">元</div>
+    </div>
+    {/volist}
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>保单相关设置</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">逾期设置</label>
+        
+        <div class="layui-form-mid layui-word-aux">逾期收取待还总金额*</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="orderset_value[yuqirebate]"  value="{$info['orderset_value']['yuqirebate']}" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">%/天</div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>保单险种选项设置</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">第三者险</label>
+        <div class="dszxian_div">
+            {volist name="loopvaule" id="vo"}
+			{if isset($info['orderset_value']['dszxian'][$key])}
+            <div class="layui-form-mid layui-word-aux dszxian_{$key}">{$vo}.</div>
+            <div class="layui-input-inline dszxian_{$key}" style="width:90px;">
+                <input type="text" name="orderset_value[dszxian][{$key}]"  value="{$info['orderset_value']['dszxian'][$key]}" class="layui-input">
+            </div>
+			{else}
+			<?php 
+			break;
+			?>
+			{/if}
+            {/volist}
+        </div>
+		<button class="layui-btn addoption" data-name="dszxian" data-key="{$key}" data-str="{$loopvaule[$key]}" type="button"  >添加选项</button>
+		<button class="layui-btn suboption" data-name="dszxian" data-key="{$key-1}" data-str="{$loopvaule[$key-1]}" type="button"  >删除选项</button>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">司机座位险</label>
+        <div class="zwxian_div">
+            {volist name="loopvaule" id="vo"}
+                {if isset($info['orderset_value']['zwxian'][$key])}
+                    <div class="layui-form-mid layui-word-aux zwxian_{$key}">{$vo}.</div>
+                    <div class="layui-input-inline zwxian_{$key}" style="width:90px;">
+                        <input type="text" name="orderset_value[zwxian][{$key}]"  value="{$info['orderset_value']['zwxian'][$key]}" class="layui-input">
+                    </div>
+                {else}
+                <?php 
+                break;
+                ?>
+                {/if}
+            {/volist}
+        </div>
+		<button class="layui-btn addoption" data-name="zwxian" data-key="{$key}" data-str="{$loopvaule[$key]}" type="button"  >添加选项</button>
+		<button class="layui-btn suboption" data-name="zwxian" data-key="{$key-1}" data-str="{$loopvaule[$key-1]}" type="button"  >删除选项</button>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">乘客座位险</label>
+        <div class="ckxian_div">
+        {volist name="loopvaule" id="vo"}
+			{if isset($info['orderset_value']['ckxian'][$key])}
+        <div class="layui-form-mid layui-word-aux ckxian_{$key}">{$vo}.</div>
+        <div class="layui-input-inline ckxian_{$key}" style="width:90px;">
+            <input type="text" name="orderset_value[ckxian][{$key}]"  value="{$info['orderset_value']['ckxian'][$key]}" class="layui-input">
+        </div>
+                {else}
+                <?php 
+                break;
+                ?>
+                {/if}
+            {/volist}
+        </div>
+		<button class="layui-btn addoption" data-name="ckxian" data-key="{$key}" data-str="{$loopvaule[$key]}" type="button"  >添加选项</button>
+		<button class="layui-btn suboption" data-name="ckxian" data-key="{$key-1}" data-str="{$loopvaule[$key-1]}" type="button"  >删除选项</button>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">玻璃险</label>
+        {volist name="loopvaule" id="vo"}
+			{if isset($info['orderset_value']['blxian'][$key])}
+        <div class="layui-form-mid layui-word-aux">{$vo}.</div>
+        <div class="layui-input-inline" style="width:90px;">
+            <input type="text" name="orderset_value[blxian][{$key}]"  value="{$info['orderset_value']['blxian'][$key]}" class="layui-input">
+        </div>
+        {/if}
+        {/volist}
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">车身划痕险</label>
+        <div class="hhxian_div">
+            {volist name="loopvaule" id="vo"}
+			{if isset($info['orderset_value']['hhxian'][$key])}
+                <div class="layui-form-mid layui-word-aux hhxian_{$key}">{$vo}.</div>
+                <div class="layui-input-inline hhxian_{$key}" style="width:90px;">
+                    <input type="text" name="orderset_value[hhxian][{$key}]"  value="{$info['orderset_value']['hhxian'][$key]}" class="layui-input">
+                </div>
+                {else}
+                <?php 
+                break;
+                ?>
+                {/if}
+            {/volist}
+        </div>
+		<button class="layui-btn addoption" data-name="hhxian" data-key="{$key}" data-str="{$loopvaule[$key]}" type="button"  >添加选项</button>
+		<button class="layui-btn suboption" data-name="hhxian" data-key="{$key-1}" data-str="{$loopvaule[$key-1]}" type="button"  >删除选项</button>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="set">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+ 
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form', 'layedit', 'laydate' , 'upload'], function(){
+    var $ = layui.$,form = layui.form,layer = layui.layer,layedit = layui.layedit,laydate = layui.laydate,upload = layui.upload;
+    var editbar = layedit.build('demo'); //建立编辑器
+    //自定义验证规则
+    form.verify({
+    });
+
+    //添加选项
+    $("body").on("click",".addoption",function(){
+        var name = $(this).data("name");
+        var key = $(this).data("key");
+        var str = $(this).data("str");
+		$(this).data("key",key + 1);
+        var html = "";
+        html = '<div class="layui-form-mid layui-word-aux"></div>';
+        html += '<div class="layui-input-inline" style="width:90px;">';
+        html += '<input type="text" name="orderset_value['+ name + '][' + key + ']"  value="" class="layui-input">';
+        html += '</div>';
+        $("."+name+"_div").append(html);
+    });
+
+    //删除选项
+    $("body").on("click",".suboption",function(){
+        var name = $(this).data("name");
+        var key = $(this).data("key");
+        var str = $(this).data("str");
+		$(this).data("key",key - 1);
+        $("." + name +"_"+key).remove();
+    });
+    //监听提交
+    form.on('submit(set)', function(data){
+        data.field.qrcodetext = layedit.getContent(editbar);
+      $.post("{:url('apiset/getset')}",data.field,function(res){
+        if(res.msg){
+          layer.msg(res.msg);
+        }else{
+            layer.msg("API设置成功");
+            setTimeout(function(){
+              parent.location.reload();
+            },800);          
+        }
+      });
+      return false;
+    });
+    var uploadInst = upload.render({
+        elem: '#test1' //绑定元素
+        , url: "{:url('apiset/info')}" //上传接口
+        , data:{'id':{$info.id}}
+        , done: function (res) {
+            $("#thumb").val(res.path);
+        }
+        , error: function () {
+            //请求异常回调
+        }
+    });
+
+    var uploadInst2 = upload.render({
+        elem: '#test2' //绑定元素
+        , url: "{:url('apiset/info')}" //上传接口
+        , data:{'id':{$info.id}}
+        , done: function (res) {
+            $("#wxthumb").val(res.path);
+        }
+        , error: function () {
+            //请求异常回调
+        }
+    });    
+
+    var uploadInst3 = upload.render({
+    elem: '#test3' //绑定元素
+    , url: "{:url('apiset/info')}" //上传接口
+    , data:{'id':{$info.id}}
+    , done: function (res) {
+        $("#qrcodebg").val(res.path);
+    }
+    , error: function () {
+        //请求异常回调
+    }
+});  
+});
+</script>
+
+
+</body>
+</html>

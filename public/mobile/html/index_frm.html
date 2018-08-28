@@ -1,0 +1,587 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>匀享车险</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-pull-refresh.css" />
+    <link rel="stylesheet" type="text/css" href="../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+    body,
+    html {
+        padding-bottom: 0;
+    }
+
+    #footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    #footer span a {
+        color: #B2B2B2;
+        text-decoration: none;
+    }
+
+    #footer ul li.active span a {
+        color: #2196F3;
+    }
+
+    #myTabContent .tab-pane {
+        height: 100%;
+        width: 100%;
+        padding-bottom: 50px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #user {
+        margin-top: 25px;
+    }
+
+    #guide,
+    #search {
+        color: #333333;
+    }
+
+    #myTab2 li {
+        text-align: center;
+        border: none;
+    }
+
+    #myTab2 li a {
+        margin-right: 0;
+        border: none;
+        border-radius: 0;
+        color: #000;
+        font-size: 16px;
+    }
+
+    #myTab2 .active a {
+        background: #2196F3;
+        color: #ffffff;
+    }
+    #myTab2Content{
+        padding: 15px 0;
+    }
+    #myTab2Content .tab-pane{
+        padding-bottom: 0;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="tab_0">
+            <div class="swiper-container swiper-1">
+                <div class="swiper-wrapper ad-list"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+            <section id="frame0" class="aui-grid">
+                <div class="aui-row">
+                    <div class="aui-col-xs-4" onclick="inquiry()">
+                        <div class="icon icon-1"></div>
+                        <div class="aui-grid-label">保险询价</div>
+                    </div>
+                    <div class="aui-col-xs-4" onclick="buy()">
+                        <div class="icon icon-2"></div>
+                        <div class="aui-grid-label">车险购买</div>
+                    </div>
+                    <a id="guide">
+                        <div class="aui-col-xs-4">
+                            <div class="icon icon-3"></div>
+                            <div class="aui-grid-label">理赔指南</div>
+                        </div>
+                    </a>
+                    <div class="aui-col-xs-4" onclick="openWin('yuyuesc')">
+                        <div class="icon icon-4"></div>
+                        <div class="aui-grid-label">预约审车</div>
+                    </div>
+                    <div class="aui-col-xs-4" onclick="openWin('carmaintain')">
+                        <div class="icon icon-5"></div>
+                        <div class="aui-grid-label">汽车维护</div>
+                    </div>
+                    <a id="search">
+                        <div class="aui-col-xs-4">
+                            <div class="icon icon-6"></div>
+                            <div class="aui-grid-label">违章查询</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+            <!-- 消息 -->
+            <div id="msg" class="aui-content">
+                <ul class="aui-list">
+                    <li class="aui-list-item" style="padding-left: 0;border: none;background: #fff !important">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title" style="font-size: 13px;font-weight: bold;">车险快报&emsp;<span class="info" style="font-weight: normal;font-size: 12px;"></span></div>
+                            <div onclick="openWin('notice')" class="aui-list-item-right" style="font-size: 10px;color: #000000;top: 2px;position: relative;">更多</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 分期账单 -->
+            <div id="fenqi-list" class="aui-content aui-margin-b-15 fqlist">
+                <ul class="aui-list aui-media-list"></ul>
+            </div>
+            <!-- 合作方 -->
+            <div id="together">
+                <div class="top">
+                    <div class="border"></div>
+                    <span>共享车险合作方</span>
+                </div>
+                <ul class="partner">
+                </ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_1">
+            <ul id="myTab2" class="flex-wrap nav nav-tabs">
+                <li tapmode="hover" class="flex-con active"><a href="#policy_0" data-toggle="tab"><span>保单</span></a></li>
+                <li tapmode="hover" class="flex-con"><a href="#policy_1" data-toggle="tab"><span>预约订单</span></a></li>
+            </ul>
+            <div id="fenqi-list" class="aui-content aui-margin-b-15" style="margin-top: 0">
+                <ul class="aui-list aui-media-list">
+                    <div id="myTab2Content" class="tab-content">
+                        <div class="tab-pane fade in active" id="policy_0">
+                            <div id="userorder">
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="policy_1">
+                            <div id="agentorder">
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_2">
+            <header style="background: transparent;position: fixed;top: 0;left: 0;right: 0;">
+                <ul>
+                    <li class="border-b" style="display: block;">
+                        <a id="menu" onclick="openWin('set')">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </a>
+                    </li>
+                </ul>
+            </header>
+            <section id="user" class="aui-grid">
+                <div class="aui-row">
+                    <div class="aui-col-xs-12" onclick="changemsg()">
+                        <div class="out">
+                            <div class="icon icon-user" id="wxavatar"></div>
+                            <div class="aui-grid-label" id="username">&emsp;</div>
+                        </div>
+                    </div>
+                    <div class="aui-col-xs-6" onclick="openWin('mywallet')">
+                        <div class="out">
+                            <div class="icon icon-1"></div>
+                            <div class="aui-grid-label">我的钱包</div>
+                        </div>
+                    </div>
+                    <div class="aui-col-xs-6" onclick="openWin('mybystages')">
+                        <div class="out">
+                            <div class="icon icon-2"></div>
+                            <div class="aui-grid-label">我的分期</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div id="frame2" class="aui-content">
+                <ul class="aui-list">
+                    <li class="aui-list-item" onclick="openWin('redpackage')">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-1"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            红包
+                        </div>
+                    </li>
+                    <li class="aui-list-item" onclick="openWin('mypolicy')">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-2"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            我的保单
+                        </div>
+                    </li>
+                    <li class="aui-list-item" onclick="openWin('agentorder')">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-2"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            预约商户
+                        </div>
+                    </li>
+                    <li class="aui-list-item" onclick="openWin('msgfeedback')">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-3"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            留言反馈
+                        </div>
+                    </li>
+                     <li class="aui-list-item" onclick="share()">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-4"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            我要推广
+                        </div>
+                    </li>
+                    <li class="aui-list-item" onclick="logout()">
+                        <div class="aui-list-item-label-icon">
+                            <div class="icon icon-6"></div>
+                        </div>
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            退出登录
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="border-t">
+        <ul id="myTab" class="flex-wrap nav nav-tabs">
+            <li tapmode="hover" class="flex-con0 flex-con active"><a href="#tab_0" data-toggle="tab"><span>首页</span></a></li>
+            <li tapmode="hover" class="flex-con1 flex-con"><a href="#tab_1" data-toggle="tab"><span>订单</span></a></li>
+            <li tapmode="hover" class="flex-con2 flex-con"><a href="#tab_2" data-toggle="tab"><span>我的</span></a></li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/bootstrap.min.js"></script>
+<script type="text/javascript" src="../script/swiper.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+$(function() {
+    var l = GetQueryString("l");
+    if(l==1){
+        $("#tab_0").removeClass("in active");
+        $("#tab_1").addClass("in active");
+        $(".flex-con0").removeClass("in active");
+        $(".flex-con1").addClass("active");
+    }
+    if(l==2){
+        $("#tab_0").removeClass("in active");
+        $("#tab_2").addClass("in active");
+        $(".flex-con0").removeClass("in active");
+        $(".flex-con2").addClass("active");
+    }
+    // getconfig.do
+
+    //广告图
+
+    $.post("/api/index/getlist.do", { t: 4 }, function(ret) {
+        var picfinish;
+        var json = eval("(" + ret + ")");
+        var html = "";
+        var pic;
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].pic.indexOf("http")) {
+                pic = json[i].pic;
+            } else {
+                pic = json[i].pic;
+            }
+            if (i == 0) {
+                html += '<div class="swiper-slide"><img id="mypic" src="' + pic + '" /></div>';
+            } else {
+                html += '<div class="swiper-slide"><img src="' + pic + '" /></div>';
+            }
+
+            if (i == 0) {
+                picfinish = pic;
+            }
+        }
+        $('.ad-list').append(html);
+        var img = new Image;
+        img.src = picfinish;
+        img.onload = function() {
+            // var slide3 = new auiSlide({
+            //     container: document.getElementById("aui-slide3"),
+            //     // "width":300,
+            //     "height": $("#mypic").height(),
+            //     "speed": 500,
+            //     "autoPlay": 3000, //自动播放
+            //     "loop": true,
+            //     "pageShow": true,
+            //     "pageStyle": 'dot',
+            //     'dotPosition': 'center'
+            // });
+
+            var mySwiper = new Swiper('.swiper-1', {
+                loop: true,
+                autoplay: 3000, //可选选项，自动滑动
+                pagination: '.swiper-pagination'
+            });
+        }
+    });
+
+    //获取分期账单列表
+    // alert($api.getStorage('serviceAddr'));
+    $.post("/api/order/getinstall.do", {}, function(ret) {
+        if (ret != "login") {
+            var json = eval("(" + ret + ")");
+            json = json.list;
+            var html = "";
+            for (var i = 0; i < json.length; i++) {
+                html += '<li class="aui-list-item"><div class="aui-media-list-item-inner">';
+                html += '<div class="aui-list-item-media"><img src="../image/car.png"></div>';
+                html += '<div class="aui-list-item-inner"><div class="aui-list-item-text"><div class="aui-list-item-title">分期账单</div></div>';
+                html += '<div class="aui-list-item-text">' + json[i].car_license + ' 保险账单已经更新咯，请记得查询哟！</div>';
+                html += '<div class="aui-info"><div class="aui-info-item"><span class="money">金额 ￥' + json[i].order_price + '</span></div>';
+                if (json[i].endtime == "") {
+                    html += '<div class="aui-info-item time">' + json[i].statstr + ' </div>';
+                } else {
+                    html += '<div class="aui-info-item time">' + json[i].endtime + ' 到期</div>';
+                }
+                html += '</div></div></div></li>';
+            }
+            $(".fqlist .aui-media-list").html(html);
+        } else {
+            // alert('未登录');
+            var phone = $api.getStorage('loginsuccesstel');
+            if (phone != '' && phone != null && phone != 'undefined' && phone != undefined) {
+                $.post("/api/index/login.do", {
+                    phone: phone,
+                    issession: 1
+                }, function(ret) {
+                    location.reload();
+                    return;
+                });
+            } else {
+                openWin('login');
+            }
+        }
+    });
+
+    //获取合作伙伴列表
+    $.post("/api/index/getlist.do", { t: 2 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        var html = "";
+        for (var i = 0; i < json.length; i++) {
+            html += '<li><div><img src="' + json[i].pic + '"></div><div class="name">' + json[i].title + '</div></li>';
+        }
+        $(".partner").html(html);
+
+    });
+    //车险快报
+    $.post("/api/index/getlist.do", { t: 5 }, function(ret) {
+        var json = eval("(" + ret + ")");
+        $(".info").text(json[0].title);
+    });
+
+    // 用户信息
+    $.post("/api", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        var headimgurl_;
+        if (json) {
+            if (json["wxnickname"] != '0' && json["wxavatar"] != '0') {
+                $("#username").html(json["wxnickname"]);
+                headimgurl_ = json["wxavatar"];
+
+            } else if (json["qqnickname"] != '0' && json["qqavatar"] != '0') {
+                $("#username").html(json["qqnickname"]);
+                headimgurl_ = json["qqavatar"];
+            } else {
+                $("#username").html($api.getStorage('loginsuccesstel'));
+                headimgurl_ = "../image/user.png";
+            }
+            $("#wxavatar").css("background-image", "url('" + headimgurl_ + "')");
+            $api.setStorage('username', $("#username").html());
+            $api.setStorage('wxavatar', headimgurl_);
+            $api.setStorage('money_free', json["money_free"]);
+            $api.setStorage('loginsuccesstel', json['username']);
+        }
+    });
+    $.post("/api/index/getconfig.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        console.log(json);
+        var url = json.url_lp_value;
+        $("#guide").attr("href", json.url_lp_value);
+        $("#search").attr("href", json.url_wz_value);
+    });
+    // 预约订单
+    $.post("/api/agent/getagentorder.do", {}, function(ret) {
+        // alert(JSON.stringify(ret));
+        var json = eval("(" + ret + ")");
+        for (var i = 0; i < json.length; i++) {
+            carlicense = json[i].car_license.substring(0, 2) + "**" + json[i].car_license.substring(4, 7);
+            addtime = json[i].addtime.substring(0, 10);
+            $("#agentorder").append('<li onclick="test()" data-id="' + json[i].id + '" data-fqstat="' + json[i].zt + '" data-fktype="' + json[i].fktype + '" class="aui-list-item"><div class="aui-media-list-item-inner"><div class="aui-list-item-media"><img src="../image/car.png"></div><div class="aui-list-item-inner"><div class="aui-list-item-text"><div class="aui-list-item-title">预约订单</div></div><div class="aui-list-item-text">' + carlicense + '</div><div class="aui-info"><div class="aui-info-item"><span class="money">￥' + json[i].order_fee + '</span></div><div class="aui-info-item time">' + addtime + '</div></div></div></div></li>')
+        }
+
+    });
+    // 保单列表
+    $.post("/api/order", {}, function(ret) {
+        // alert(JSON.stringify(ret));
+        var json = eval("(" + ret + ")");
+        for (var i = 0; i < json.length; i++) {
+            carlicense = json[i].car_license;//.substring(0, 2) + "**" + json[i].car_license.substring(4, 7);
+            addtime = json[i].addtime.substring(0, 10);
+            var temphtml  = '<li onclick="test()" data-id="' + json[i].id + '" data-fqstat="' + json[i].zt + '" data-fktype="' + json[i].fktype + '" class="aui-list-item orderfun"><div class="aui-media-list-item-inner"><div class="aui-list-item-media"><img src="../image/car.png"></div><div class="aui-list-item-inner"><div class="aui-list-item-text"><div class="aui-list-item-title">';
+            if (json[i].bstat == 3 || json[i].stat == 7) {
+                temphtml += '<span class="statu s2">被驳回</span>';
+            }else if (json[i].bstat < 2) {
+                temphtml += '<span class="statu s2">报价中</span>';
+            } else if (json[i].stat < 4) {
+                temphtml += '<span class="statu s3">未生效</span>';
+            } else if (json[i].stat == 4) {
+                temphtml += '<span class="statu s1">生效中</span>';
+            } else if (json[i].stat == 5) {
+                temphtml += '<span class="statu s2">已过期</span>';
+            } else if (json[i].stat == 6) {
+                temphtml += '<span class="statu s2">已违约</span>';
+            }            
+            temphtml += '保单</div></div><div class="aui-list-item-text">' + carlicense + '</div><div class="aui-info"><div class="aui-info-item"><span class="money">￥' + json[i].order_price + '</span></div><div class="aui-info-item time">' + addtime + '</div></div></div></div></li>'
+            $("#userorder").append(temphtml)
+        }
+
+    });
+})
+
+$(document).on("click",".orderfun",function(){
+    var id = $(this).data("id");
+    $.post("/api/order/getuserorder.do", {id:id}, function(ret) {
+        if (ret == "null") {
+            alert("您未询价，请先询价！");
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                if(json["isp"]){
+                    window.location = "mybystagesdetail_frm.html?id=" + id;
+                }else{
+                    window.location = "buy_frm.html?id=" + id;
+                }
+            } else {    
+                    if (json["step"] == 0) {
+                        window.location = "buy_frm.html?id=" + id;
+                    } else if (json["step"] == 1) {
+                        openWin('identification');
+                    } else if (json["step"] == 2) {
+                        openWin('phoneauth');
+                    } else if (json["step"] == 3) {
+                        openWin('billbystages');
+                    } else if (json["step"] == 4) {
+                        if(json["fqstat"]==4){
+                            window.location = "mybystagesdetail_frm.html?id=" + id;
+                        }else{
+                            window.location = "auditbystages_frm.html?id=" + id;
+                            // openWin('auditbystages');
+                        }
+                    }
+            }
+
+        }
+    });    
+})
+
+function inquiry() {
+    $.post("/api/order/getuserorder.do", {}, function(ret) {
+        if (ret == "null") {
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["stat"] == 2) {
+                openWin('inquiry');
+            } else {
+                alert("您已询价，请等待审核！");
+            }
+        }
+    });
+}
+
+
+
+function buy() {
+    $.post("/api/order/getuserorder.do", {}, function(ret) {
+        // return false;
+        if (ret == "null") {
+            alert("您未询价，请先询价！");
+            openWin('inquiry');
+        } else {
+            var json = eval("(" + ret + ")");
+            if (json["fktype"] == 1) {
+                alert("您未询价，请先询价！");
+                openWin('inquiry');
+            } else {
+                switch (json["step"]) {
+                    case 0:
+                        openWin('buy');
+                        break;
+                    case 1:
+                        openWin('identification');
+                        break;
+                    case 2:
+                        openWin('phoneauth');
+                        break;
+                    case 3:
+                        openWin('billbystages');
+                        break;
+                    case 4:
+                        openWin('auditbystages');
+                        break;
+                    default:
+                        break;
+                }
+                // if (json["step"] == 0) {
+                //     openWin('buy');
+                // } else if (json["step"] == 1) {
+                //     openWin('identification');
+                // } else if (json["step"] == 2) {
+                //     openWin('phoneauth');
+                // } else if (json["step"] == 3) {
+                //     openWin('billbystages');
+                // } else if (json["step"] == 4) {
+                //     openWin('auditbystages');
+                // }
+            }
+
+        }
+    });
+}
+
+function logout() {
+    $.post("/api/index/loginout.do", {}, function(ret) {
+        $api.clearStorage();
+        openWin('login');
+    });
+}
+
+function share(){
+    openWin('spread');
+	// var phone = $api.getStorage('loginsuccesstel');
+	// window.location = "/api/index/qrcode/?phone=" + phone;
+}
+
+$("#myTab li a").click(function() {
+    $("title").text($(this).children('span').text());
+});
+$(document).on("click", "#agentorder li", function() {
+    var id = $(this).data("id");
+    window.location = "agentdetail_frm.html?id=" + id;
+});
+
+function test(obj) {
+    console.log(obj);
+}
+
+</script>

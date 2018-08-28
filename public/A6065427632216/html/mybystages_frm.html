@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的分期</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+
+<body id="mybystages">
+    <section class="aui-grid">
+        <div class="aui-col-xs-6">
+            <div class="aui-grid-label">分期保单</div>
+            <div class="num">
+                <font id="count"></font><span class="samll">个</span></div>
+        </div>
+        <div class="aui-col-xs-6">
+            <div class="aui-grid-label">未还款<span class="samll">(本月)</span></div>
+            <div class="num">
+                <font id="nopaycount">0</font><span class="samll">期</span></div>
+        </div>
+        </div>
+    </section>
+    <div id="mybystages-list">
+        <div class="top">&nbsp;分期保单</div>
+        <div class="midlist">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+$(function() {
+    //获取分期账单列表
+    $.post($api.getStorage('serviceAddr') + "/api/order/getinstall.do", {}, function(ret) {
+        if (ret != "login") {
+            var data = eval("(" + ret + ")");
+            console.log(data);
+            json = data.list;
+            var html = "";
+            for (var i = 0; i < json.length; i++) {
+                html += '<li onclick="test()" class="aui-list-item aui-list-item-middle installdetail" data-id="' + json[i].id + '" data-fqstat="' + json[i].zt + '">';
+                html += '<div class="aui-media-list-item-inner"><div class="aui-list-item-media">';
+                html += '<img src="../image/car.png" class="aui-img-round aui-list-img-sm"></div>';
+                html += '<div class="aui-list-item-inner">' + json[i].car_license + '<span class="aui-pull-right">' + json[i].addtime + '</span></div></div></li>';
+            }
+            $("#count").html(data.count);
+            $("#nopaycount").html(data.nopaycount);
+            $(".aui-media-list").html(html);
+        } else {
+            openWin('login');
+        }
+    });
+});
+
+$(document).on('click', '.installdetail', function() {
+    var fqstat = $(this).data("fqstat");
+    if (fqstat < 4) {
+        openWin('auditbystages');
+    } else {
+        var id = $(this).data("id");
+        // alert(id);
+        location.href = "mybystagesrepay_frm.html?id=" + id;
+    }
+
+});
+
+function test(obj) {
+    console.log(obj);
+}
+apiready = function() {
+    api.parseTapmode();
+}
+var tab = new auiTab({
+    element: document.getElementById("tab"),
+}, function(ret) {
+    console.log(ret);
+    $("#status" + ret.index).css({
+        "display": "block"
+    });
+    $("#status" + ret.index).nextAll().css({
+        "display": "none"
+    });
+    $("#status" + ret.index).prevAll().css({
+        "display": "none"
+    });
+});
+</script>
+
+</html>

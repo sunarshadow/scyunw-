@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title switch-list">
+                <li layui-data="" class="layui-this">全部</li>
+                <li layui-data="0" ;>初审中</li>
+                <li layui-data="1" ;>复审中</li>
+                <li layui-data="2" ;>拨款中</li>
+                <li layui-data="3" ;>出单中</li>
+                <li layui-data="7" ;>被驳回</li>
+                <!-- <li layui-data="4" ;>生效中</li>
+                <li layui-data="5" ;>过期</li>
+                <li layui-data="6" ;>违约</li> -->
+
+            </ul>
+        </div>
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        <div class="layui-inline">
+            <input class="layui-input" name="companyname" placeholder="保险公司名" id="companyname" autocomplete="off">
+        </div>
+        <label style="padding-left: 10px;">资金初审：</label>
+        <div class="layui-inline">
+            <select name="modules" id="inspectadminid" >
+                <option value="">请选择管理员</option>
+                {volist name="adminlist" id="vo"}
+                <option value="{$vo.id}">{$vo.nickname}</option>
+                {/volist}
+            </select>        
+        </div>
+        <label style="padding-left: 10px;">初审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input"  id="inspecttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">资金复审：</label>
+        <div class="layui-inline">
+            <select name="modules" id="inspectadminid" >
+                <option value="">请选择管理员</option>
+                {volist name="adminlist" id="vo"}
+                <option value="{$vo.id}">{$vo.nickname}</option>
+                {/volist}
+            </select> 
+        </div>
+        <label style="padding-left: 10px;">复审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="comfirmtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">资金结算：</label>
+        <div class="layui-inline">
+            <select name="modules" id="approadminid" >
+                <option value="">请选择管理员</option>
+                {volist name="adminlist" id="vo"}
+                <option value="{$vo.id}">{$vo.nickname}</option>
+                {/volist}
+            </select>
+        </div>
+        <label style="padding-left: 10px;">结款时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="approtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('insurer/getorder')}',  limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'car_license', width:120 ,templet: '#car_licenseTpl'}">申请车辆</th>
+                <th lay-data="{field:'username', width:120}">车主姓名</th>
+                <th lay-data="{field:'companyname', width:200,templet: '#companynameTpl'}">保险公司</th>
+                <th lay-data="{field:'jqprice', width:100}">交强险</th>
+                <th lay-data="{field:'csprice', width:100}">车船税</th>
+                <th lay-data="{field:'syprice', width:100}">商业险</th>
+                <th lay-data="{field:'order_price', width:160,templet: '#priceTpl'}">保单总额</th>
+                <th lay-data="{field:'inspectadminid', width:180 ,templet: '#inspectadminidTpl'}">资金初审</th>
+                <th lay-data="{field:'inspecttime', width:180 ,templet: '#inspecttimeTpl'}">初审时间</th>
+                <th lay-data="{field:'comfirmadminid', width:180 ,templet: '#comfirmadminidTpl'}">资金复审</th>
+                <th lay-data="{field:'comfirmtime', width:180 ,templet: '#comfirmtimeTpl'}">复审时间</th>
+                <th lay-data="{field:'approadminid', width:180,templet: '#approadminidTpl'}">结款人</th>
+                <th lay-data="{field:'approtime', width:180 ,templet: '#approtimeTpl'}">结款时间</th>
+                <th lay-data="{field:'stat_cg', width:180}">审核状态</th>
+                <th lay-data="{fixed:'right', width:210, align:'center', toolbar: '#barDemo'}">操作</th>
+            </tr>
+        </thead>
+    </table>
+    <!-- 账单详情 -->
+    <script type="text/html" id="priceTpl">
+       {{d.order_price}} 
+       {{# if(d.approadminid != '暂未审核'){ }}
+        <a class="layui-btn layui-btn-xs"  lay-event="approinfo"  lay-data="{{ d.id}}" >查看</a>
+       {{# }}}
+    </script>
+    <!-- 消费详情 -->
+    <script type="text/html" id="payinfoTpl">
+        <a style="color:#32CD32"   lay-event="payinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">查看</a>
+    </script>
+    <!-- 保险公司名称 -->
+    <script type="text/html" id="companynameTpl">
+        <a style="color:#32CD32"   lay-event="bfcount"  lay-data="{{ d.userid}}" >{{ d.companyname}}</a>
+    </script>
+    
+    <!-- 提现历史详情 -->
+    <script type="text/html" id="withinfoTpl">
+        <a style="color:#32CD32"   lay-event="withinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">提现详情</a>
+    </script>
+    <script type="text/html" id="car_licenseTpl">
+              <a lay-event="carinfo" color="#B3EE3A">{{ d.car_license}}</a>
+    </script>
+
+    <script type="text/html" id="barDemo">
+        {if in_array("order_1",$sary)}<a class="layui-btn layui-btn-xs {{#  if(d.stat!=0){ }}layui-btn-disabled {{#  } }}" datatype="cs"  lay-event="examine">初审</a>{/if}
+        {if in_array("order_2",$sary)}<a class="layui-btn layui-btn-xs layui-btn-warm {{#  if(d.stat!=1){ }}layui-btn-disabled {{#  } }}"  datatype="fs"  lay-event="examine">复审</a>{/if}
+        {if in_array("order_3",$sary)}<a class="layui-btn layui-btn-danger layui-btn-xs {{#  if(d.stat!=2){ }}layui-btn-disabled {{#  } }}" datatype="js"  lay-event="examine">结算</a>{/if}
+        {if in_array("order_-1",$sary)}<a class="layui-btn layui-btn-danger layui-btn-xs " datatype="hs" lay-event="del">回收</a>{/if}
+    </script>
+
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);
+                    form.render('select');
+                });
+            });
+            //三个时间
+            laydate.render({
+                elem: '#inspecttime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#comfirmtime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#approtime'
+                , range: true
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            //监听工具条
+
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'examine') {
+                    var datatype=$(this).attr('datatype');
+                    if ($(this).hasClass('layui-btn-disabled')) {
+                        layer.msg("错误操作");
+                        return false;
+                    }
+                    dourl("{:url('insurer/likepremium')}?id=" + data.id + '&datatype='+datatype, '详细信息', '点此返回保费申请', ['50%', '80%']);
+         
+                } else if (obj.event === 'del') {
+                    var datatype=$(this).attr('datatype');
+                    dourl("{:url('insurer/likepremium')}?id=" + data.id + '&datatype='+datatype, '详细信息', '点此返回保费申请', ['50%', '80%']);
+                } else if (obj.event === 'carinfo') {
+                    dourl("{:url('insurer/carinfonew')}?rs=" + data.rs, '查看车辆详情', '点此返回保费申请', ['50%', '80%']);
+                } else if (obj.event === 'bfcount') {
+                    dourl("{:url('insurer/countpremium')}?companyname=" + data.companyname, '查看保险公司', '点此返回保费申请', ['50%', '80%']);
+                } else if (obj.event === 'approinfo') {
+                    dourl("{:url('insurer/approinfo')}?id=" + data.id, '查看结款详情', '点此返回保费申请', ['50%', '80%']);
+                }
+                
+            });
+            var active = {
+                reload: function () {
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            type: type,
+                            companyname: $('#companyname').val(),
+                            inspectadminid: $('#inspectadminid').val(),
+                            inspecttime: $('#inspecttime').val(),
+                            comfirmadminid: $('#comfirmadminid').val(),
+                            comfirmtime: $('#comfirmtime').val(),
+                            approadminid: $('#approadminid').val(),
+                            approtime: $('#approtime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                        , page: { curr: 1 }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    
+                     for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type=' + type : '';
+                    get += $('#companyname').val() ? '&companyname=' + $('#companyname').val() : '';
+                    get += $('#inspectadminid').val() ? '&inspectadminid=' + $('#inspectadminid').val() : '';
+                    get += $('#inspecttime').val() ? '&inspecttime=' + $('#inspecttime').val() : '';
+                    get += $('#comfirmadminid').val() ? '&comfirmadminid=' + $('#comfirmadminid').val() : '';
+                    get += $('#comfirmtime').val() ? '&comfirmtime=' + $('#comfirmtime').val() : '';
+                    get += $('#approadminid').val() ? '&approadminid=' + $('#approadminid').val() : '';
+                    get += $('#approtime').val() ? '&approtime=' + $('#approtime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('insurer/getorder')}" + "?toexcel=1" + get;
+                },
+
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    table.reload('idTest', {
+                        url: "{:url('insurer/getorder')}"
+                        , page: { curr: 1 }
+                        , where: {
+                            type: type
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

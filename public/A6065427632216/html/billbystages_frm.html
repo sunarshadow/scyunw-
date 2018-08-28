@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>生成订单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css" media="screen">
+    .bystagestype button:nth-child(2):active {
+         color: #ffffff; 
+        border: 1px solid #2196F3;
+         background: #2196F3; 
+    }
+    </style>
+</head>
+
+<body id="details" ontouchstart="" onmouseover="">
+    <form id="orderform">
+        <div class="out outshow">
+            <section class="aui-grid aui-grid-0 bill-bgblue">
+                <div class="aui-col-xs-6" style="width: 100%;">
+                    <div class="aui-grid-label aui-text-left">保单金额：
+                        <span class="num aui-text-left"><span class="small">￥</span>
+                        <font class="order_price"></font>
+                        </span>
+                    </div>
+                    <div class="aui-grid-label order-num">订单编号:
+                        <font class="ordernum"></font>
+                    </div>
+                    <div class="aui-grid-label order-time">订单时间:
+                        <font class="ordertime"></font>
+                    </div>
+                    <div class="num name" style="padding-top: 20px;">
+                        <font class="companyname"></font>
+                    </div>
+                </div>
+            </section>
+            <section class="aui-grid aui-grid-0 bill-bgwhite">
+                <div class="aui-col-xs-6" style="width: 100%;">
+                    <div class="aui-grid-label aui-text-left">账单金额</div>
+                    <div class="num aui-text-left"><span class="small">￥</span>
+                        <font class="order_price"></font>
+                    </div>
+                </div>
+            </section>
+            <section class="aui-grid bill-bgwhite-2">
+                <div class="aui-col-xs-3">
+                    <div class="aui-grid-label">
+                        分期:
+                    </div>
+                </div>
+                <div class="aui-col-xs-9">
+                    <div class="aui-grid-label aui-text-left">
+                        <div class="label">
+                            <input class="aui-checkbox aui-fq aui-checked" type="checkbox" name="install_count" value="3" checked=""> 3期&emsp;（每期：￥
+                            <font class="install_3"></font>）
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox aui-fq" type="checkbox" name="install_count" value="6"> 6期&emsp;（每期：￥
+                            <font class="install_6"></font>）
+                        </div>
+                        <div class="label">
+                            <input class="aui-checkbox aui-fq" type="checkbox" name="install_count" value="9"> 9期&emsp;（每期：￥
+                            <font class="install_9"></font>）
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="bystagestype">
+                <font class="orderid" style="display:none;"></font>
+                <button type="button" onclick="createorder()">确认分期</button>
+                <!--  <div class="label">
+                    <input class="aui-checkbox" type="checkbox" name="demo1"> 已阅读付款协议
+                </div> -->
+            </div>
+        </div>
+    </form>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+$(function() {
+    //获取已报价未确认订单
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", {}, function(ret) {
+        var json = eval("(" + ret + ")");
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+    });
+});
+//创建保单
+function createorder() {
+    // return;
+    var fromary = $("#orderform").serialize();
+    var id = $(".orderid").html();
+    fromary += "&id=" + id + "&fktype=0";
+    console.log(id);
+    // alert(fromary);
+    $.post($api.getStorage('serviceAddr') + "/api/order/buy.do", fromary, function(ret) {
+        openWin('auditbystages');
+
+    });
+};
+$(".aui-fq").click(function() {
+    $('.aui-fq').removeClass('aui-checked').removeAttr('checked');
+    $(this).addClass('aui-checked').prop('checked', true);
+
+});
+</script>
+
+</html>

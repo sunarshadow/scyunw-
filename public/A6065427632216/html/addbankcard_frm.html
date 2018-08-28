@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>添加银行卡</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+</head>
+
+<body id="addbankcardpage">
+    <form id="bankform">
+        <div id="inputmsg" class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            卡号
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="number" id="bank_account" name="bank_account" placeholder="请输入卡号">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            卡类型
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="bank_name" name="bank_name" placeholder="卡类型">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-header">请填写银行预留信息</li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            姓名
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="acholder" name="acholder" placeholder="请输入真实姓名">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            证件号
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" id="acmenid" name="acmenid" placeholder="请输入身份证">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item bornone">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            手机号
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="number" id="bank_phone" name="bank_phone" placeholder="请输入手机号">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="login" class="yzm">
+            <div class="msg">绑定银行卡需要短信确认，验证码已发送至手机：
+                <font class="phone"></font>，请按提示操作：</div>
+            <div class="aui-content">
+                <ul class="aui-list aui-form-list">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-input">
+                                <input type="text" name="smscode" placeholder="请输入手机验证码">
+                                <span onclick="getsmscode()">获取验证码</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item bornone pad">
+                        <input type="hidden" id="id" name="id">
+                        <button type="button" onclick="addbank()">确认</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="aui-text-center fixbottom">
+            <button type="button" id="next">下一步</button>
+        </div>
+    </form>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var id = $api.getStorage('cardid');
+    if (id > 0) {
+        $.post($api.getStorage('serviceAddr') + "/api/user/getbank.do", { id: id }, function(ret) {
+            var json = eval("(" + ret + ")");
+            for (key in json) {
+                $("#" + key).val(json[key]);
+            }
+        });
+    }
+};
+$("#next").click(function() {
+    var msgarray = new Array();
+    $("input").each(function(index, element) {
+        var vl = $(this).val();
+        var msg = $(this).attr('placeholder');
+        if (vl == "") {
+            msgarray[index] = $(this).attr('placeholder');
+        } else {
+            msgarray[index] = 0;
+        }
+    });
+    for (var i = 0; i < msgarray.length; i++) {
+        if (msgarray[i] != 0 && i != 5 && i != 6) {
+            var dialog = new auiDialog();
+            dialog.alert({
+                title: "请输入信息",
+                msg: msgarray[i],
+                buttons: ['确定']
+            }, function(ret) {
+
+            });
+            return;
+        }
+    }
+    $(".phone").html($("#bank_phone").val());
+    $("#inputmsg").hide();
+    $(".yzm").show();
+    $(this).hide();
+});
+$("body").on("blur", "#bank_account", function() {
+    $.post($api.getStorage('serviceAddr') + "/api/user/getbanktype.do", { bankaccount: $(this).val() }, function(ret) {
+        $("#bank_name").val(ret);
+    });
+});
+
+function addbank() {
+    var fromary = $("#bankform").serialize();
+    $.post($api.getStorage('serviceAddr') + "/api/user/addbank.do", fromary, function(ret) {
+        if (ret == 1) {
+            alert("银行卡编辑成功！");
+            var jsfun = 'getcardlist();';
+            api.execScript({
+                name: 'bankcard',
+                frameName: 'bankcard',
+                script: jsfun
+            });
+            closeWin('addbankcard');
+        } else {
+            alert(ret);
+        }
+    });
+}
+
+function getsmscode() {
+    $.post($api.getStorage('serviceAddr') + "/api/index/sms_sendcode.do", { apply_phone: $("#bank_phone").val() }, function(ret) {
+        if (ret == 1) {
+            alert("短信已成功发送！");
+        } else {
+            alert(ret.msg);
+        }
+        return;
+    });
+}
+
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+</script>

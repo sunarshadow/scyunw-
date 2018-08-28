@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+    <style>
+    .fa-plus-circle{
+        transform: rotate(45deg);
+        color:red;
+        font-size: 60px;
+        margin-right: 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <div class="menu"><a>个人中心</a><i class="fa fa-angle-right blue"></i><a class="blue">修改密码</a></div>
+        <div class="user">
+            <!-- 显示加show 隐藏加hide -->
+            <div class="outtotal outtotal-2">
+                <div class="total">
+                    <div class="title"><span>个人信息</span></div>
+                   
+                    <div class="type">
+                        保单公司：{$insurer.companyname}
+                    </div>
+                    <div class="type">
+                        地&emsp;&emsp;址：{$insurer.address}
+                    </div>
+                    <div class="type">
+                        联&ensp;系&ensp;人：  
+                        <input placeholder="XXX" disabled  type="text" name="corporation" value="{$insurer.corporation}"><a href="#" class="detail updateone">修改</a>
+                    </div>
+                    <div class="type">
+                        电&emsp;&emsp;话： 
+                        <input placeholder="0000000000" disabled  type="text" name="cptphone" value="{$insurer.cptphone}"><a href="#" class="detail updateone" >修改</a>
+                    </div>
+                </div>
+                <div class="botbtn">
+                    <a id="changelogin" name="account" class="btn btn-default blue cancel finish updatepwd">修改账户登录密码</a>
+                    <a id="changefinance" name="finance" class="btn btn-default red cancel finish updatepwd">修改财务中心密码</a>
+                </div>
+            </div>
+        </div>
+        <div id="change">
+            <form id="changepassword">
+            
+            <div class="type">
+                用&ensp;户&ensp;名：{$insurer.loginname}
+            </div>
+            <div class="type">
+                原&ensp;密&ensp;码：
+                <input placeholder="原密码"  type="text" name="oldpwd" value="">
+            </div>
+            <div class="type">
+                新&ensp;密&ensp;码：
+                <input placeholder="新密码"  type="text" name="newpwd" value="">
+            </div>
+            <div class="type">
+                确认密码：
+                <input placeholder="新密码"  type="text" name="quitpwd" value="">
+            </div>
+            <div class="type">
+                &emsp;&emsp;&emsp;&emsp;&emsp;<a id="queren" href="#" class="detail">确认</a>
+            </div>
+        </form>
+        </div>
+    </div>
+    <div class="modal fade" id="msg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="out-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">提示消息</h4>
+                    </div>
+                    <div class="modal-body" id="ajaxinfo"></div>
+                    <div class="modal-footer">
+                        <a href="{:url('index/index')}" type="button" class="btn cancel finish btn-return pull-left">返回首页</a>
+                        <a href="{:url('financenter/index')}" type="button" class="btn cancel finish btn-return">返回财务中心</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script type="text/javascript">
+$("#password").click(function() {
+    $(".password").hide();
+    $(".outtotal-1").show();
+});
+$("#queren").click(function(event) {
+    var data = $('#changepassword').serializeArray();
+    var postdata = { type: type};
+    $.each(data,function(index,item){
+        postdata[item.name] = item.value
+    })
+    $.post('update',postdata,function(res){
+        console.log(res);
+        if(res.code==1){
+            var html = '<i class="fa fa-check-circle"></i>'+res.msg;
+        }
+        if(res.code==0){
+            var html = '<i class="fa fa-plus-circle"></i>'+res.msg;
+        }
+
+        $('#ajaxinfo').html(html)
+        $("#msg").modal('show');
+    })
+    
+});
+var type='';
+$(".updatepwd").click(function() {
+    type = $(this).attr('name');
+    $(".user").hide();
+    $("#change").show();
+})
+
+$(".updateone").click(function() {
+    if($(this).hasClass('on')){
+        $(this).text('修改');
+        $(this).removeClass('on');
+        $(this).prev('input').attr('disabled','disabled');
+        var postdata = {
+            value : $(this).prev('input').val(),
+            key   : $(this).prev('input').attr('name')
+        }
+        $.post('update',postdata,function(res){
+
+        })
+    }else{
+        $(this).text('确定');
+        $(this).addClass('on');
+        $(this).prev('input').removeAttr('disabled');
+    }
+    
+})
+
+</script>
+
+</html>

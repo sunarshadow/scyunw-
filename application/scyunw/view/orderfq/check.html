@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+  <style>
+    body {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div lay-filter="demo" >
+    <a class="layui-btn checkstat" lay-stat="{$stat}" id="fqstat" >审核通过</a>
+    <a class="layui-btn layui-btn-danger nopass">驳回申请</a>
+  </div>
+
+  <table class="layui-table">
+    <tbody>
+    <tr style="display: none">
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+		<td style=" width: 120px;"></td>
+    </tr>
+    <tr height="60">
+      <th colspan="4" style="font-size: 24px; font-weight: bold;">
+        <label style="width: 50%; float: right;display: block;text-align: right; ">{$info.car_license}</label>
+        <label style="width: 50%; display: block; float:left;">地区：{$info.orderarea}</label>
+      </th>
+    </tr>    
+    <tr>
+      <td class="tips">人脸认证</td>
+      <td colspan="3">
+      <span id="facestat"></span>
+      <button class="layui-btn layui-btn-warm layui-btn-xs" onclick='window.location="#aaaaa"'>查看数据</button>
+      </td>
+    </tr>   
+    <tr>
+      <td class="tips">运营商认证</td>
+      <td colspan="3">
+      <span id="phonestat"></span>
+      <span class="reportID" style="display:none">0</span>
+      <button class="layui-btn phonedetail layui-btn-warm layui-btn-xs">查看数据</button>
+      </td>
+    </tr>   
+    <tr>
+      <td class="tips">车主姓名</td>
+      <td>{$info.car_name}</td>
+      <td class="tips">身份证号码</td>
+      <td>{$info.id_code}</td>
+    </tr>   
+    <tr>
+      <td class="tips">车主手机</td>
+      <td>{$info.apply_phone}</td>
+      <td class="tips">车牌号码</td>
+      <td>{$info.car_license}</td>
+    </tr>
+    <tr>
+      <td class="tips">行驶证识别码</td>
+      <td>{$info.car_code}</td>
+      <td class="tips">发动机号码</td>
+      <td>{$info.car_motor}</td>
+    </tr>
+    <tr>
+      <td class="tips">投保公司</td>
+      <td>{$info.company}</td>
+      <td class="tips">归属地</td>
+      <td>{$info.orderarea}</td>
+    </tr>
+    {if $order.firstadminid}
+    <tr>
+      <td class="tips">初审人</td>
+      <td>{$order.firstadmin}</td>
+      <td class="tips">初审时间</td>
+      <td>{$order.firsttime}</td>
+    </tr>
+    {/if}
+    <tr>
+      <td class="tips">投保险种</td>
+      <td colspan="3">{$info.insurance}<a name="aaaaa"></a></td>
+    </tr>
+    <tr>
+		<td colspan="4" align="center">用户身份证件</td>
+    </tr>
+    <tr>
+		<td colspan="2">
+    <img src="{$order['id_img']}" style="max-width:100%;"></td>
+		<td colspan="2"><img src="{$order['id_img_b']}" style="max-width:100%;"></td>
+    </tr>
+    <tr>
+		<td colspan="4" align="center">手持身份证照片</td>
+    </tr>
+    <tr>
+		<td colspan="4" align="center"><img src="{$order['id_img_r']}" style="max-width:100%;"></td>
+    </tr>    
+    </tbody>
+  </table>
+
+
+
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use('table',function(){
+    var table = layui.table, $ = layui.jquery;
+    //监听表格复选框选择
+
+    //审核通过
+    $("body").on("click",".checkstat",function(){
+        var fqstat = $("#fqstat").attr("lay-stat");
+        var id = "{$order['id']}";
+        layer.confirm("是否对该订单执行审核操作?", function(index){
+            $.post("{:url('orderfq/getset')}", {id:id,fqstat:fqstat},function(ret){
+              layer.msg("审核成功");
+              setTimeout(function(){
+                parent.location.reload();
+              },800);    
+            });            
+            // layer.confirm("是否更改订单状态?", function(index){
+            //     $.post("{:url('orderfq/getset')}", {id:data.id,fqstat:fqstat},function(ret){
+            //         layer.msg("状态修改成功");
+            //         table.reload('idTest');
+            //     });
+            // });
+        });
+    });
+
+    //驳回申请
+    $("body").on("click",".nopass",function(){
+        layer.prompt({
+            formType: 2,
+            value: '',
+            title: '请输入驳回理由',
+            area: ['500px', '200px'] //自定义文本域宽高
+          }, function(value, index, elem){
+            var id = "{$order['id']}";
+            $.post("{:url('orderfq/getset')}", {id:id,stat:7,admin_note:value},function(ret){
+              layer.msg("用户询价已驳回");
+              setTimeout(function(){
+                parent.location.reload();
+              },800);    
+            });
+        });
+    });
+
+    $("body").on("click",".phonedetail",function(){
+            var id = "{$order['id']}";
+            
+        layui.layer.open({
+          title : "投保险种/证件/详情",
+          type : 2,
+          area: ['100%', '100%'],
+          content : "{:url('userorder/info')}"+'?oid='+id,
+          success : function(layero, index){
+            setTimeout(function(){
+              layui.layer.tips('点击此处返回分期订单列表', '.layui-layer-setwin .layui-layer-close', {
+                tips: 3
+              });
+            },500)
+          }
+        })
+    });
+  {if $token}
+      var reportID = $(".reportID").html();
+      // console.log(reportID.length);
+      if(reportID==0){
+        var index = layer.load();
+        getphonedate('{$token}');
+      }
+  {/if}
+  function getphonedate(token) {
+      $.post("/api/index/getphonedata?token=" + token, {}, function(res) {
+          if (res == 0) {
+              getphonedate(token);
+          }if (res == 1) {
+              $("#phonestat").html("<span style='color:#5FB878'>认证成功</span>");
+              layer.close(index);
+          } else {
+              $("#phonestat").html("<span style='color:#FF5722'>" + res + "</span>");
+              layer.close(index);
+          }
+      });
+
+      var id = "{$order['id']}";
+      $.post("/scyunw/orderfq/checkface", {id:id}, function(res) {
+          if (res == 1) {
+              $("#facestat").html("<span style='color:#5FB878'>认证成功</span>");
+              layer.close(index);
+          } else {
+              $("#facestat").html("<span style='color:#FF5722'>" + res + "</span>");
+              layer.close(index);
+          }
+      });
+      layer.close(index);
+  } 
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+
+    
+});	
+</script>
+</body>
+
+</html>

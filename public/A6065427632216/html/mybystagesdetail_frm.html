@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>保单信息</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style type="text/css">
+    .pdfimg {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+        display: none;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .pdfimg img {
+        width: 100%;
+    }
+    </style>
+</head>
+
+<body id="details">
+    <div class="out outshow">
+        <section class="aui-grid aui-grid-0">
+            <div class="aui-col-xs-6" style="width: 100%;">
+                <div class="aui-grid-label aui-text-left">保单金额：
+                    <span class="num aui-text-left"><span class="small">￥</span>
+                    <font class="order_price"></font>
+                    </span>
+                    <span id="dzbd" class="openmsg" onclick="final()">电子保单</span>
+                    <span id="fqfk" class="openpay" onclick="pay()">分期付款</span>
+                </div>
+                <div class="aui-grid-label order-num" style="z-index: 1">订单编号:
+                    <font class="ordernum"></font>
+                    <font class="orderid" style="display:none;"></font>
+                </div>
+                <div class="aui-grid-label order-time">订单时间:
+                    <font class="ordertime"></font>
+                </div>
+                <div class="aui-grid-label order-time">有效时间:
+                    <font class="awaketime"></font>至
+                    <font class="endtime"></font>
+                </div>
+                <div class="aui-grid-label order-time">失效时间:
+                    <font class="lasttime"></font>
+                </div>
+                <span class="num name"><font class="companyname"></font></span>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-1">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">被保车辆</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_license"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">车主信息</div>
+                <div class="aui-grid-label fw">
+                    <font class="car_name"></font>
+                </div>
+            </div>
+        </section>
+        <section class="aui-grid aui-grid-0 bgw">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">身份证</div>
+                <div class="aui-grid-label">
+                    <font class="id_code"></font>
+                </div>
+                <div class="aui-grid-label">行驶证</div>
+                <div class="aui-grid-label">
+                    <font class="car_code"></font>
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">
+                    <img src="../image/circle.png">
+                </div>
+            </div>
+        </section>
+    </div>
+    <div id="details-list">
+        <div class="top">&nbsp;保单物流信息</div>
+        <div class="toptitle">详情</div>
+        <div class="midlist wl">
+            <div class="aui-content">
+                <span class="openmsg" onclick="getexpress()">物流信息</span>
+                <font class="express_id" style="display:none"></font>
+                <div class="wlname">
+                    <font class="express_company"></font>
+                </div>
+                <div id="progressBar">
+                    <button id="first" class="btn-active">1<a>&emsp;寄出&emsp;</a></button>
+                    <div id="first_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="second">2<a>&emsp;验收&emsp;</a></button>
+                    <div id="second_"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                    <button id="third"><span>完成</span><a>&emsp;签收&emsp;</a></button>
+                </div>
+                <section class="aui-grid expresslist" style="display:none">
+                    <div>
+                        <ul id="expresslist">
+                        </ul>
+                    </div>
+                </section>
+                <section class="aui-grid">
+                    <div class="aui-col-xs-6">
+                        <div class="num">
+                            <font class="senddays">发货后</font>
+                        </div>
+                        <div class="gettext">7天后自动签收</div>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <button type="button" class="getbtn getexpress">确认签收</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div id="details-list">
+        <div class="top">&nbsp;保单信息</div>
+        <div class="toptitle">详情<span class="aui-pull-right">￥<font class="order_price"></font></span></div>
+        <div class="midlist">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner">
+                                交强险<span class="aui-pull-right">￥<font class="jqprice"></font></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner">
+                                车船税<span class="aui-pull-right">￥<font class="csprice"></font></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../image/car.png" class="aui-img-round aui-list-img-sm">
+                            </div>
+                            <div class="aui-list-item-inner">
+                                商业险<span class="aui-pull-right">￥<font class="syprice"></font></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="order_number">
+    <div class="pdfimg">
+        <img src="#">
+    </div>
+</body>
+<script type="text/javascript" src="../script/jquery.min_1.11.1.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/openWin.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript">
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
+$(function() {
+
+    var id = GetQueryString("id");
+// alert(id);
+    $.post($api.getStorage('serviceAddr') + "/api/order/getuserorder.do", { id: id }, function(ret) {
+        console.log(ret);
+        // alert(JSON.stringify(ret).fktype);
+        var json = eval("(" + ret + ")");
+        if (json['fktype'] == '1') {
+            $("#dzbd,#fqfk").hide();
+        }
+        for (key in json) {
+            $("." + key).html(json[key]);
+        }
+        if (json["express_time"]) {
+            $(".senddays").html(7 - json["senddays"]);
+        } else {
+            $(".senddays").html("发货");
+        }
+        $("#order_number").val(json["ordernum"]);
+        if (json["express_id"] != '') { $("#second").addClass("btn-active"); }
+        if (json["express_gettime"]) {
+            $("#third").addClass("btn-active");
+            $(".gettext").html("");
+            $(".senddays").html("已签收");
+            $(".getbtn").html("已签收");
+            $(".getbtn").css("background", "#dddddd");
+            $(".getbtn").removeClass("getexpress");
+        }
+    });
+})
+
+$("body").on("click", ".getexpress", function() {
+    var id = GetQueryString("id");
+    if (confirm("请确定收到保单后再签收，确定签收？")) {
+        $.post($api.getStorage('serviceAddr') + "/api/order/send.do", { id: id }, function(ret) {
+            var data = eval("(" + ret + ")");
+            $(".getbtn").html("已签收");
+            $("#third").addClass("btn-active");
+            $(".getbtn").removeClass("getexpress");
+            $(".getbtn").css("background", "#dddddd");
+        });
+    }
+})
+
+function pay() {
+    var id = $(".orderid").html();
+    window.location = "mybystagesrepay_frm.html?id=" + id;
+    //openWin('mybystagesdetail')
+}
+
+function final() {
+    var ordernum = $("#order_number").val();
+    var pdfReader = api.require('pdfReader');
+    var pdfurl=$api.getStorage('serviceAddr') + "/uploads/contract/" + ordernum + "-final.pdf";
+    pdfReader.open({
+        path: pdfurl,
+        hidden: {
+            print: true,
+            export: true,
+            bookmark: true,
+            email: true
+        },
+        backBtn: {
+            title: {
+                text: '返回',
+            },
+            corner: 5
+        }
+    });
+}
+
+function getexpress() {
+    var express_id = $(".express_id").html();
+    if (express_id != "") {
+        $.post($api.getStorage('serviceAddr') + "/api/order/getexpress.do", { express_id: express_id }, function(ret) {
+            var data = eval("(" + ret + ")");
+            var json = data.result.result.list;
+            var html = '';
+            for (var i = 0; i < json.length; i++) {
+                html += "<li><font>" + json[i].time + "</font>   <font>" + json[i].status + "</font></li>"
+            }
+            $("#expresslist").html(html);
+            $(".expresslist").show();
+        });
+    } else {
+        alert("请等待发货！");
+    }
+}
+</script>
+
+</html>

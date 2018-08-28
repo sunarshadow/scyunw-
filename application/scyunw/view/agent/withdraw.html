@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .layui-table a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        {if $type neq "a"}
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title switch-list">
+                <li layui-type=""  class="{if $type===NULL}layui-this{/if}">提现查询</li>
+                <li layui-data="0" class="{if $type==='0'}layui-this{/if}";>待初审</li>
+                <li layui-data="1" class="{if $type==='1'}layui-this{/if}";>待复审</li>
+                <li layui-data="2" class="{if $type==='2'}layui-this{/if}";>待打款</li>
+                <li layui-data="3" class="{if $type==='3'}layui-this{/if}";>已结款</li>
+                <li layui-data="4" class="{if $type==='4'}layui-this{/if}";>被驳回</li>
+            </ul>
+        </div>
+        {/if}
+        <input type="hidden" value="" id="stat"> 关键字搜索：
+        {if isset($agentid) == false}
+        <div class="layui-inline">
+            <input class="layui-input" name="keyword" placeholder="商户名" id="keyword" autocomplete="off">
+        </div>
+        {/if}
+        <label style="padding-left: 10px;">初审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="firsttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">复审时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="secondtime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        <label style="padding-left: 10px;">结款时间：</label>
+        <div class="layui-inline">
+            <input class="layui-input" id="paymenttime" readonly placeholder="开始日期 - 结束日期" type="text">
+        </div>
+        {if isset($agentid) == false}
+        <br>
+        <div class="layui-inline">
+            <select name="modules" id="province" lay-filter="province">
+                <option value="">选择省份</option>
+                {volist name="province" id="vo"}
+                <option value="{$vo.province_id}">{$vo.province_name}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select name="modules" id="city" lay-filter="city">
+                <option value="">选择城市</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <select name="modules" id="area" lay-filter="area">
+                <option value="">选择地区</option>
+            </select>
+        </div>
+        {/if}
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <button class="layui-btn" data-type="toexcel">导出数据</button>
+    </div>
+    <table class="layui-table content" lay-data="{ width: 'full-335',url:'{:url('agent/getwithdraw',['type'=>$type])}', where:{ {if isset($agentid)}id:'{$agentid}'{/if}    }, limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest'}"
+        lay-filter="demo">
+        <thead>
+            <tr>
+                <th lay-data="{checkbox:true, fixed: true}"></th>
+                <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                <th lay-data="{field:'test', width:120}">地区</th>
+                <th lay-data="{field:'username', width:120,templet: '#usernameTpl'}">商户名</th>
+                <th lay-data="{field:'name', width:200}">商户类型</th>
+                <th lay-data="{field:'userid', width:90,templet: '#payinfoTpl'}">消费详情</th>
+                <!--消费外接id 跟商户id-->
+                <th lay-data="{field:'money', width:350}">提现金额</th>
+                <th lay-data="{field:'id', width:120,templet: '#withinfoTpl'}">提现详情</th>
+                <!--提现详情外接id 跟此次提现id-->
+                <th lay-data="{field:'allmoney', width:120}">可提现金额</th>
+                <th lay-data="{field:'historymoney', width:120}">历史提现总额</th>
+                <th lay-data="{field:'firstexamine', width:200, templet:'#firstexamineTpl'}">资金初审</th>
+                <th lay-data="{field:'firsttime', width:200, templet:'#ftimeTpl'}">初审时间</th>
+                <th lay-data="{field:'secondexamine', width:200, templet:'#secondexamineTpl'}">资金复审</th>
+                <th lay-data="{field:'secondtime', width:200, templet:'#stimeTpl'}">复审时间</th>
+                <th lay-data="{field:'collector', width:200,templet: '#collectorTpl'}">结款人</th>
+                <th lay-data="{field:'paymenttime', width:200,templet: '#paymenttimeTpl'}">结款时间</th>
+                <th lay-data="{field:'examinetype', width:200,templet: '#examinetypeTpl'}">审核状态</th>
+                {if isset($agentid) == false}<th lay-data="{fixed:'right', width:200, align:'center', toolbar: '#barDemo'}">操作</th>{/if}
+            </tr>
+        </thead>
+    </table>
+    <!-- 提现历史详情 -->
+    <script type="text/html" id="usernameTpl">
+        <a style="color:#32CD32"   lay-event="getinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">{{ d.username}}</a>
+    </script>
+    <!-- 消费详情 -->
+    <script type="text/html" id="payinfoTpl">
+        <a style="color:#32CD32"   lay-event="payinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">查看</a>
+    </script>
+    <!-- 提现历史详情 -->
+    <script type="text/html" id="withinfoTpl">
+        <a style="color:#32CD32"   lay-event="withinfo"  lay-data="{{ d.userid}}" goid="{{ d.userid}}">提现详情</a>
+    </script>
+    <script type="text/html" id="examinetypeTpl">
+    {{#  if(d.examinetype==0){         }}
+            初审中
+    {{#  }else if(d.examinetype==1) {  }}
+            复审中
+    {{#  }else if(d.examinetype==2){    }}
+            待打款
+    {{#  }else if(d.examinetype==3) {  }}
+            已结款
+    {{#  }else if(d.examinetype==4) {  }}
+            驳回
+    {{#   }                            }}
+    </script>
+    <script type="text/html" id="barDemo">
+        {if in_array("agent_1",$sary)}<a datatype="cs" class="layui-btn layui-btn-xs {{#  if(d.examinetype !=0||d.examinetype==-1){ }}layui-btn-disabled {{#  } }}"  lay-event="examine">初审</a>{/if}
+        {if in_array("agent_2",$sary)}<a datatype="fs" class="layui-btn layui-btn-xs layui-btn-warm  {{#  if(d.examinetype!=1||d.examinetype==-1){ }}layui-btn-disabled {{#  } }}"  lay-event="examine">复审</a>{/if}
+        {if in_array("agent_3",$sary)}<a datatype="jk" class="layui-btn layui-btn-danger layui-btn-xs {{#  if(d.examinetype!=2||d.examinetype==-1){ }}layui-btn-disabled {{#  } }}" lay-event="examine">结算</a>{/if}
+        {if in_array("agent_-1",$sary)}<a datatype="hs" class="layui-btn layui-btn-danger layui-btn-xs huishou" lay-event="examine">回收</a>{/if}
+    </script>
+    <!-- updateexaminetype -->
+
+
+
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'table', 'jquery','laydate'], function () {
+            var table = layui.table, form = layui.form, laydate = layui.laydate, $ = layui.jquery;
+            //省市区三级联动
+            form.on('select(province)', function (data) {
+                var html = "<option value=''>选择城市</option>";
+                $.post("{:url('lib/base/province')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#city").html(html);
+                    form.render('select');
+                });
+            });
+            form.on('select(city)', function (data) {
+                var html = "<option value=''>选择地区</option>";
+                $.post("{:url('lib/base/city')}", { id: data.value }, function (ret) {
+                    for (var i = 0; i < ret.length; i++) {
+                        console.log(ret[i].name);
+                        html += "<option value='" + ret[i].id + "'>" + ret[i].name + "</option>";
+                    }
+                    $("#area").html(html);                                                                                                                                                                                                                                                                                                                                                   
+                    form.render('select');
+                });
+            });
+            //三个时间
+            laydate.render({ 
+                elem: '#firsttime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#secondtime'
+                , range: true
+            });
+            laydate.render({
+                elem: '#paymenttime'
+                , range: true
+            });
+            //监听表格复选框选择
+            table.on('checkbox(demo)', function (obj) {
+                console.log(obj)
+            });
+            function hasClass(element, cls) {
+                return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+            } 
+            //监听工具条
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'examine') {
+                    var datatype=$(this).attr('datatype');
+                    if(hasClass(this, 'layui-btn-disabled')){
+                        return false;
+                    }
+                    dourl("{:url('agent/liketxinfo')}?datatype="+datatype+"&id=" + data.id, '查看详情', '点此返回', ['50%', '80%']);
+                    return false;
+                }else if(obj.event === 'payinfo'){
+                    dourl("{:url('agent/payinfo')}?paystat=1&agentid="+ data.userid,'查看消费详情','点此返回商户提现',['50%', '80%']);
+                }else if(obj.event === 'withinfo'){
+                    dourl("{:url('agent/withinfo')}?userid=" + data.userid, '查看提现历史详情', '点此返回商户提现', ['50%', '80%']);
+                }else if(obj.event === 'getinfo'){
+                    dourl("{:url('agent/info')}?id=" + data.userid, '查看商户', '点此返回商户提现', ['50%', '80%']);
+                    // var index = layui.layer.open({
+                        
+                    //     title: '查看商户',
+                    //     type: 2,
+                    //     content: "{:url('agent/info')}" + '?id=' + data.userid,
+                    //     area: ['50%', '60%'],
+                    //     shadeClose: true, //开启遮罩关闭
+                    //     success: function (layero, index) {
+                    //         setTimeout(function () {
+                    //             layui.layer.tips('点击此处返回商户列表', '.layui-layer-setwin .layui-layer-close', {
+                    //                 tips: 3
+                    //             });
+                    //         }, 500)
+                    //     }
+                    //     , btn: ['删除']
+                    //     , yes: function (index, layero) {
+                    //         layer.confirm('您确定删除该商户吗', function (index) {
+                    //             $.post("{:url('agent/getdel')}", { ids: data.id }, function (ret) {
+                    //                 if (ret.code) {
+                    //                     obj.del();
+                    //                     layer.close(index);
+                    //                 }
+                    //             });
+                    //         });
+                    //     }
+                    // })
+                }
+            });
+            var active = {
+                reload: function () {
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                    table.reload('idTest', {
+                        where: {
+                            type: type,
+                            keyword: $('#keyword').val(),
+                            firsttime: $('#firsttime').val(),
+                            secondtime:  $('#secondtime').val(),
+                            paymenttime: $('#paymenttime').val(),
+                            province: $('#province').val(),
+                            city: $('#city').val(),
+                            area: $('#area').val(),
+                        }
+                        , page: { curr: 1 }
+                    });
+                },
+                toexcel: function () { //导出数据
+                    var checkStatus = table.checkStatus('idTest'), data = checkStatus.data, ids = [];
+                    var type = $('.switch-list').find('.layui-this').attr('layui-data');
+                  
+                    for (var i = 0; i < data.length; i++) {
+                        ids[i] = data[i].id;
+                    }
+                    ids = ids.join(",");
+                    var type = type ? type : '';
+                    var get = '';
+                    get += ids ? '&ids=' + ids : '';
+                    get += type ? '&type='+ type :'';
+                    get += $('#keyword').val() ? '&keyword=' + $('#keyword').val() : '';
+                    get += $('#firsttime').val() ? '&firsttime=' + $('#firsttime').val() : '';
+                    get += $('#secondtime').val() ? '&secondtime=' + $('#secondtime').val() : '';
+                    get += $('#paymenttime').val() ? '&paymenttime=' + $('#paymenttime').val() : '';
+                    get += $('#province').val() ? '&province=' + $('#province').val() : '';
+                    get += $('#city').val() ? '&city=' + $('#city').val() : '';
+                    get += $('#area').val() ? '&area=' + $('#area').val() : '';
+                    window.location = "{:url('agent/getwithdraw')}" + "?toexcel=1" + get;
+                }
+              
+                
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            //切换全部，黑名单， 待审核和已审核
+            $('.switch-list li').on('click', function () {
+                $_this = $(this);
+                if ($_this.hasClass('layui-this') === false) {
+                    $('.switch-list li').removeClass('layui-this');
+                    $_this.addClass('layui-this');
+                    var type = $_this.attr('layui-data');
+                    var type = type ? type : '';
+                    table.reload('idTest', {
+                        url: "{:url('agent/getwithdraw')}"
+                        ,page :{curr:1}
+                        , where: {
+                            type
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            })
+
+            function dourl(url, title, tips, area = 'auth') {
+                var index = layui.layer.open({
+                    title: title,
+                    type: 2,
+                    content: url,
+                    area: area,
+                    shadeClose: true, //开启遮罩关闭
+                    success: function (layero, index) {
+                        setTimeout(function () {
+                            layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
+                })
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

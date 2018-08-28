@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <input type="hidden" value="{$stat}" id="stat">
+    关键字搜索：
+    <div class="layui-inline">
+        <input style="width:250px;" class="layui-input" name="keyword" placeholder="手机号/车牌号/用户名/快递单号" id="keyword" autocomplete="off">
+    </div>
+
+    <button class="layui-btn" data-type="reload">搜索</button>
+    <button class="layui-btn" data-type="toexcel">导出数据</button>
+</div>
+<table class="layui-table"   >  
+    <thead>
+    <tr>
+        <th>
+            全款保单总数:<label id="ordercount"></label>,
+            快递签收成功数:<label id="isexpresscount"></label>,
+            待签收成功数:<label id="notexpresscount"></label>,
+            商业险总和:￥<label id="sytotalprice"></label>元
+        </th>
+    </tr>
+
+    </thead>
+</table>
+<table  lay-filter="demo" class="layui-table" lay-data="{
+    width: 'full',url:'{$url}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest' , 
+    done:function(res){
+        document.getElementById('ordercount').innerHTML = res.totaldata.ordercount;
+        document.getElementById('isexpresscount').innerHTML = res.totaldata.isexpresscount;
+        document.getElementById('notexpresscount').innerHTML = res.totaldata.notexpresscount;
+        document.getElementById('sytotalprice').innerHTML = res.totaldata.sytotalprice;
+    }
+}">
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed: true}"></th>
+      <th lay-data="{field:'username', width:120}">用户名</th>
+      <th lay-data="{field:'phone', width:120}">绑定手机</th>
+      <th lay-data="{field:'car_license', width:100}">车牌号</th>
+      <th lay-data="{field:'ordernumber', width:180}">保单号</th>
+      <th lay-data="{field:'insurname', width:120}">保险公司</th>
+      <th lay-data="{field:'companyname', width:120}">出单公司</th>
+      <th lay-data="{field:'jqprice', width:120}">交强险</th>
+      <th lay-data="{field:'csprice', width:120}">车船税</th>
+      <th lay-data="{field:'syprice', width:120}">商业险</th>
+      <th lay-data="{field:'order_price', width:120}">保单总价</th>
+      {if $stat!=1}
+      <th lay-data="{field:'firstadmin', width:180}">初审人</th>
+      <th lay-data="{field:'firsttime', width:180}">初审时间</th>
+      <th lay-data="{field:'secondadmin', width:180}">复审人</th>
+      <th lay-data="{field:'secondtime', width:180}">复审时间</th>
+      <th lay-data="{field:'install_count', width:90}">分期期数</th>
+      <th lay-data="{field:'install_stat', width:90}">还款状态</th>
+      <th lay-data="{field:'install_day', width:90}">月还款日</th>
+      <th lay-data="{field:'yuqicount', width:90}">有无逾期</th>
+      <th lay-data="{field:'fakuan', width:90}">逾期罚息</th>
+      <th lay-data="{field:'broke_flag', width:90}">提前还款</th>
+      {/if}
+      <th lay-data="{field:'express_company', width:120}">快递公司</th>
+      <th lay-data="{field:'express_id', width:120}">快递单号</th>
+      <th lay-data="{field:'express_time', width:120}">配送时间</th>
+      <th lay-data="{field:'express_gettime', width:120}">签收时间</th>
+      {if $stat!=1}
+      <th lay-data="{field:'signtime', width:120}">合同时间</th>
+      {/if}
+      <th lay-data="{fixed:'right',align:'center', toolbar: '#order_detail' , width:90}">保单详情</th>
+      {if $stat!=1}
+      <th lay-data="{fixed:'right',align:'center', toolbar: '#install_detail' , width:90}">分期详情</th>
+      {/if}
+      <th lay-data="{fixed:'right',align:'center', toolbar: '#order_toexcel' , width:120}">导出</th>
+    </tr>
+  </thead>
+</table>
+<table  class="layui-table" id="orderlist"></table>
+<script type="text/html" id="order_detail">
+    <a class="layui-btn layui-btn-xs"  lay-event="order_detail">查看</a>
+</script>
+<script type="text/html" id="install_detail">
+    <a class="layui-btn layui-btn-xs"  lay-event="install_detail">查看</a>
+</script>
+<script type="text/html" id="order_toexcel">
+{{#  if(d.fktype==0){ }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="toexcel_pdf">合同</a>
+{{#  } }}
+  <a class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="toexcel">保单</a>
+</script>
+     
+
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form','table',"element","laydate"],function(){
+    var table = layui.table,form = layui.form,element = layui.element,laydate = layui.laydate;
+    function testalert(res){
+        console.log(res);
+    }
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        //导出保单
+		if(obj.event === 'toexcel'){
+			var id = data.id;
+			window.location = "{:url('order/toexcel')}"+'?id='+id;
+        //导出合同
+        }else if(obj.event === 'toexcel_pdf'){      
+            var id = data.id;
+            $.post("{:url('bill/Topdf')}",{id:id},function(res){
+                if(res==0){
+                    layer.msg("合同文件缺失！");
+                }else{
+                    window.location = res;
+                }
+            });
+        }else if(obj.event === 'order_detail'){
+			var id = data.id;
+            var index = dourl("{:url('order/info')}"+'?id='+id,"保单详情",'点击此处返回保单列表',['50%', '90%']);
+        }else if(obj.event === 'install_detail'){
+			var rs = data.rs;
+            var index = dourl("{:url('bill/installlist')}"+'?rs='+rs,"分期订单详情",'点击此处返回保单列表',['60%', '90%']);
+        }
+    });
+
+    var $ = layui.$, active = {
+        reload: function(){
+			table.reload('idTest', {
+				page: {
+                    curr: 1 //重新从第 1 页开始
+            	},   				
+				where: {
+					keyword : $('#keyword').val(),
+				}
+			});
+        },
+		toexcel: function(){ //导出保单数据
+			var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+			for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+			var url = "{:url('bill/getlist')}?toexcel=1";
+			if(ids){ url += "&ids="+ids;}//获取选中数据
+			if($('#stat').val()){ url += "&stat="+$('#stat').val();}//获取状态
+			if($('#keyword').val()){ url += "&keyword="+$('#keyword').val();}//获取关键字
+			window.location = url;	
+		}
+    };  
+	
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+	
+    function dourl(url,title,tips,area){
+	layui.layer.open({
+		title : title,
+		type : 2,
+		content : url,
+		area: area,
+		success : function(layero, index){
+			setTimeout(function(){
+				layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+					tips: 3
+				});
+			},500)
+		}
+	})
+}	
+    
+});
+	
+</script>
+
+</body>
+</html>

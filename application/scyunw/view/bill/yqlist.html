@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+        <input type="hidden" value="{$stat}" id="stat">
+    关键字搜索：
+    <div class="layui-inline">
+        <input style="width:250px;" class="layui-input" name="keyword" placeholder="手机号/车牌号/用户名/快递单号" id="keyword" autocomplete="off">
+    </div>
+    <label style="padding-left: 10px;">状态：</label>
+    <div class="layui-inline">
+        <select name="ystat" id="ystat" >
+            <option value="">审核状态</option>
+            <option value="0">无</option>
+            <option value="1">催收</option>
+            <option value="2">退保</option>
+            <option value="3">诉讼</option>
+        </select>
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+    <button class="layui-btn" data-type="toexcel">导出数据</button>
+</div>
+
+<table  lay-filter="demo" class="layui-table" lay-data="{ width: 'full',url:'{$url}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest' }">
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed:'left'}" rowspan="2"></th>
+      <th lay-data="{field:'orderarea', width:120}" rowspan="2">地区</th>
+      <th lay-data="{field:'car_license', width:100, toolbar: '#showxz'}" rowspan="2">车牌号</th>
+      <th lay-data="{field:'realname', width:90}" rowspan="2">车主</th>
+      <th lay-data="{field:'phone', width:120}" rowspan="2">手机号</th>
+      <th lay-data="{field:'yuqicount', width:120}" rowspan="2">逾期天数</th>
+      <th lay-data="{field:'order_price', width:120}" rowspan="2">保单总价</th>
+      <th lay-data="{field:'install_count', width:90}" rowspan="2">分期期数</th>
+      <th lay-data="{field:'install_fee', width:90}" rowspan="2">每期应还</th>
+      <th lay-data="{field:'install_ispay', width:90}" rowspan="2">已还金额</th>
+      <th lay-data="{field:'', width:90 , toolbar: '#install_detail'}" rowspan="2">已还期数</th>
+      <th lay-data="{field:'install_notpay', width:90}" rowspan="2">待还金额</th>
+      <th lay-data="{field:'yqmoney', width:90}" rowspan="2">逾期总额</th>
+      <th lay-data="{field:'fakuan', width:90}" rowspan="2">逾期罚息</th>
+      <th lay-data="{field:'secondadmin', width:180}" rowspan="2">保单终审人</th>
+      <th lay-data="{align:'center'}" colspan="3">状态变更平台催收记录及紧急联系方式</th>
+      <th lay-data="{field:'ystat',fixed:'right', align:'center'  , width:70}" rowspan="2">状态</th>
+      <th lay-data="{fixed:'right', align:'center' , toolbar: '#changestat' , width:70}" rowspan="2">操作</th>
+    </tr>
+    <tr>
+      <th lay-data="{field:'call',toolbar: '#call' ,align:'center' ,width:260}">电话记录</th>  
+      <th lay-data="{field:'sos_realname',align:'center' , width:120}">姓名</th>
+      <th lay-data="{field:'sos_phone',align:'center' , width:120}">紧急电话</th>
+    </tr>
+  </thead>
+</table>
+<script type="text/html" id="call">
+    <a class="layui-btn layui-btn-xs" href="tel:{{d.phone}}"  lay-event="callphone">拨本人</a>
+    <a class="layui-btn layui-btn-xs"  lay-event="callsosphone">拨紧急</a>
+    <a class="layui-btn layui-btn-xs" lay-event="smsphone">发短信</a>
+    <a class="layui-btn layui-btn-xs"  lay-event="phonedata">查纪录</a>
+</script>
+<script type="text/html" id="order_detail">
+    <a>催收</a>
+</script>
+<script type="text/html" id="showxz">
+  <a style="color: #5FB878;"  lay-event="showxz">{{d.car_license}}</a>
+</script>
+<script type="text/html" id="install_detail">
+    <a style="color: #5FB878;" lay-event="install_detail">{{d.install_stat}}</a>
+</script>
+<script type="text/html" id="changestat">
+    <a class="layui-btn layui-btn-xs"  lay-event="changestat">变更</a>
+</script>
+     
+
+
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form','table',"element","laydate"],function(){
+    var table = layui.table,form = layui.form,element = layui.element,laydate = layui.laydate;
+    function testalert(res){
+        console.log(res);
+    }
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        //导出保单
+		if(obj.event === 'toexcel'){
+			var id = data.id;
+			window.location = "{:url('bill/toexcel')}"+'?id='+id;
+        //导出合同
+        }else if(obj.event === 'toexcel_pdf'){      
+            var id = data.id;
+            var index = dourl("{:url('bill/toexceldoc')}"+'?id='+id,"合同详情",'点击此处返回保单列表',['50%', '90%']);
+            //window.open("{:url('bill/toexceldoc')}"+'?id='+id);   
+        }else if(obj.event === 'order_detail'){
+			var id = data.id;
+            var index = dourl("{:url('bill/info')}"+'?id='+id,"保单详情",'点击此处返回保单列表',['50%', '90%']);
+        }else if(obj.event === 'install_detail'){
+			var rs = data.rs;
+            var index = dourl("{:url('bill/installlist')}"+'?rs='+rs,"分期订单详情",'点击此处返回保单列表',['60%', '90%']);
+        }else if(obj.event === 'phonedata'){
+			var phone = data.phone;
+			var index = dourl("{:url('user/phonedata')}"+'?phone='+phone,"数据分析","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'showxz'){
+            var id = data.bid;
+			var index = dourl("{:url('userorder/info')}"+'?id='+id,"投保险种/证件/详情","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'changestat'){
+            var id = data.bid;
+			var index = dourl("{:url('bill/check')}"+'?id='+id,"变更状态","点击此处返回用户列表",['50%', '80%']);
+        }else if(obj.event === 'smsphone'){
+			var phone = data.phone;
+			alert(phone);
+        }
+    });
+
+    var $ = layui.$, active = {
+        reload: function(){
+			table.reload('idTest', {
+				page: {
+                    curr: 1 //重新从第 1 页开始
+            	},   				
+				where: {
+					keyword : $('#keyword').val(),
+					ystat : $('#ystat').val(),
+				}
+			});
+        },
+		toexcel: function(){ //导出保单数据
+			var checkStatus = table.checkStatus('idTest'),data = checkStatus.data,ids="";
+			for(var i=0;i<data.length;i++){ids += ","+data[i].id;}
+			var url = "{:url('bill/getyqlist')}?toexcel=1";
+			if(ids){ url += "&ids="+ids;}//获取选中数据
+			if($('#stat').val()){ url += "&stat="+$('#stat').val();}//获取状态
+			if($('#keyword').val()){ url += "&keyword="+$('#keyword').val();}//获取关键字
+			if($('#ystat').val()){ url += "&ystat="+$('#ystat').val();}//获取关键字
+			window.location = url;	
+		}
+    };  
+	
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+	
+    function dourl(url,title,tips,area){
+	layui.layer.open({
+		title : title,
+		type : 2,
+		content : url,
+		area: area,
+		success : function(layero, index){
+			setTimeout(function(){
+				layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+					tips: 3
+				});
+			},500)
+		}
+	})
+}	
+    
+});
+	
+</script>
+
+</body>
+</html>

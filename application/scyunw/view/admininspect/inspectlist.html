@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>  
+<div class="layui-form demoTable" style="line-height: 3.5" lay-filter="search">
+    关键字搜索：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" placeholder="管理员" autocomplete="off">
+    </div>
+    <div class="layui-inline">
+        <select name="sid"  >
+            <option value="">选择组别</option>
+            {volist name="inspect" id="vo"}
+            <option value="{$vo.id}">{$vo.title}</option>
+			{/volist}
+        </select>
+    </div>    
+	<label style="padding-left: 10px;">时间段：</label>
+	<div class="layui-inline">
+	<input class="layui-input" id="searchtime" readonly placeholder="开始日期 - 结束日期" type="text">
+	</div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+<table class="layui-table"   >
+        <thead>
+            <tr>
+                <th>统计项目</th>
+                <th>数量</th>
+                <th>涉及金额</th>
+                <th>统计项目</th>
+                <th>数量</th>
+                <th>涉及金额</th>
+                <th>统计项目</th>
+                <th>数量</th>
+                <th>涉及金额</th>
+            </tr>
+        </thead>
+     <tbody>
+       <tr>
+            <td>当前分期未审核总数</td>
+            <td><label id="count[0]">数量</label>个</td>
+            <td>￥<label id="sum[0]">金额</label></td>
+            <td>当前分期未复审总数</td>
+            <td><label id="count[1]">数量</label>个</td>
+            <td>￥<label id="sum[1]">金额</label></td>
+            <td></td>
+            <td></td>
+            <td></td>
+       </tr>
+       <tr>
+            <td>当前保费未初审总数</td>
+            <td><label id="count[2]">数量</label>个</td>
+            <td>￥<label id="sum[2]">金额</label></td>
+            <td>当前保费未复审总数</td>
+            <td><label id="count[3]">数量</label>个</td>
+            <td>￥<label id="sum[3]">金额</label></td>
+            <td>当前保费未结算数</td>
+            <td><label id="count[4]">数量</label>个</td>
+            <td>￥<label id="sum[4]">金额</label></td>
+       </tr>
+       <tr>
+            <td>当前商户提现初审总数</td>
+            <td><label id="count[5]">数量</label>个</td>
+            <td>￥<label id="sum[5]">金额</label></td>
+            <td>当前商户提现未复审总数</td>
+            <td><label id="count[6]">数量</label>个</td>
+            <td>￥<label id="sum[6]">金额</label></td>
+            <td>当前商户提现未结算数</td>
+            <td><label id="count[7]">数量</label>个</td>
+            <td>￥<label id="sum[7]">金额</label></td>
+       </tr>
+       <tr>
+            <td>当前未询价初审数</td>
+            <td><label id="count[8]">数量</label>个</td>
+            <td>￥<label id="sum[8]">金额</label></td>
+            <td>当前流水录入未审核数</td>
+            <td><label id="count[9]">数量</label>个</td>
+            <td>￥<label id="sum[9]">金额</label></td>
+            <td></td>
+            <td></td>
+            <td></td>
+       </tr>
+     </tbody>
+<table class="layui-table" lay-data="{ width: 'full',cellMinWidth:90,url:'{:url('admininspect/getinspectlist')}', limit:10 , limits: [1, 5, 10, 30] , page:true,  id:'idTest' , 
+done:function(res){
+    for(var i=0;i<=8;i++){
+        document.getElementById('count['+i+']').innerHTML = res.totaldata[i].count;
+        document.getElementById('sum['+i+']').innerHTML = res.totaldata[i].sum;
+    }
+}}" lay-filter="demo" >
+    <tr>
+      <thead>
+            <th lay-data="{checkbox:true, width:80, fixed: true}"></th>
+            <th lay-data="{field:'id',sort: true,width:80, fixed: true}">序号</th>
+            <th lay-data="{field:'title',width:130}">组别</th>
+            <th lay-data="{field:'name'}">操作员</th>
+            <th lay-data="{field:'check_count',  templet: '#check_count'}">询价初审</th>
+            <th lay-data="{field:'first_count',  templet: '#first_count'}">分期初审</th>
+            <th lay-data="{field:'second_count',  templet: '#second_count'}">分期复审</th>
+            <th lay-data="{field:'inspect_count',  templet: '#inspect_count'}">保费初审</th>
+            <th lay-data="{field:'comfirm_count',  templet: '#comfirm_count'}">保费复审</th>
+            <th lay-data="{field:'appro_count',  templet: '#appro_count'}">保费结算</th>
+            <th lay-data="{field:'a_first_count',  templet: '#a_first_count', width:130}">商户提现初审</th>
+            <th lay-data="{field:'a_second_count',  templet: '#a_second_count', width:130}">商户提现复审</th>
+            <th lay-data="{field:'name', width:130}">流水录入审核</th>
+            <!-- <th lay-data="{field:'allow_login', width:100,  templet: '#statusTpl'}" >账号状态</th>
+            <th lay-data="{fixed:'right', width: 120, align:'center', toolbar: '#statusTpl'}">管理员操作</th> -->
+    </tr>
+  </thead>
+</table>
+<script type="text/html" id="check_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="check" data-url="{:url('userorder/index')}">{{d.check_count}}</a></script>
+<script type="text/html" id="first_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="first" data-url="{:url('orderfq/index')}">{{d.first_count}}</a></script>
+<script type="text/html" id="second_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="second" data-url="{:url('orderfq/index')}">{{d.second_count}}</a></script>
+<script type="text/html" id="inspect_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="inspect" data-url="{:url('Insurer/premium')}">{{d.inspect_count}}</a></script>
+<script type="text/html" id="comfirm_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="comfirm" data-url="{:url('Insurer/premium')}">{{d.comfirm_count}}</a></script>
+<script type="text/html" id="appro_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="appro" data-url="{:url('Insurer/premium')}">{{d.appro_count}}</a></script>
+<script type="text/html" id="a_first_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="first" data-url="{:url('Agent/withdraw')}">{{d.a_first_count}}</a></script>
+<script type="text/html" id="a_second_count"><a style="color: #5FB878;" href="javascrpt:;" lay-event="tourl" data-type="second" data-url="{:url('Agent/withdraw')}">{{d.a_second_count}}</a></script>
+<script type="text/html" id="statusTpl">
+{{#  if(d.allow_login==1){ }}<a style="color: #5FB878;" lay-event="chgstatus">正常</a>
+{{#  } else { }}<a style="color: #F581B1;" lay-event="chgstatus">封禁</a>
+{{#  } }}
+</script>     
+          
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['table',"laydate"],function(){
+    var $ = layui.$,table = layui.table,laydate = layui.laydate;;
+	laydate.render({
+		elem: '#searchtime'
+		,range: true
+	});	
+    //监听工具条
+    table.on('tool(demo)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'tourl'){
+            var url = $(this).data("url")+"?adminid="+data.id+"&type="+$(this).data("type");
+            var index = dourl(url,"查看详情","点击此处返回用户列表",['80%', '80%']);
+        }
+    });
+    var active = {
+        reload: function(){
+            var demoReload = $('#demoReload');
+            table.reload('idTest', {
+                where: {
+                    keyword: demoReload.val(),
+                    searchtime : $('#searchtime').val(),
+                    sid : $('#sid').val(),
+                }
+            });
+        }	
+    };    
+    
+    $('.demoTable .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    }); 
+
+    function dourl(url, title, tips, area) {
+        layui.layer.open({
+            title: title,
+            type: 2,
+            content: url,
+            area: area,
+            shadeClose: true, //开启遮罩关闭
+            success: function (layero, index) {
+                setTimeout(function () {
+                    layui.layer.tips(tips, '.layui-layer-setwin .layui-layer-close', {
+                        tips: 3
+                    });
+                }, 500)
+            }
+        })
+    }	
+    
+});
+</script>
+
+</body>
+</html>

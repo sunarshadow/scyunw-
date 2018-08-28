@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>首页</title>
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/insureradmin/css/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/swiper.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/animate.min.css">
+    <link rel="stylesheet" href="__STATIC__/insureradmin/css/style.css">
+    <script src="__STATIC__/insureradmin/js/jquery.min_1.11.1.js"></script>
+    <script src="__STATIC__/insureradmin/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.min.js"></script>
+    <script src="__STATIC__/insureradmin/js/swiper.animate.min.js"></script>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="main">
+        <div id="home" class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="grid yellow" id="daibaojia">
+                        <div class="name">待报价</div>
+                        <div class="numtype">
+                            <span class="num">0</span>
+                            <span class="type">个</span>
+                        </div>
+                        <span class="detail"><a style="color:#fff" href="{:url('policylist/index',['stat'=>'1'])}">详情</a></span>
+                    </div>
+                </div>
+                <div class="col-lg-3  col-md-5">
+                    <div class="grid red" id="weifahuo">
+                        <div class="name">未发货</div>
+                        <div class="numtype">
+                            <span class="num">0</span>
+                            <span class="type">个</span>
+                        </div>
+                        <span class="detail"><a style="color:#fff" href="{:url('logisticslist/index',['express_id'=>'wei'])}">详情</a></span>
+                    </div>
+                </div>
+                <div class="col-lg-3  col-md-5">
+                    <div class="grid green" id="weichudan">
+                        <div class="name">未出单</div>
+                        <div class="numtype">
+                            <span class="num">0</span>
+                            <span class="type">个</span>
+                        </div>
+                        <span class="detail"><a style="color:#fff" href="{:url('policylist/index',['stat'=>'2'])}">详情</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="realtime">
+                <div class="title">
+                    实时报价
+                </div>
+                <div class="list">
+                    <ul class="list-group">
+                        <li class="list-group-item search" id="infotip">
+                            <div>
+                                <input type="text" name="" value="" id="keywords" placeholder="搜索">
+                                <i class="fa fa-search" id="serchbth"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var headerurl = '{:url("index/header")}';
+</script>
+<script src="__STATIC__/insureradmin/js/public.js"></script>
+<script>
+    /*
+    * @AJAX轮循 实时更新报价 待报价数量 未发货数量 未出单数量
+    */
+    var getnewinfo = function(keywords,refresh=true){
+        var newbytopid = $('.getinfokey').eq(0);
+        var lastid = newbytopid.attr('id');
+        var dbjnum = $('#daibaojia .num').text(); //待报价
+        var wfhnum = $('#weifahuo .num').text(); //未发货
+        var wcdnum = $('#weichudan .num').text(); //未出单
+        $.get('getInsurerInfo', { lastid: lastid,wfhnum:wfhnum,wcdnum:wcdnum,keywords:keywords},function(res){
+            var infobyhtml = '';
+            $.each(res.main,function(index,item){
+                infobyhtml += '<li class="list-group-item getinfokey" id="'+item.id+'"';
+                infobyhtml +='<div class="img-time">';
+                infobyhtml +='<img src="'+item.wxavatar+'">';
+                infobyhtml +='<span class="time">'+item.checktime+'</span>';//2017年10月1日00时00分00秒
+                infobyhtml +='</div>';
+                infobyhtml +='<div class="name">车主姓名：'+item.car_name+'</div>';//车主姓名
+                infobyhtml +='<div class="car-type">车型：'+item.car_license+'</div>';//车牌
+                infobyhtml +='<div class="order-num">单号：'+item.ordernumber +'<span class="baojia">报&nbsp;价</span></div>';//单号
+                infobyhtml +='</li>';
+            })
+            var dbj= parseInt(dbjnum)+parseInt(res.dbz_count);
+            var wfh= parseInt(wfhnum)+parseInt(res.wfh_count);
+            var wcd= parseInt(wcdnum)+parseInt(res.wcd_count);
+            
+            refresh ? $('#daibaojia .num').text(dbj) : false ;
+            $('#weifahuo .num').text(wfh);
+            $('#weichudan .num').text(wcd); 
+            $('#infotip').after(infobyhtml);
+            refresh ? settimebar = setTimeout("getnewinfo()", 5000) : clearTimeout(settimebar);;
+        })
+    }
+    getnewinfo();
+    $('#serchbth').click(function(){
+        var keywords = $('#keywords').val();
+        $('#infotip').nextAll().remove();
+        if(keywords==''){
+            $('#daibaojia .num').text('0');
+            getnewinfo();
+        }else{getnewinfo(keywords,false)}
+    })
+</script>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layui</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all" />
+<style>body{margin: 10px;}</style>
+</head>
+<body>
+
+              
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  <legend>编辑管理员审核组</legend>
+</fieldset>
+ 
+<form class="layui-form layui-form-pane" action="">
+  <input type="hidden" value="{$info.id}" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">分组名称：</label>
+        <div class="layui-input-block">
+          <input name="title" lay-verify="title" autocomplete="off" value="{$info.title}" class="layui-input" type="text">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限设置：</label>
+        <div class="layui-input-block">
+        <div class="iptdiv">
+            <div class="prentipt"><input name="menus[inquiry]" {if in_array("inquiry",$groupmenus)} checked {/if} title="询价审核" value="inquiry" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[inquiry_1]" {if in_array("inquiry_1",$groupmodes)} checked {/if} lay-skin="primary" title="初审"  value="inquiry_1"  type="checkbox">
+            <input class="chirldipt" name="modes[inquiry_2]" {if in_array("inquiry_2",$groupmodes)} checked {/if} lay-skin="primary" title="报价"  value="inquiry_2"  type="checkbox">
+            <input class="chirldipt" name="modes[inquiry_-1]" {if in_array("inquiry_-1",$groupmodes)} checked {/if} lay-skin="primary" title="回收"  value="inquiry_-1"  type="checkbox"><bR>
+        </div>
+        <div class="iptdiv">  
+            <div class="prentipt"><input name="menus[fqorder]" {if in_array("fqorder",$groupmenus)} checked {/if} title="分期审核" value="fqorder" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[fqorder_2]" {if in_array("fqorder_2",$groupmodes)} checked {/if}  lay-skin="primary" title="初审"  value="fqorder_2"  type="checkbox">
+            <input class="chirldipt" name="modes[fqorder_3]" {if in_array("fqorder_3",$groupmodes)} checked {/if}  lay-skin="primary" title="复审"  value="fqorder_3"  type="checkbox">
+            <input class="chirldipt" name="modes[fqorder_-1]" {if in_array("fqorder_-1",$groupmodes)} checked {/if}  lay-skin="primary" title="回收"  value="fqorder_-1"  type="checkbox"><bR>
+        </div>
+        <div class="iptdiv">  
+            <div class="prentipt"><input name="menus[order]" {if in_array("order",$groupmenus)} checked {/if} title="支付保费" value="order" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[order_1]" {if in_array("order_1",$groupmodes)} checked {/if}  lay-skin="primary" title="初审"  value="order_1"  type="checkbox">
+            <input class="chirldipt" name="modes[order_2]" {if in_array("order_2",$groupmodes)} checked {/if}  lay-skin="primary" title="复审"  value="order_2"  type="checkbox">
+            <input class="chirldipt" name="modes[order_3]" {if in_array("order_3",$groupmodes)} checked {/if}  lay-skin="primary" title="结算"  value="order_3"  type="checkbox">
+            <input class="chirldipt" name="modes[order_-1]" {if in_array("order_-1",$groupmodes)} checked {/if}  lay-skin="primary" title="回收"  value="order_-1"  type="checkbox">
+        </div>
+        <div class="iptdiv">  
+            <div class="prentipt"><input name="menus[agent]" {if in_array("agent",$groupmenus)} checked {/if} title="商户提现" value="agent" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[agent_1]" {if in_array("agent_1",$groupmodes)} checked {/if}  lay-skin="primary" title="初审"  value="agent_1"  type="checkbox">
+            <input class="chirldipt" name="modes[agent_2]" {if in_array("agent_2",$groupmodes)} checked {/if}  lay-skin="primary" title="复审"  value="agent_2"  type="checkbox">
+            <input class="chirldipt" name="modes[agent_3]" {if in_array("agent_3",$groupmodes)} checked {/if}  lay-skin="primary" title="结算"  value="agent_3"  type="checkbox">
+            <input class="chirldipt" name="modes[agent_4]" {if in_array("agent_4",$groupmodes)} checked {/if}  lay-skin="primary" title="驳回"  value="agent_4"  type="checkbox">
+            <input class="chirldipt" name="modes[agent_-1]" {if in_array("agent_-1",$groupmodes)} checked {/if}  lay-skin="primary" title="回收"  value="agent_-1"  type="checkbox">
+        </div>
+        <div class="iptdiv">  
+            <div class="prentipt"><input name="menus[user]" {if in_array("user",$groupmenus)} checked {/if} title="用户提现" value="user" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[user_1]" {if in_array("user_1",$groupmodes)} checked {/if}  lay-skin="primary" title="初审"  value="user_1"  type="checkbox">
+            <input class="chirldipt" name="modes[user_2]" {if in_array("user_2",$groupmodes)} checked {/if}  lay-skin="primary" title="复审"  value="user_2"  type="checkbox">
+            <input class="chirldipt" name="modes[user_3]" {if in_array("user_3",$groupmodes)} checked {/if}  lay-skin="primary" title="结算"  value="user_3"  type="checkbox">
+            <input class="chirldipt" name="modes[user_-1]" {if in_array("user_-1",$groupmodes)} checked {/if}  lay-skin="primary" title="回收"  value="user_-1"  type="checkbox">
+        </div>
+        <div class="iptdiv">  
+            <div class="prentipt"><input name="menus[finance]" {if in_array("finance",$groupmenus)} checked {/if} title="资金审核" value="finance" type="checkbox"><bR></div>
+            <input class="chirldipt" name="modes[finance_1]" {if in_array("finance_1",$groupmodes)} checked {/if}  lay-skin="primary" title="初审"  value="finance_1"  type="checkbox">
+        </div>
+    </div>
+    <div class="layui-form-item">
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="set">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+ 
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script>
+layui.use(['form', 'layedit', 'laydate', 'jquery'], function(){
+    var $ = layui.jquery,form = layui.form,layer = layui.layer,layedit = layui.layedit,laydate = layui.laydate;
+    $("body").on("click",".layui-form-checkbox",function(){
+      console.log($(this).parent().attr("class"));
+      var pclass = $(this).parent().attr("class");
+      if(pclass=="prentipt"){
+          //$(this).parents(".iptdiv").find("div").removeClass("layui-form-checked");
+      }else{
+          $(this).parent(".iptdiv").find(".prentipt input").attr("checked","checked");
+          $(this).parent(".iptdiv").find(".prentipt div").addClass("layui-form-checked");
+      }
+    });
+    //自定义验证规则
+    form.verify({
+    });
+    //监听提交
+    form.on('submit(set)', function(data){
+      $.post("{:url('admininspect/getset')}",data.field,function(res){
+        if(res.msg){
+          layer.msg(res.msg);
+        }else{
+            layer.msg("分组权限编辑成功");
+            setTimeout(function(){
+              parent.location.reload();
+            },800);          
+        }
+      });
+      return false;
+    });
+  
+});
+</script>
+
+</body>
+</html>
